@@ -9,7 +9,7 @@ import EventDetail from './containers/eventDetail/EventDetail';
 function App() {
 	return (
 		<Switch>
-			<Route exact path={('/', '/home')} component={Home} />
+			<Route exact path={['/', '/home']} component={Home} />
 			<Route path='/login' component={Login} />
 			<Route path='/sign-up' component={SignUp} />
 			<Route exact path='/event-detail/:id' component={EventDetail} />
