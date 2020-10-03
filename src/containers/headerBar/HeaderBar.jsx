@@ -7,7 +7,6 @@ const HeaderBar = () => {
 		<AppBar position='static' style={{ marginBottom: '40px' }}>
 			<Toolbar>
 				<div style={{ flexGrow: 1 }}></div>
-				{/* <Grid spacing={1}> */}
 				<Grid item xs={1}>
 					<Link
 						component={RouterLink}
@@ -20,13 +19,12 @@ const HeaderBar = () => {
 				<Grid item xs={1}>
 					<Link
 						component={RouterLink}
-						to='/sign-up'
+						to='/register'
 						underline='hover'
 						style={{ color: 'white' }}>
-						Sign Up Here
+						Register Here
 					</Link>
 				</Grid>
-				{/* </Grid> */}
 			</Toolbar>
 		</AppBar>
 	);

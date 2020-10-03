@@ -1,9 +1,15 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Container, Typography, TextField, Button } from '@material-ui/core';
+import {
+	Container,
+	Typography,
+	TextField,
+	Button,
+	Grid,
+} from '@material-ui/core';
 
 const Login = () => {
-	const { register, handleSubmit, errors, getValues } = useForm();
+	const { register, handleSubmit, errors } = useForm();
 	const submitLoginForm = async (data) => {
 		console.log(data);
 	};
@@ -12,7 +18,9 @@ const Login = () => {
 			<Typography component='h1' variant='h5'>
 				Login
 			</Typography>
-			<form onSubmit={handleSubmit(submitLoginForm)}>
+			<form
+				onSubmit={handleSubmit(submitLoginForm)}
+				style={{ margin: '20px 0' }}>
 				<TextField
 					variant='outlined'
 					margin='normal'
@@ -35,10 +43,11 @@ const Login = () => {
 					inputRef={register({ required: true, minLength: 8 })}
 					error={errors.password?.type === 'required'}
 				/>
-
-				<Button type='submit' fullWidth variant='contained' color='primary'>
-					Login
-				</Button>
+				<Grid container justify='center'>
+					<Button type='submit' variant='contained' color='primary'>
+						Login
+					</Button>
+				</Grid>
 			</form>
 		</Container>
 	);

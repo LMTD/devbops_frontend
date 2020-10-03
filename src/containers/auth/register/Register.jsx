@@ -1,20 +1,28 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Container, Typography, TextField, Button } from '@material-ui/core';
+import {
+	Container,
+	Typography,
+	TextField,
+	Button,
+	Grid,
+} from '@material-ui/core';
 
-const SignUp = () => {
+const Register = () => {
 	const { register, handleSubmit, errors, getValues } = useForm();
 
-	const submitSignUpForm = async (data) => {
+	const submitRegisterForm = async (data) => {
 		console.log(data);
 	};
 
 	return (
 		<Container fixed>
 			<Typography component='h1' variant='h5'>
-				Sign Up
+				Register
 			</Typography>
-			<form onSubmit={handleSubmit(submitSignUpForm)}>
+			<form
+				onSubmit={handleSubmit(submitRegisterForm)}
+				style={{ margin: '20px 0' }}>
 				<TextField
 					variant='outlined'
 					margin='normal'
@@ -84,6 +92,7 @@ const SignUp = () => {
 					type='text'
 					id='first-name'
 					inputRef={register({ required: true })}
+					error={errors.firstName?.type === 'required'}
 				/>
 				<TextField
 					variant='outlined'
@@ -94,6 +103,7 @@ const SignUp = () => {
 					type='text'
 					id='last-name'
 					inputRef={register({ required: true })}
+					error={errors.lastName?.type === 'required'}
 				/>
 				<TextField
 					variant='outlined'
@@ -104,6 +114,7 @@ const SignUp = () => {
 					type='text'
 					id='country'
 					inputRef={register({ required: true })}
+					error={errors.country?.type === 'required'}
 				/>
 				<TextField
 					variant='outlined'
@@ -114,13 +125,16 @@ const SignUp = () => {
 					type='text'
 					id='state'
 					inputRef={register({ required: true })}
+					error={errors.state?.type === 'required'}
 				/>
-				<Button type='submit' fullWidth variant='contained' color='primary'>
-					Sign Up
-				</Button>
+				<Grid container justify='center'>
+					<Button type='submit' variant='contained' color='primary'>
+						Register
+					</Button>
+				</Grid>
 			</form>
 		</Container>
 	);
 };
 
-export default SignUp;
+export default Register;
