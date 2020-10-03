@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import {
 	Container,
@@ -7,16 +8,48 @@ import {
 	Button,
 	Grid,
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 const Register = () => {
-	const { register, handleSubmit, errors, getValues } = useForm();
+	const [alertSeverity, setAlertSeverity] = useState('');
+	const [alertMessage, setAlertMessage] = useState('');
+	const { register, handleSubmit, errors, getValues, reset } = useForm();
 
-	const submitRegisterForm = async (data) => {
-		console.log(data);
+	const submitRegisterForm = async (formData) => {
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/user',
+				{
+					Action: 'register',
+					Username: formData.username,
+					Password: formData.password,
+					Email: formData.email,
+					FirstName: formData.firstName,
+					LastName: formData.lastName,
+					Country: formData.country,
+					City: formData.city,
+				},
+			);
+			console.log('this is data: ', data);
+			if (data.statusCode === 200) {
+				setAlertSeverity('success');
+				setAlertMessage('Register Successfully');
+				reset();
+			} else {
+				setAlertSeverity('error');
+				setAlertMessage(data.Error);
+			}
+			reset();
+		} catch (err) {
+			console.log('there is an error in register: ', err);
+			setAlertSeverity('error');
+			setAlertMessage('Network error');
+		}
 	};
 
 	return (
 		<Container fixed>
+			{alertMessage && <Alert severity={alertSeverity}>{alertMessage}</Alert>}
 			<Typography component='h1' variant='h5'>
 				Register
 			</Typography>
@@ -120,10 +153,10 @@ const Register = () => {
 					variant='outlined'
 					margin='normal'
 					fullWidth
-					name='state'
-					label='Current State'
+					name='city'
+					label='Current City'
 					type='text'
-					id='state'
+					id='city'
 					inputRef={register({ required: true })}
 					error={errors.state?.type === 'required'}
 				/>
