@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Container, Typography, TextField, Button } from '@material-ui/core';
 
 const SignUp = () => {
-	const { register, handleSubmit, errors, getValues, watch } = useForm();
+	const { register, handleSubmit, errors, getValues } = useForm();
 
 	const submitSignUpForm = async (data) => {
 		console.log(data);
