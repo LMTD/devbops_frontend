@@ -13,7 +13,33 @@ import Alert from '@material-ui/lab/Alert';
 const Register = () => {
 	const [alertSeverity, setAlertSeverity] = useState('');
 	const [alertMessage, setAlertMessage] = useState('');
-	const { register, handleSubmit, errors, getValues, reset } = useForm();
+	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
+	const watchFields = watch([
+		'username',
+		'email',
+		'password',
+		'confirmPassword',
+		'firstName',
+		'lastName',
+		'country',
+		'city',
+	]);
+
+	const checkAllFieldFilled = () => {
+		let filled = true;
+
+		for (let fieldName in watchFields) {
+			const fieldFilled = Boolean(watchFields.fieldName);
+			console.log(
+				`this is fieldname: ${fieldName} and this is value: ${watchFields.fieldName} and this is fieldFilled: ${fieldFilled}`,
+			);
+
+			filled = filled && fieldFilled;
+		}
+
+		console.log('this is filled: ', filled);
+		return !filled;
+	};
 
 	const submitRegisterForm = async (formData) => {
 		try {
@@ -64,8 +90,7 @@ const Register = () => {
 					label='Username'
 					type='text'
 					id='username'
-					inputRef={register({ required: true })}
-					error={errors.username?.type === 'required'}
+					inputRef={register()}
 				/>
 				<TextField
 					variant='outlined'
@@ -73,13 +98,17 @@ const Register = () => {
 					fullWidth
 					name='email'
 					label='Email'
-					type='email'
+					type='text'
 					id='email'
 					inputRef={register({
-						required: true,
 						pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
 					})}
-					error={errors.email?.type === 'required'}
+					error={errors.email?.type === 'pattern'}
+					helperText={
+						errors?.email?.type === 'pattern'
+							? 'Please enter a valid email'
+							: null
+					}
 				/>
 				<TextField
 					variant='outlined'
@@ -89,8 +118,13 @@ const Register = () => {
 					label='Password'
 					type='password'
 					id='password'
-					inputRef={register({ required: true, minLength: 8 })}
-					error={errors.password?.type === 'required'}
+					inputRef={register({ minLength: 8 })}
+					error={errors.password?.type === 'minLength'}
+					helperText={
+						errors?.password?.type === 'minLength'
+							? 'Password has to be at least 8 characters long'
+							: null
+					}
 				/>
 				<TextField
 					variant='outlined'
@@ -101,19 +135,15 @@ const Register = () => {
 					type='password'
 					id='confirm-password'
 					inputRef={register({
-						required: true,
-						minLength: 8,
 						validate: (value) => {
-							console.log('this is value: ', value);
-							console.log('this is password: ', getValues('password'));
-
 							return value === getValues('password');
 						},
 					})}
-					error={
-						errors.confirmPassword?.type === 'required' ||
-						errors.confirmPassword?.type === 'minlength' ||
-						errors.confirmPassword?.type === 'validate'
+					error={errors.confirmPassword?.type === 'validate'}
+					helperText={
+						errors?.confirmPassword?.type === 'validate'
+							? 'Password has to be matched'
+							: null
 					}
 				/>
 				<TextField
@@ -124,8 +154,7 @@ const Register = () => {
 					label='First Name'
 					type='text'
 					id='first-name'
-					inputRef={register({ required: true })}
-					error={errors.firstName?.type === 'required'}
+					inputRef={register()}
 				/>
 				<TextField
 					variant='outlined'
@@ -135,8 +164,7 @@ const Register = () => {
 					label='Last Name'
 					type='text'
 					id='last-name'
-					inputRef={register({ required: true })}
-					error={errors.lastName?.type === 'required'}
+					inputRef={register()}
 				/>
 				<TextField
 					variant='outlined'
@@ -146,8 +174,7 @@ const Register = () => {
 					label='Current Country'
 					type='text'
 					id='country'
-					inputRef={register({ required: true })}
-					error={errors.country?.type === 'required'}
+					inputRef={register()}
 				/>
 				<TextField
 					variant='outlined'
@@ -157,11 +184,25 @@ const Register = () => {
 					label='Current City'
 					type='text'
 					id='city'
-					inputRef={register({ required: true })}
-					error={errors.state?.type === 'required'}
+					inputRef={register()}
 				/>
 				<Grid container justify='center'>
-					<Button type='submit' variant='contained' color='primary'>
+					<Button
+						type='submit'
+						variant='contained'
+						color='primary'
+						disabled={
+							!(
+								watchFields.username &&
+								watchFields.email &&
+								watchFields.password &&
+								watchFields.confirmPassword &&
+								watchFields.firstName &&
+								watchFields.lastName &&
+								watchFields.country &&
+								watchFields.city
+							)
+						}>
 						Register
 					</Button>
 				</Grid>

@@ -15,7 +15,9 @@ const Login = () => {
 	const [alertSeverity, setAlertSeverity] = useState('');
 	const [alertMessage, setAlertMessage] = useState('');
 
-	const { register, handleSubmit, errors, reset } = useForm();
+	const { register, handleSubmit, errors, reset, watch } = useForm();
+	const watchFields = watch(['username', 'password']);
+
 	const submitLoginForm = async (formData) => {
 		try {
 			const { data } = await axios.post(
@@ -73,7 +75,11 @@ const Login = () => {
 					error={errors.password?.type === 'required'}
 				/>
 				<Grid container justify='center'>
-					<Button type='submit' variant='contained' color='primary'>
+					<Button
+						type='submit'
+						variant='contained'
+						color='primary'
+						disabled={!(watchFields.username && watchFields.password)}>
 						Login
 					</Button>
 				</Grid>
