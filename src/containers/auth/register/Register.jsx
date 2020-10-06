@@ -25,22 +25,6 @@ const Register = () => {
 		'city',
 	]);
 
-	const checkAllFieldFilled = () => {
-		let filled = true;
-
-		for (let fieldName in watchFields) {
-			const fieldFilled = Boolean(watchFields.fieldName);
-			console.log(
-				`this is fieldname: ${fieldName} and this is value: ${watchFields.fieldName} and this is fieldFilled: ${fieldFilled}`,
-			);
-
-			filled = filled && fieldFilled;
-		}
-
-		console.log('this is filled: ', filled);
-		return !filled;
-	};
-
 	const submitRegisterForm = async (formData) => {
 		try {
 			const { data } = await axios.post(
