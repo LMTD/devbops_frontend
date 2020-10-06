@@ -8,9 +8,11 @@ import Home from './containers/home/Home';
 import EventDetail from './containers/eventDetail/EventDetail';
 import About from './containers/about/About';
 
+import './App.css';
+
 function App() {
 	return (
-		<div>
+		<div style={{ background: '#fffa71' }}>
 			<HeaderBar />
 			<Switch>
 				<Route exact path={['/', '/home']} component={Home} />
