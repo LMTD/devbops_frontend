@@ -1,11 +1,12 @@
 import React from 'react';
 import { AppBar, Toolbar, Link, Grid } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import LogoArea from '../../components/headerBar/logoArea/LogoArea';
 import RightSection from '../../components/headerBar/rightSection/RightSection';
 
-const HeaderBar = () => {
+const HeaderBar = (props) => {
 	return (
 		<AppBar
 			position='static'
@@ -22,11 +23,17 @@ const HeaderBar = () => {
 					</Link>
 				</Grid>
 				<Grid item xs={1} sm={1}>
-					<RightSection />
+					<RightSection isAuthenticated={props.isAuthenticated} />
 				</Grid>
 			</Toolbar>
 		</AppBar>
 	);
 };
 
-export default HeaderBar;
+const mapStateToProps = (state) => {
+	return {
+		isAuthenticated: state.userToken !== null,
+	};
+};
+
+export default connect(mapStateToProps)(HeaderBar);
