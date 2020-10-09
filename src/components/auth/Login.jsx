@@ -33,13 +33,13 @@ const Login = (props) => {
 				},
 			);
 			console.log('this is data: ', data);
-			if (data.statusCode === 200) {
+			if (data.Status) {
 				setAlertSeverity('success');
 				setAlertMessage('Login Successfully');
 				reset();
 			} else {
 				setAlertSeverity('error');
-				setAlertMessage(data.errorMessage);
+				setAlertMessage(data.Error);
 			}
 		} catch (err) {
 			console.log('there is an error in login: ', err);

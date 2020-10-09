@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { Link as RouterLink } from 'react-router-dom';
+import { DataUsageSharp } from '@material-ui/icons';
 
 const Register = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
@@ -43,7 +44,7 @@ const Register = (props) => {
 				},
 			);
 			console.log('this is data: ', data);
-			if (data.statusCode === 200) {
+			if (data.Status) {
 				setAlertSeverity('success');
 				setAlertMessage('Register Successfully');
 				reset();
@@ -51,7 +52,6 @@ const Register = (props) => {
 				setAlertSeverity('error');
 				setAlertMessage(data.Error);
 			}
-			reset();
 		} catch (err) {
 			console.log('there is an error in register: ', err);
 			setAlertSeverity('error');

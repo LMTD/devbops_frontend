@@ -1,13 +1,17 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
-
 import DialogWindow from '../../UI/dialogWindow/DialogWindow';
+import { useHistory } from 'react-router-dom';
 
 const ProfileArea = (props) => {
 	const [open, setOpen] = React.useState(false);
-
+	let history = useHistory();
 	const handleClickOpen = () => {
-		setOpen(true);
+		if (props.isAuthenticated) {
+			history.push('/home');
+		} else {
+			setOpen(true);
+		}
 	};
 
 	const handleClose = (value) => {

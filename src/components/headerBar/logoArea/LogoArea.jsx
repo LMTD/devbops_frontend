@@ -6,7 +6,7 @@ import logo from '../../../images/devBopsLogo.png';
 const LogoArea = () => {
 	return (
 		<div style={{ flexGrow: 1 }}>
-			<Link to='/home'>
+			<Link to='/'>
 				<img
 					src={logo}
 					alt='Baskit Logo'

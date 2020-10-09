@@ -42,7 +42,6 @@ const DialogWindow = (props) => {
 	const [isLoginMode, setIsLoginMode] = useState(true);
 
 	const handleSwitchMode = () => {
-		console.log('clicked');
 		setIsLoginMode(!isLoginMode);
 	};
 
