@@ -8,8 +8,6 @@ import {
 	Select,
 	MenuItem,
 	FormControl,
-	FormHelperText,
-	NativeSelect,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
