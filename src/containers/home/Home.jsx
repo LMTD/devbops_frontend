@@ -5,7 +5,14 @@ import {
 	Button,
 	TextField,
 	Typography,
+	Select,
+	MenuItem,
+	FormControl,
+	FormHelperText,
+	NativeSelect,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
 import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const popularOnlineEvents = [
@@ -143,7 +150,19 @@ const recentBlogs = [
 	},
 ];
 
+const useStyles = makeStyles((theme) => ({
+	formControl: {
+		// margin: theme.spacing(1),
+		// minWidth: 120,
+	},
+	selectEmpty: {
+		// marginTop: theme.spacing(2),
+	},
+}));
+
 const Home = () => {
+	const classes = useStyles();
+
 	return (
 		<Container>
 			<Grid container spacing={3}>
@@ -161,9 +180,30 @@ const Home = () => {
 						// error={errors.username?.type === 'required'}
 					/>
 				</Grid>
-
-				<Grid item xs={1} sm={1} md={2}>
-					<Button variant='contained' color='primary' size='large'>
+				<Grid item xs={3} sm={3} md={2}>
+					<FormControl
+						variant='outlined'
+						className={classes.formControl}
+						style={{ width: '100%' }}>
+						<FormControl variant='outlined' className={classes.formControl}>
+							{/* <InputLabel id='demo-simple-select-filled-label'>Age</InputLabel> */}
+							<Select
+								displayEmpty
+								value={''}
+								onChange={() => {
+									console.log('');
+								}}
+								style={{ height: '40px' }}>
+								<MenuItem value=''>Filter</MenuItem>
+								<MenuItem value={10}>Filter 1</MenuItem>
+								<MenuItem value={20}>Filter 2</MenuItem>
+								<MenuItem value={30}>Filter 3</MenuItem>
+							</Select>
+						</FormControl>
+					</FormControl>
+				</Grid>
+				<Grid item xs={1} sm={1} md={1}>
+					<Button variant='contained' color='primary' size='medium'>
 						Search
 					</Button>
 				</Grid>
