@@ -96,14 +96,6 @@ const SlideItem = (props) => {
 						</Typography>
 					</CardContent>
 				</CardActionArea>
-				<CardActions disableSpacing>
-					<IconButton aria-label='add to favorites'>
-						<ThumbUpIcon />
-					</IconButton>
-					<IconButton aria-label='share'>
-						<ThumbDownIcon />
-					</IconButton>
-				</CardActions>
 			</Card>
 		);
 		itemDetail = (

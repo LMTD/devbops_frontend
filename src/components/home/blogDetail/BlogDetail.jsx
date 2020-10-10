@@ -146,9 +146,9 @@ const BlogDetail = (props) => {
 					</Grid>
 
 					<Grid item>
-						<IconButton aria-label='add to favorites'>
+						{/* <IconButton aria-label='add to favorites'>
 							<ThumbUpIcon />
-						</IconButton>
+						</IconButton> */}
 						<Button component='p' onClick={handleShowCommentInputField}>
 							Comment
 						</Button>
