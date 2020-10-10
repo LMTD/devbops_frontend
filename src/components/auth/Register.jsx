@@ -8,6 +8,7 @@ import {
 	Button,
 	Grid,
 	Link,
+	CircularProgress,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { Link as RouterLink } from 'react-router-dom';
@@ -16,6 +17,7 @@ import { DataUsageSharp } from '@material-ui/icons';
 const Register = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
 	const [alertMessage, setAlertMessage] = useState('');
+	const [loading, setLoading] = useState(false);
 	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
 	const watchFields = watch([
 		'username',
@@ -29,6 +31,7 @@ const Register = (props) => {
 	]);
 
 	const submitRegisterForm = async (formData) => {
+		setLoading(true);
 		try {
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/user',
@@ -57,6 +60,7 @@ const Register = (props) => {
 			setAlertSeverity('error');
 			setAlertMessage('Network error');
 		}
+		setLoading(false);
 	};
 
 	return (
@@ -195,33 +199,29 @@ const Register = (props) => {
 						<Typography variant='caption' onClick={props.handleSwitchMode}>
 							Login Here
 						</Typography>
-						{/* <Link
-							component={RouterLink}
-							underline='hover'
-							style={{ color: 'black' }}
-							onClick={props.handleSwitchMode}>
-							Login Here
-						</Link> */}
 					</Grid>
-					<Grid container justify='center'>
-						<Button
-							type='submit'
-							variant='contained'
-							color='primary'
-							disabled={
-								!(
-									watchFields.username &&
-									watchFields.email &&
-									watchFields.password &&
-									watchFields.confirmPassword &&
-									watchFields.firstName &&
-									watchFields.lastName &&
-									watchFields.country &&
-									watchFields.city
-								)
-							}>
-							Register
-						</Button>
+					<Grid container justify='center' spacing={2}>
+						<Grid item>{loading ? <CircularProgress /> : null}</Grid>
+						<Grid item>
+							<Button
+								type='submit'
+								variant='contained'
+								color='primary'
+								disabled={
+									!(
+										watchFields.username &&
+										watchFields.email &&
+										watchFields.password &&
+										watchFields.confirmPassword &&
+										watchFields.firstName &&
+										watchFields.lastName &&
+										watchFields.country &&
+										watchFields.city
+									) || loading
+								}>
+								Register
+							</Button>
+						</Grid>
 					</Grid>
 				</Grid>
 			</form>
