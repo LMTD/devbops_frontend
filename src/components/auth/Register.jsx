@@ -199,13 +199,6 @@ const Register = (props) => {
 						<Typography variant='caption' onClick={props.handleSwitchMode}>
 							Login Here
 						</Typography>
-						{/* <Link
-							component={RouterLink}
-							underline='hover'
-							style={{ color: 'black' }}
-							onClick={props.handleSwitchMode}>
-							Login Here
-						</Link> */}
 					</Grid>
 					<Grid container justify='center' spacing={2}>
 						<Grid item>{loading ? <CircularProgress /> : null}</Grid>
