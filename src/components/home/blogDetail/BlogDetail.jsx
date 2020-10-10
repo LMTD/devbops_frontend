@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
+import { useForm } from 'react-hook-form';
+
 import {
 	Dialog,
 	DialogContent,
@@ -7,18 +9,64 @@ import {
 	Card,
 	IconButton,
 	CardContent,
-	CardMedia,
+	TextField,
 	Grid,
 	DialogActions,
 	Button,
 } from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import { makeStyles } from '@material-ui/core/styles';
-
-import DialogTitle from '../../UI/dialogTitle/DialogTitle';
 
 const BlogDetail = (props) => {
+	const [showCommentInputField, setShowCommentInputField] = useState(false);
+	const { register, handleSubmit, watch } = useForm();
+	const watchComment = watch('comment');
+
+	const handleShowCommentInputField = () => {
+		setShowCommentInputField(!showCommentInputField);
+	};
+
+	const submitComment = (formData) => {
+		console.log('this is comment: ', formData);
+		alert(`comment submited and this is comment: ${formData['comment']}`);
+	};
+
+	const commentForm = (
+		<Grid item sm={12}>
+			<form onSubmit={handleSubmit(submitComment)}>
+				<TextField
+					variant='outlined'
+					size='small'
+					fullWidth
+					multiline
+					name='comment'
+					label='Comment'
+					type='text'
+					id='comment'
+					inputRef={register({ required: true })}
+				/>
+
+				{watchComment ? (
+					<div>
+						<Button
+							variant='contained'
+							color='primary'
+							type='submit'
+							style={{ margin: '6px 0' }}>
+							Post Comment
+						</Button>
+						<Button
+							variant='contained'
+							color='secondary'
+							onClick={handleShowCommentInputField}
+							style={{ margin: ' 0 6px' }}>
+							Cancel Comment
+						</Button>
+					</div>
+				) : null}
+			</form>
+		</Grid>
+	);
+
 	return (
 		<Dialog
 			disableBackdropClick
@@ -28,37 +76,66 @@ const BlogDetail = (props) => {
 			aria-labelledby='responsive-dialog-title'>
 			<DialogContent style={{ padding: '12px 24px' }} dividers>
 				<Grid container spacing={2}>
-					<Grid item xs={12} sm={12} md={12}>
-						<Typography component='h6' variant='h6'>
+					<Grid
+						item
+						xs={12}
+						sm={12}
+						md={4}
+						style={{ borderBottom: '1px solid black' }}>
+						<Typography component='h4' variant='h4'>
 							{props.title}
 						</Typography>
 					</Grid>
-					<Grid item xs={12} sm={4} md={4}>
+					<Grid
+						item
+						xs={12}
+						sm={4}
+						md={3}
+						style={{ borderBottom: '1px solid black' }}>
+						<Typography component='p' variant='subtitle1'>
+							Author
+						</Typography>
 						<Typography
 							component='p'
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							Author: {props.author}
+							{props.author}
 						</Typography>
 					</Grid>
-					<Grid item xs={12} sm={5} md={5}>
+					<Grid
+						item
+						xs={12}
+						sm={4}
+						md={3}
+						style={{ borderBottom: '1px solid black' }}>
+						<Typography component='p' variant='subtitle1'>
+							Posted Date
+						</Typography>
 						<Typography
 							component='p'
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							Post Date: {moment().format('dddd')},{' '}
-							{moment().format('MMMM Do YYYY, h:mm a')}
+							{moment().format('dddd')}
+							{moment().format('MMMM Do YYYY')}
 						</Typography>
 					</Grid>
-					<Grid item xs={12} sm={3} md={3}>
+					<Grid
+						item
+						xs={12}
+						sm={4}
+						md={2}
+						style={{ borderBottom: '1px solid black' }}>
+						<Typography component='p' variant='subtitle1'>
+							Posted Location
+						</Typography>
 						<Typography
 							component='p'
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							location: {props.location}
+							{props.location}
 						</Typography>
 					</Grid>
 
@@ -67,12 +144,16 @@ const BlogDetail = (props) => {
 							{props.blogBody}
 						</Typography>
 					</Grid>
+
 					<Grid item>
 						<IconButton aria-label='add to favorites'>
 							<ThumbUpIcon />
 						</IconButton>
-						<Button component='p'>Comment</Button>
+						<Button component='p' onClick={handleShowCommentInputField}>
+							Comment
+						</Button>
 					</Grid>
+					{showCommentInputField ? commentForm : null}
 				</Grid>
 			</DialogContent>
 			<DialogActions>
