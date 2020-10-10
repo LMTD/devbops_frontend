@@ -80,7 +80,7 @@ const EventDetail = (props) => {
 										component='p'
 										variant='subtitle2'
 										color='textSecondary'>
-										{props.otherProps.location}
+										{props.location}
 									</Typography>
 								</Grid>
 								<Grid item>

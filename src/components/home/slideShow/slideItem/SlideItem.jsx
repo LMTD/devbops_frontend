@@ -71,6 +71,7 @@ const SlideItem = (props) => {
 				title={props.eventTitle}
 				eventDescription={props.eventDescription}
 				imageUrl={props.imageUrl}
+				location={props.otherProps.location}
 				otherProps={props.otherProps}
 			/>
 		);
@@ -87,7 +88,7 @@ const SlideItem = (props) => {
 					subheader={props.otherProps.date}
 				/>
 				<CardActionArea>
-					<CardContent>
+					<CardContent onClick={handleClickOpen}>
 						<Typography variant='body2' color='textSecondary' component='p'>
 							{props.blogBody.length > 150
 								? props.blogBody.slice(0, 150) + '...'
@@ -104,6 +105,17 @@ const SlideItem = (props) => {
 					</IconButton>
 				</CardActions>
 			</Card>
+		);
+		itemDetail = (
+			<BlogDetail
+				open={open}
+				handleClose={handleClose}
+				title={props.blogTitle}
+				blogBody={props.blogBody}
+				author={`${props.title} author`}
+				location={props.otherProps.location}
+				otherProps={props.otherProps}
+			/>
 		);
 	}
 
