@@ -15,7 +15,7 @@ import './App.css';
 
 function App() {
 	return (
-		<div style={{ background: '#fffa71' }}>
+		<div>
 			<HeaderBar />
 			<Switch>
 				<Route exact path='/' component={Main} />

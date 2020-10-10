@@ -4,8 +4,8 @@ import {
 	Container,
 	Button,
 	TextField,
-	Link,
 	Typography,
+	CircularProgress,
 } from '@material-ui/core';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
@@ -16,11 +16,13 @@ import './styles.css';
 const Login = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
 	const [alertMessage, setAlertMessage] = useState('');
+	const [loading, setLoading] = useState('');
 
 	const { register, handleSubmit, errors, reset, watch } = useForm();
 	const watchFields = watch(['username', 'password']);
 
 	const submitLoginForm = async (formData) => {
+		setLoading(true);
 		console.log('this is formdata: ', formData);
 		try {
 			const { data } = await axios.post(
@@ -45,6 +47,7 @@ const Login = (props) => {
 			setAlertSeverity('error');
 			setAlertMessage('Network error');
 		}
+		setLoading(false);
 	};
 	return (
 		<Container fixed>
@@ -95,14 +98,19 @@ const Login = (props) => {
 							Register Here
 						</Link> */}
 					</Grid>
-					<Grid container justify='center'>
-						<Button
-							type='submit'
-							variant='contained'
-							color='primary'
-							disabled={!(watchFields.username && watchFields.password)}>
-							Login
-						</Button>
+					<Grid container justify='center' spacing={2}>
+						<Grid item>{loading ? <CircularProgress /> : null}</Grid>
+						<Grid item>
+							<Button
+								type='submit'
+								variant='contained'
+								color='primary'
+								disabled={
+									!(watchFields.username && watchFields.password) || loading
+								}>
+								Login
+							</Button>
+						</Grid>
 					</Grid>
 				</Grid>
 			</form>
