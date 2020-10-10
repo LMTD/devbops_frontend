@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions/auth';
+
 import {
 	Grid,
 	Container,
@@ -14,11 +17,15 @@ import Alert from '@material-ui/lab/Alert';
 import './styles.css';
 
 const Login = (props) => {
-	const [alertSeverity, setAlertSeverity] = useState('');
-	const [alertMessage, setAlertMessage] = useState('');
+	const [alertSeverity, setAlertSeverity] = useState(
+		props.registerSucceed ? 'success' : '',
+	);
+	const [alertMessage, setAlertMessage] = useState(
+		props.registerSucceed ? 'Register Successfully' : '',
+	);
 	const [loading, setLoading] = useState('');
 
-	const { register, handleSubmit, errors, reset, watch } = useForm();
+	const { register, handleSubmit, errors, watch } = useForm();
 	const watchFields = watch(['username', 'password']);
 
 	const submitLoginForm = async (formData) => {
@@ -37,7 +44,8 @@ const Login = (props) => {
 			if (data.Status) {
 				setAlertSeverity('success');
 				setAlertMessage('Login Successfully');
-				reset();
+				props.authSuccess(data.Token);
+				props.onClose();
 			} else {
 				setAlertSeverity('error');
 				setAlertMessage(data.Error);
@@ -49,6 +57,7 @@ const Login = (props) => {
 		}
 		setLoading(false);
 	};
+
 	return (
 		<Container fixed>
 			{alertMessage && <Alert severity={alertSeverity}>{alertMessage}</Alert>}
@@ -86,17 +95,10 @@ const Login = (props) => {
 						Don't have account? &nbsp;
 						<Typography
 							variant='caption'
-							onClick={props.handleSwitchMode}
+							onClick={() => props.handleSwitchMode(false)}
 							style={{}}>
 							Register Here
 						</Typography>
-						{/* <Link
-							component={RouterLink}
-							underline='hover'
-							style={{ color: 'black' }}
-							onClick={props.handleSwitchMode}>
-							Register Here
-						</Link> */}
 					</Grid>
 					<Grid container justify='center' spacing={2}>
 						<Grid item>{loading ? <CircularProgress /> : null}</Grid>
@@ -117,5 +119,9 @@ const Login = (props) => {
 		</Container>
 	);
 };
-
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+	return {
+		authSuccess: (token) => dispatch(actions.authSuccess(token)),
+	};
+};
+export default connect(null, mapDispatchToProps)(Login);
