@@ -8,6 +8,9 @@ import Main from './containers/main/Main';
 import EventDetail from './containers/eventDetail/EventDetail';
 import About from './containers/about/About';
 import Home from './containers/home/Home';
+import CreateEvent from './containers/createEvent/CreateEvent';
+import PostBlog from './containers/postBlog/PostBlog';
+
 import './App.css';
 
 function App() {
@@ -23,6 +26,8 @@ function App() {
 				{/* this is a for authenticated users */}
 				<Route exact path='/home' component={Home} />
 				<Route exact path='/event-detail/:id' component={EventDetail} />
+				<Route exact path='/create-event' component={CreateEvent} />
+				<Route exact path='/post-blog' component={PostBlog} />
 			</Switch>
 		</div>
 	);

@@ -7,7 +7,7 @@ import {
 	CardContent,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles({
 	root: {
 		maxWidth: 345,
@@ -17,12 +17,12 @@ const useStyles = makeStyles({
 
 const SlideItem = (props) => {
 	const classes = useStyles();
-	let history = useHistory();
+	// let history = useHistory();
 	return (
 		<Card className={classes.root}>
 			<CardActionArea
 				onClick={() => {
-					history.push(`event-detail/${props.title}`);
+					// history.push(`event-detail/${props.title}`);
 				}}>
 				<CardMedia
 					component='img'

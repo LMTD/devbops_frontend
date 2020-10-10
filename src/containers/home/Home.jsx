@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import SlideShow from '../../components/UI/slideShow/SlideShow';
+import SlideShow from '../../components/home/slideShow/SlideShow';
 
 const popularOnlineEvents = [
 	{
