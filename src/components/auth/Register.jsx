@@ -50,6 +50,7 @@ const Register = (props) => {
 			if (data.Status) {
 				setAlertSeverity('success');
 				setAlertMessage('Register Successfully');
+				props.handleSwitchMode(true);
 				reset();
 			} else {
 				setAlertSeverity('error');
@@ -196,7 +197,9 @@ const Register = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={12} md={12}>
 						Already have account?&nbsp;
-						<Typography variant='caption' onClick={props.handleSwitchMode}>
+						<Typography
+							variant='caption'
+							onClick={() => props.handleSwitchMode(false)}>
 							Login Here
 						</Typography>
 					</Grid>

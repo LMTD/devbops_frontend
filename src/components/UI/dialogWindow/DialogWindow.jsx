@@ -7,8 +7,9 @@ import DialogTitle from '../dialogTitle/DialogTitle';
 
 const DialogWindow = (props) => {
 	const [isLoginMode, setIsLoginMode] = useState(true);
-
-	const handleSwitchMode = () => {
+	const [registerSucceed, setRegisterSucceed] = useState(false);
+	const handleSwitchMode = (successRegister) => {
+		setRegisterSucceed(successRegister);
 		setIsLoginMode(!isLoginMode);
 	};
 
@@ -24,7 +25,11 @@ const DialogWindow = (props) => {
 			</DialogTitle>
 			<DialogContent style={{ padding: '12px 24px' }} dividers>
 				{isLoginMode ? (
-					<Login handleSwitchMode={handleSwitchMode} />
+					<Login
+						handleSwitchMode={handleSwitchMode}
+						onClose={props.handleClose}
+						registerSucceed={registerSucceed}
+					/>
 				) : (
 					<Register handleSwitchMode={handleSwitchMode} />
 				)}
