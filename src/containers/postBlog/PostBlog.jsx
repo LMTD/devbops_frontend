@@ -35,6 +35,8 @@ const PostBlog = () => {
 					Location: formData.location,
 					Date: formData.date,
 					BlogID: null,
+					LikeCount: 0,
+					DislikeCount: 0,
 					Token:
 						'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJVc2VybmFtZSI6InVzZXJuYW1lIiwiZXhwIjoxNjAyMzc1MDI0LCJpYXQiOjE2MDIyODg2MjR9.72HH661pvz-eG_uEK_KxQvgu8IyYtNx9n-ZSZv-BB5c',
 				},
