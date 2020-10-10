@@ -44,7 +44,7 @@ const Login = (props) => {
 			if (data.Status) {
 				setAlertSeverity('success');
 				setAlertMessage('Login Successfully');
-				props.authSuccess(data.Token);
+				props.authSuccess(data.Token, true);
 				props.onClose();
 			} else {
 				setAlertSeverity('error');
@@ -121,7 +121,8 @@ const Login = (props) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		authSuccess: (token) => dispatch(actions.authSuccess(token)),
+		authSuccess: (token, launchClicked) =>
+			dispatch(actions.authSuccess(token, launchClicked)),
 	};
 };
 export default connect(null, mapDispatchToProps)(Login);

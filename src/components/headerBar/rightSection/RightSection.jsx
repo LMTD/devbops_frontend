@@ -4,6 +4,8 @@ import DialogWindow from '../../UI/dialogWindow/DialogWindow';
 import { useHistory } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 
+import Profile from '../profile/Profile';
+
 const RightSection = (props) => {
 	const [open, setOpen] = useState(false);
 	let history = useHistory();
@@ -59,17 +61,24 @@ const RightSection = (props) => {
 						</Button>
 					</Grid>
 				) : null}
-
-				<Grid item>
-					<Button
-						// variant='button'
-						// align='center'
-						style={{ background: 'white', color: 'black', fontSize: '0.7rem' }}
-						color='inherit'
-						onClick={handleClickOpen}>
-						LAUNCH DEVBOPS
-					</Button>
-				</Grid>
+				{props.isAuthenticated ? (
+					<Profile />
+				) : (
+					<Grid item>
+						<Button
+							// variant='button'
+							// align='center'
+							style={{
+								background: 'white',
+								color: 'black',
+								fontSize: '0.7rem',
+							}}
+							color='inherit'
+							onClick={handleClickOpen}>
+							LAUNCH DEVBOPS
+						</Button>
+					</Grid>
+				)}
 			</Grid>
 
 			<DialogWindow open={open} handleClose={handleClose} dialogTitle='Login' />

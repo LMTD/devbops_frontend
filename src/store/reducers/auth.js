@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
 	token: null,
-	launchClicked: false,
+	launchFirstClicked: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -11,7 +11,13 @@ const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				token: action.token,
-				launchClicked: action.launchClicked,
+				launchFirstClicked: action.launchClicked,
+			};
+		case actionTypes.AUTH_LOGOUT:
+			return {
+				...state,
+				token: null,
+				launchFirstClicked: false,
 			};
 		default:
 			return initialState;
