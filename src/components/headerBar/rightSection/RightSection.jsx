@@ -10,12 +10,11 @@ const RightSection = (props) => {
 	const [open, setOpen] = useState(false);
 	let history = useHistory();
 	const handleClickOpen = () => {
-		console.log('this is props in rightsection: ', props);
-		if (props.isAuthenticated) {
-			history.push('/home');
-		} else {
-			setOpen(true);
-		}
+		// if (props.isAuthenticated) {
+		// history.push('/home');
+		// } else {
+		setOpen(true);
+		// }
 	};
 
 	const handleClose = (value) => {
@@ -51,13 +50,14 @@ const RightSection = (props) => {
 				{props.isAuthenticated ? (
 					<Grid item>
 						<Button>
-							<Link
+							{/* <Link
 								component={RouterLink}
 								to='/post-blog'
 								underline='hover'
 								style={{ color: 'black' }}>
 								Post A Blog
-							</Link>
+							</Link> */}
+							Post A Blog
 						</Button>
 					</Grid>
 				) : null}
@@ -66,8 +66,6 @@ const RightSection = (props) => {
 				) : (
 					<Grid item>
 						<Button
-							// variant='button'
-							// align='center'
 							style={{
 								background: 'white',
 								color: 'black',
@@ -81,7 +79,7 @@ const RightSection = (props) => {
 				)}
 			</Grid>
 
-			<DialogWindow open={open} handleClose={handleClose} dialogTitle='Login' />
+			<DialogWindow open={open} handleClose={handleClose} />
 		</div>
 	);
 };
