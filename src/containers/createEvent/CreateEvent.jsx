@@ -95,6 +95,8 @@ const CreateEvent = () => {
 							variant='outlined'
 							size='small'
 							fullWidth
+							rows={3}
+							multiline
 							name='location'
 							label='Location'
 							type='text'

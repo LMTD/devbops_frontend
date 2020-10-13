@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import { Button, Link, Grid } from '@material-ui/core';
 import DialogWindow from '../../UI/dialogWindow/DialogWindow';
-import { useHistory } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 
 import Profile from '../profile/Profile';
 
 const RightSection = (props) => {
-	const [open, setOpen] = useState(false);
-	let history = useHistory();
-	const handleClickOpen = () => {
-		// if (props.isAuthenticated) {
-		// history.push('/home');
-		// } else {
-		setOpen(true);
-		// }
+	const [openAuth, setOpenAuth] = useState(false);
+	const [openPostBlog, setOpenPostBlog] = useState(false);
+
+	const handleAuthClickOpen = () => {
+		setOpenAuth(true);
 	};
 
-	const handleClose = (value) => {
-		setOpen(false);
+	const handlePostBlogOpen = () => {
+		setOpenPostBlog(true);
+	};
+
+	const handleClose = () => {
+		setOpenAuth(false);
+		setOpenPostBlog(false);
 	};
 	return (
 		<div>
@@ -49,7 +50,7 @@ const RightSection = (props) => {
 				) : null}
 				{props.isAuthenticated ? (
 					<Grid item>
-						<Button>
+						<Button onClick={handlePostBlogOpen}>
 							{/* <Link
 								component={RouterLink}
 								to='/post-blog'
@@ -72,14 +73,18 @@ const RightSection = (props) => {
 								fontSize: '0.7rem',
 							}}
 							color='inherit'
-							onClick={handleClickOpen}>
+							onClick={handleAuthClickOpen}>
 							LAUNCH DEVBOPS
 						</Button>
 					</Grid>
 				)}
 			</Grid>
 
-			<DialogWindow open={open} handleClose={handleClose} />
+			<DialogWindow
+				openAuth={openAuth}
+				handleClose={handleClose}
+				openPostBlog={openPostBlog}
+			/>
 		</div>
 	);
 };

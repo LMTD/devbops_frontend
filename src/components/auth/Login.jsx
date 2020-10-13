@@ -44,6 +44,7 @@ const Login = (props) => {
 			if (data.Status) {
 				setAlertSeverity('success');
 				setAlertMessage('Login Successfully');
+				props.clearRegisterSuccess();
 				props.authSuccess(data.Token, true);
 				props.onClose();
 			} else {

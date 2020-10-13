@@ -36,7 +36,7 @@ function App(props) {
 			<Switch>
 				<Route exact path='/' component={Main} />
 				<Route path='/about' component={About} />
-				<Redirect from='/*' to='/' />
+				{/* <Redirect from='/*' to='/' /> */}
 			</Switch>
 		);
 	}
