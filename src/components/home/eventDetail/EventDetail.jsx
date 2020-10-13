@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const EventDetail = (props) => {
 	const classes = useStyles();
 
-	console.log('this is other props: ', props.otherProps);
+	// console.log('this is other props: ', props.otherProps);
 
 	return (
 		<Dialog

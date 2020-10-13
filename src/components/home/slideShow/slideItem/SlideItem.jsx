@@ -104,7 +104,7 @@ const SlideItem = (props) => {
 				handleClose={handleClose}
 				title={props.blogTitle}
 				blogBody={props.blogBody}
-				author={`${props.title} author`}
+				author={props.blogAuthor}
 				location={props.otherProps.location}
 				otherProps={props.otherProps}
 			/>
