@@ -13,18 +13,21 @@ const HeaderBar = (props) => {
 			style={{ marginBottom: '40px', background: '#fffa71' }}>
 			<Toolbar>
 				<LogoArea />
-				<Grid item xs={1} sm={1}>
-					<Link
+				{/* <Grid item xs={1} sm={1}> */}
+				{/* <Link
 						component={RouterLink}
 						to='/about'
 						underline='none'
 						style={{ color: 'black' }}>
 						About
-					</Link>
-				</Grid>
-				<Grid item xs={1} sm={1}>
-					<RightSection isAuthenticated={props.isAuthenticated} />
-				</Grid>
+					</Link> */}
+				{/* </Grid> */}
+				{/* <Grid item xs={1} sm={1}> */}
+				<RightSection
+					isAuthenticated={props.isAuthenticated}
+					launchClicked={props.launchClicked}
+				/>
+				{/* </Grid> */}
 			</Toolbar>
 		</AppBar>
 	);
@@ -32,7 +35,8 @@ const HeaderBar = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		isAuthenticated: state.userToken !== null,
+		isAuthenticated: state.token !== null,
+		launchClicked: state.launchClicked,
 	};
 };
 
