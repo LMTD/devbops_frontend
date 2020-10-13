@@ -83,6 +83,8 @@ const CreateEvent = () => {
 							name='eventDescription'
 							label='Event Description'
 							type='text'
+							multiLine
+							row='2'
 							id='eventDescription'
 							inputRef={register({ required: true })}
 							// error={errors.password?.type === 'required'}
