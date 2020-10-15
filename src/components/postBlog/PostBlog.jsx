@@ -1,28 +1,53 @@
 import React from 'react';
-import {
-	Grid,
-	Container,
-	Button,
-	TextField,
-	Typography,
-	CircularProgress,
-} from '@material-ui/core';
+import { connect } from 'react-redux';
+import { Grid, Container, Button, TextField } from '@material-ui/core';
 import axios from 'axios';
+import moment from 'moment';
 import { useForm } from 'react-hook-form';
-import Alert from '@material-ui/lab/Alert';
 
 const PostBlog = (props) => {
-	const { register, handleSubmit, errors, watch, reset } = useForm();
-	const watchFields = watch(['blogName', 'blogContent']);
+	const { register, handleSubmit, watch, reset } = useForm();
+	const watchFields = watch(['blogSubject', 'blogBody']);
 
-	const handlePostBlog = (formData) => {
+	const handlePostBlog = async (formData) => {
 		console.log('this is form data: ', formData);
+		// also need to location and the posted date by using momentjs
 		// axios call
+		let location;
+		navigator.geolocation.getCurrentPosition(function (position) {
+			location =
+				position.coords.latitude.toString() +
+				' ' +
+				position.coords.longitude.toString();
+		});
+		console.log('this is location: ', location);
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
+				{
+					Action: 'C',
+					Token: props.token,
+					BlogSubject: formData.blogSubject,
+					BlogBody: formData.blogBody,
+					Date: moment().format('dddd MMM Do YYYY'),
+					Time: moment().format('hh:mm a'),
+					Comment: null,
+					Location: null,
+				},
+			);
+			console.log('this is data from post blog: ', data);
+		} catch (error) {
+			console.log(error);
+		}
 
-		alert(`You submitted the blog: ${formData.blogContent}`);
 		reset();
 		props.onClose();
 	};
+	console.log(
+		'moment().format(" dddd MMM Do YY"); ',
+		moment().format('dddd MMM Do YYYY'),
+	);
+	console.log('moment().format("h:mm a"); ', moment().format('hh:mm a'));
 
 	return (
 		<Container fixed>
@@ -36,10 +61,9 @@ const PostBlog = (props) => {
 							variant='outlined'
 							size='small'
 							fullWidth
-							name='blogName'
-							label='Blog Name *'
+							name='blogSubject'
+							label='Blog Subject *'
 							type='text'
-							id='blogName'
 							inputRef={register({ required: true })}
 						/>
 					</Grid>
@@ -51,7 +75,6 @@ const PostBlog = (props) => {
 							name='eventName'
 							label='Event Name'
 							type='text'
-							id='eventName'
 							inputRef={register()}
 						/>
 					</Grid>
@@ -60,7 +83,7 @@ const PostBlog = (props) => {
 							variant='outlined'
 							size='small'
 							fullWidth
-							name='blogContent'
+							name='blogBody'
 							placeholder='What do you like to share?'
 							type='text'
 							multiline
@@ -75,7 +98,7 @@ const PostBlog = (props) => {
 							type='submit'
 							variant='contained'
 							color='primary'
-							disabled={!(watchFields.blogName && watchFields.blogContent)}>
+							disabled={!(watchFields.blogSubject && watchFields.blogBody)}>
 							Post
 						</Button>
 					</Grid>
@@ -84,5 +107,9 @@ const PostBlog = (props) => {
 		</Container>
 	);
 };
-
-export default PostBlog;
+const mapStateToProps = (state) => {
+	return {
+		token: state.token,
+	};
+};
+export default connect(mapStateToProps)(PostBlog);
