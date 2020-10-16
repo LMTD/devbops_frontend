@@ -18,15 +18,15 @@ import axios from 'axios';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
 
-const CreateEvent = () => {
+const CreateEvent = (props) => {
 	const { register, handleSubmit, watch } = useForm();
 	const [eventType, setEventType] = useState('');
 	const [selectedFile, setSelectedFile] = useState('');
 	const [isSelectImageMode, setIsSelectImageMode] = useState(true);
 	const watchFields = watch([
 		'eventTitle',
-		'startDate',
-		'endDate',
+		'eventDate',
+		'eventTime',
 		'eventType',
 		'locationDetail',
 		'eventDescription',
@@ -35,31 +35,43 @@ const CreateEvent = () => {
 	const handleRadioChange = (event) => {
 		setEventType(event.target.value);
 	};
-	const handleCreateEvent = (formData) => {
-		console.log(
-			'this is form data: ',
-			formData,
-			' this is selected fiel: ',
-			selectedFile,
-		);
+	const handleCreateEvent = async (formData) => {
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Action: 'C',
+					Token: props.token,
+					eventTitle: formData.eventTitle,
+					eventDate: moment(formData.eventDate).format('dddd MMM  Do YYYY'),
+					eventTime: moment(
+						`${formData.eventDate}, ${formData.eventTime}`,
+					).format('h:mm a'),
+					eventType: formData.eventType,
+					locationDetail: formData.locationDetail,
+					imgUrl: selectedFile,
+					eventDescription: formData.eventDescription,
+				},
+			);
+
+			console.log('this is data from create event: ', data);
+		} catch (err) {
+			console.log('this is err: ', err);
+		}
 	};
 
 	const handleUploadClick = (event) => {
-		var file = event.target.files[0];
+		const file = event.target.files[0];
 		const reader = new FileReader();
-		var url = reader.readAsDataURL(file);
-		console.log('file: ', file);
-		console.log('this is reader: ', reader);
-		// setSelectedFile([reader.result])
+		reader.readAsDataURL(file);
 		reader.onloadend = function (e) {
 			setSelectedFile(reader.result);
 		};
-		console.log(url); // Would see a path?
 		setIsSelectImageMode(false);
 		setSelectedFile(event.target.files[0]);
 	};
 
-	const imageResetHandler = (event) => {
+	const imageResetHandler = () => {
 		setSelectedFile(null);
 		setIsSelectImageMode(true);
 	};
@@ -76,7 +88,7 @@ const CreateEvent = () => {
 				type='file'
 				name='eventImage'
 				fullWidth
-				inputRef={register({ required: true })}
+				inputRef={register()}
 				onChange={handleUploadClick}
 				style={{ display: 'none' }}
 			/>
@@ -170,9 +182,9 @@ const CreateEvent = () => {
 							fullWidth
 							variant='outlined'
 							size='small'
-							name='startDate'
-							label='Event Starts *'
-							type='datetime-local'
+							name='eventDate'
+							label='Event Date *'
+							type='date'
 							InputLabelProps={{
 								shrink: true,
 							}}
@@ -184,15 +196,16 @@ const CreateEvent = () => {
 							fullWidth
 							variant='outlined'
 							size='small'
-							name='endDate'
-							label='Event Ends *'
-							type='datetime-local'
+							name='eventTime'
+							label='Event Time *'
+							type='time'
 							InputLabelProps={{
 								shrink: true,
 							}}
 							inputRef={register({ required: true })}
 						/>
 					</Grid>
+
 					<Grid item xs={12} sm={12} md={12}>
 						<RadioGroup
 							aria-label='event-type'
@@ -244,8 +257,8 @@ const CreateEvent = () => {
 							disabled={
 								!(
 									watchFields.eventTitle &&
-									watchFields.startDate &&
-									watchFields.endDate &&
+									watchFields.eventDate &&
+									watchFields.eventTime &&
 									watchFields.eventType &&
 									watchFields.locationDetail &&
 									watchFields.eventDescription
@@ -260,4 +273,9 @@ const CreateEvent = () => {
 	);
 };
 
-export default CreateEvent;
+const mapStateToProps = (state) => {
+	return {
+		token: state.token,
+	};
+};
+export default connect(mapStateToProps)(CreateEvent);
