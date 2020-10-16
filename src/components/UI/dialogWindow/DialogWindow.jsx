@@ -5,6 +5,7 @@ import DialogTitle from '../dialogTitle/DialogTitle';
 import Login from '../../auth/Login';
 import Register from '../../auth/Register';
 import PostBlog from '../../postBlog/PostBlog';
+import CreateEvent from '../../createEvent/CreateEvent';
 
 const DialogWindow = (props) => {
 	const [isLoginMode, setIsLoginMode] = useState(true);
@@ -45,11 +46,18 @@ const DialogWindow = (props) => {
 		);
 
 		dialogContent = <PostBlog onClose={props.handleClose} />;
+	} else if (props.openCreateEvent) {
+		dialogTitle = (
+			<DialogTitle id='customized-dialog-title' onClose={props.handleClose}>
+				Create Event
+			</DialogTitle>
+		);
+		dialogContent = <CreateEvent />;
 	}
 	return (
 		<Dialog
 			disableBackdropClick
-			open={props.openAuth || props.openPostBlog}
+			open={props.openAuth || props.openPostBlog || props.openCreateEvent}
 			onClose={props.handleClose}
 			aria-labelledby='responsive-dialog-title'>
 			{dialogTitle}

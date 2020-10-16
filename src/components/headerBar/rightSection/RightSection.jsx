@@ -8,6 +8,7 @@ import Profile from '../profile/Profile';
 const RightSection = (props) => {
 	const [openAuth, setOpenAuth] = useState(false);
 	const [openPostBlog, setOpenPostBlog] = useState(false);
+	const [openCreateEvent, setOpenCreateEvent] = useState(false);
 
 	const handleAuthClickOpen = () => {
 		setOpenAuth(true);
@@ -17,9 +18,14 @@ const RightSection = (props) => {
 		setOpenPostBlog(true);
 	};
 
+	const handleCreateEventOpen = () => {
+		setOpenCreateEvent(true);
+	};
+
 	const handleClose = () => {
 		setOpenAuth(false);
 		setOpenPostBlog(false);
+		setOpenCreateEvent(false);
 	};
 	return (
 		<div>
@@ -29,7 +35,7 @@ const RightSection = (props) => {
 						<Link
 							component={RouterLink}
 							to='/about'
-							underline='hover'
+							underline='none'
 							style={{ color: 'black' }}>
 							About
 						</Link>
@@ -37,29 +43,12 @@ const RightSection = (props) => {
 				</Grid>
 				{props.isAuthenticated ? (
 					<Grid item>
-						<Button>
-							<Link
-								component={RouterLink}
-								to='/create-event'
-								underline='hover'
-								style={{ color: 'black' }}>
-								Create Event
-							</Link>
-						</Button>
+						<Button onClick={handleCreateEventOpen}>Create Event</Button>
 					</Grid>
 				) : null}
 				{props.isAuthenticated ? (
 					<Grid item>
-						<Button onClick={handlePostBlogOpen}>
-							{/* <Link
-								component={RouterLink}
-								to='/post-blog'
-								underline='hover'
-								style={{ color: 'black' }}>
-								Post A Blog
-							</Link> */}
-							Post A Blog
-						</Button>
+						<Button onClick={handlePostBlogOpen}>Post A Blog</Button>
 					</Grid>
 				) : null}
 				{props.isAuthenticated ? (
@@ -82,8 +71,9 @@ const RightSection = (props) => {
 
 			<DialogWindow
 				openAuth={openAuth}
-				handleClose={handleClose}
 				openPostBlog={openPostBlog}
+				openCreateEvent={openCreateEvent}
+				handleClose={handleClose}
 			/>
 		</div>
 	);

@@ -208,19 +208,7 @@ const recentBlogs = [
 	},
 ];
 
-const useStyles = makeStyles((theme) => ({
-	formControl: {
-		// margin: theme.spacing(1),
-		// minWidth: 120,
-	},
-	selectEmpty: {
-		// marginTop: theme.spacing(2),
-	},
-}));
-
 const Home = () => {
-	const classes = useStyles();
-
 	return (
 		<Container>
 			<Grid container spacing={3}>
@@ -239,11 +227,8 @@ const Home = () => {
 					/>
 				</Grid>
 				<Grid item xs={3} sm={3} md={2}>
-					<FormControl
-						variant='outlined'
-						className={classes.formControl}
-						style={{ width: '100%' }}>
-						<FormControl variant='outlined' className={classes.formControl}>
+					<FormControl variant='outlined' style={{ width: '100%' }}>
+						<FormControl variant='outlined'>
 							{/* <InputLabel id='demo-simple-select-filled-label'>Age</InputLabel> */}
 							<Select
 								displayEmpty
