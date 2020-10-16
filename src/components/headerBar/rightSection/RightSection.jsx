@@ -35,7 +35,7 @@ const RightSection = (props) => {
 						<Link
 							component={RouterLink}
 							to='/about'
-							underline='hover'
+							underline='none'
 							style={{ color: 'black' }}>
 							About
 						</Link>

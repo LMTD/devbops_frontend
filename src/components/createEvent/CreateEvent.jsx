@@ -67,7 +67,7 @@ const CreateEvent = () => {
 	let eventImageSection = (
 		<CardContent
 			style={{
-				border: '1px solid black',
+				border: '1px solid rgba(0, 0, 0, 0.23)',
 			}}>
 			<TextField
 				accept='image/*'
