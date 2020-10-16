@@ -7,20 +7,11 @@ import { useForm } from 'react-hook-form';
 
 const PostBlog = (props) => {
 	const { register, handleSubmit, watch, reset } = useForm();
-	const watchFields = watch(['blogSubject', 'blogBody']);
+	const watchFields = watch(['blogSubject', 'blogBody', 'location']);
 
 	const handlePostBlog = async (formData) => {
 		console.log('this is form data: ', formData);
-		// also need to location and the posted date by using momentjs
-		// axios call
-		let location;
-		navigator.geolocation.getCurrentPosition(function (position) {
-			location =
-				position.coords.latitude.toString() +
-				' ' +
-				position.coords.longitude.toString();
-		});
-		console.log('this is location: ', location);
+
 		try {
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
@@ -32,7 +23,7 @@ const PostBlog = (props) => {
 					Date: moment().format('dddd MMM Do YYYY'),
 					Time: moment().format('hh:mm a'),
 					Comment: null,
-					Location: null,
+					Location: formData.location,
 				},
 			);
 			console.log('this is data from post blog: ', data);
@@ -43,11 +34,6 @@ const PostBlog = (props) => {
 		reset();
 		props.onClose();
 	};
-	console.log(
-		'moment().format(" dddd MMM Do YY"); ',
-		moment().format('dddd MMM Do YYYY'),
-	);
-	console.log('moment().format("h:mm a"); ', moment().format('hh:mm a'));
 
 	return (
 		<Container fixed>
@@ -72,10 +58,10 @@ const PostBlog = (props) => {
 							variant='outlined'
 							size='small'
 							fullWidth
-							name='eventName'
-							label='Event Name'
+							name='location'
+							label='Location *'
 							type='text'
-							inputRef={register()}
+							inputRef={register({ required: true })}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={12} md={12}>
@@ -98,7 +84,13 @@ const PostBlog = (props) => {
 							type='submit'
 							variant='contained'
 							color='primary'
-							disabled={!(watchFields.blogSubject && watchFields.blogBody)}>
+							disabled={
+								!(
+									watchFields.blogSubject &&
+									watchFields.blogBody &&
+									watchFields.location
+								)
+							}>
 							Post
 						</Button>
 					</Grid>
