@@ -23,6 +23,8 @@ const CreateEvent = () => {
 		 */
 
 		console.log('this is form data: ', formData);
+		const form_data = new FormData();
+		console.log('this is form_data: ', form_data);
 
 		try {
 			const { data } = await axios.post(
@@ -97,7 +99,7 @@ const CreateEvent = () => {
 							fullWidth
 							name='location'
 							label='Location'
-							type='text'
+							type='file'
 							id='location'
 							inputRef={register({ required: true })}
 							// error={errors.password?.type === 'required'}

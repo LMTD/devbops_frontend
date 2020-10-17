@@ -1,11 +1,34 @@
 import * as actionTypes from './actionTypes';
 
-export const authSuccess = (token, launchClicked) => {
-	console.log('this is token:', token);
-	localStorage.setItem('token', JSON.stringify(token));
+export const authSuccess = (
+	token,
+	launchClicked,
+	username,
+	email,
+	firstName,
+	lastName,
+	city,
+	country,
+) => {
+	const userData = {
+		token: token,
+		username: username,
+		email: email,
+		firstName: firstName,
+		lastName: lastName,
+		city: city,
+		country: country,
+	};
+	localStorage.setItem('userData', JSON.stringify(userData));
 	return {
 		type: actionTypes.AUTH_SUCCESS,
 		token: token,
+		username: username,
+		email: email,
+		firstName: firstName,
+		lastName: lastName,
+		city: city,
+		country: country,
 		launchClicked: launchClicked,
 	};
 };
@@ -19,17 +42,56 @@ export const logout = () => {
 
 export const authCheckState = () => {
 	return (dispatch) => {
-		let token = localStorage.getItem('token');
-		token = JSON.parse(token);
+		let userData = localStorage.getItem('userData');
+		userData = JSON.parse(userData);
 
-		if (token) {
-			dispatch(authSuccess(token, false));
+		if (userData !== null) {
+			dispatch(
+				authSuccess(
+					userData.token,
+					false,
+					userData.username,
+					userData.email,
+					userData.firstName,
+					userData.lastName,
+					userData.city,
+					userData.country,
+				),
+			);
 		} else {
 			// dispatch(logout());
 		}
 	};
 };
-// this is for
+
 export const launchedClicked = () => {
 	return { type: actionTypes.LAUNCH_FIRST_CLICKED };
+};
+
+export const updateUserSuccess = (
+	email,
+	firstName,
+	lastName,
+	city,
+	country,
+) => {
+	// console.log('this is updateUserData in reducd');
+	let userData = localStorage.getItem('userData');
+	userData = JSON.parse(userData);
+	userData.email = email;
+	userData.firstName = firstName;
+	userData.lastName = lastName;
+	userData.city = city;
+	userData.country = country;
+	// console.log('this is userData in update user: ', userData);
+	localStorage.setItem('userData', JSON.stringify(userData));
+
+	return {
+		type: actionTypes.UPDATE_USER_SUCCESS,
+		newEmail: email,
+		newFirstName: firstName,
+		newLastName: lastName,
+		newCity: city,
+		newCountry: country,
+	};
 };

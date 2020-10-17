@@ -11,12 +11,10 @@ import {
 	CardHeader,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { makeStyles } from '@material-ui/core/styles';
 
-import EventDetail from '../../eventDetail/EventDetail';
-import BlogDetail from '../../blogDetail/BlogDetail';
+import EventDetail from '../../../eventDetail/EventDetail';
+import BlogDetail from '../../../blogDetail/BlogDetail';
 
 const useStyles = makeStyles({
 	root: {
@@ -41,16 +39,42 @@ const SlideItem = (props) => {
 	};
 	let item = null;
 	let itemDetail = null;
-	if (props.otherProps.isEvent) {
+	let imageArea = null;
+
+	if (props.eventImageUrl !== '' && props.eventImageUrl !== 'None') {
+		imageArea = (
+			<CardMedia
+				component='img'
+				alt='Contemplative Reptile'
+				// image={props.eventImageUrl === '' ? logo : props.eventImageUrl}
+				image={props.eventImageUrl}
+				height={225}
+				// width={400}
+			/>
+		);
+	} else {
+		imageArea = (
+			<div style={{ height: '225px', width: '225px' }}>
+				<Avatar
+					aria-label='recipe'
+					style={{
+						fontSize: '10em',
+						width: '100%',
+						height: '100%',
+						backgroundColor: red[500],
+					}}>
+					{props.eventTitle[0]}
+				</Avatar>
+			</div>
+		);
+	}
+	if (props.isEvent) {
+		// console.log('this is props in event : ', props);
 		item = (
 			<Card className={classes.root}>
 				<CardActionArea onClick={handleClickOpen}>
-					<CardMedia
-						component='img'
-						alt='Contemplative Reptile'
-						image={props.imageUrl}
-						height={225}
-					/>
+					{imageArea}
+
 					<CardContent>
 						<Typography gutterBottom variant='h5' component='h2'>
 							{props.eventTitle}
@@ -64,15 +88,23 @@ const SlideItem = (props) => {
 				</CardActionArea>
 			</Card>
 		);
+
 		itemDetail = (
 			<EventDetail
 				open={open}
 				handleClose={handleClose}
-				title={props.eventTitle}
+				eventTitle={props.eventTitle}
 				eventDescription={props.eventDescription}
-				imageUrl={props.imageUrl}
-				location={props.otherProps.location}
-				otherProps={props.otherProps}
+				// eventImageUrl={props.eventImageUrl === '' ? logo : props.eventImageUrl}
+				eventImageUrl={props.eventImageUrl}
+				eventLocation={props.eventLocation}
+				eventDate={props.eventDate}
+				eventTime={props.eventTime}
+				eventRSVPList={props.eventRSVPList}
+				eventOrganizer={props.eventOrganizer}
+				eventType={props.eventType}
+				myEvent={props.myEvent}
+				rsvpEvent={props.rsvpEvent}
 			/>
 		);
 	} else {
@@ -81,11 +113,11 @@ const SlideItem = (props) => {
 				<CardHeader
 					avatar={
 						<Avatar aria-label='recipe' className={classes.avatar}>
-							R
+							{props.blogAuthor[0]}
 						</Avatar>
 					}
 					title={props.blogTitle}
-					subheader={props.otherProps.date}
+					subheader={props.blogDate}
 				/>
 				<CardActionArea>
 					<CardContent onClick={handleClickOpen}>
@@ -102,11 +134,14 @@ const SlideItem = (props) => {
 			<BlogDetail
 				open={open}
 				handleClose={handleClose}
-				title={props.blogTitle}
+				blogTitle={props.blogTitle}
 				blogBody={props.blogBody}
-				author={props.blogAuthor}
-				location={props.otherProps.location}
-				otherProps={props.otherProps}
+				blogAuthor={props.blogAuthor}
+				blogDate={props.blogDate}
+				blogTime={props.blogTime}
+				blogLocation={props.blogLocation}
+				blogComment={props.blogComment}
+				updateComment={props.updateComment}
 			/>
 		);
 	}
