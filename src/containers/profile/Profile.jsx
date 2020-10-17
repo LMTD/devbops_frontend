@@ -11,11 +11,15 @@ import AccountSection from '../../components/profile/accountSection/AccountSecti
 import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const Profile = (props) => {
-	const [loading, setLoading] = useState(false);
+	const [blogLoading, setBlogLoading] = useState(false);
 	const [myBlogs, setMyBlogs] = useState([]);
+	const [rsvpLoading, setRSVPloading] = useState(false);
+	const [rsvpList, setRSVPlist] = useState([]);
+	const [eventsLoading, setEventsLoading] = useState(false);
+	const [events, setEvents] = useState([]);
 	useEffect(() => {
 		const getAllBlogs = async () => {
-			setLoading(true);
+			setBlogLoading(true);
 			try {
 				const { data } = await axios.post(
 					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
@@ -34,26 +38,103 @@ const Profile = (props) => {
 				if (data.Status) {
 					setMyBlogs(data.BlogsDB);
 				}
-				setLoading(false);
+				setBlogLoading(false);
 			} catch (err) {
 				console.log('there is error in fetch blog history: ', err);
 			}
 		};
+
+		const getAllRSVIPs = async () => {
+			setRSVPloading(true);
+			try {
+				const { data } = await axios.post(
+					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+					{
+						Token: props.token,
+						Action: 'VH',
+						eventTitle: null,
+						eventDate: null,
+						eventTime: null,
+						eventDescription: null,
+						imgUrl: null,
+						locationDetail: null,
+						eventType: null,
+					},
+				);
+				console.log('this is rsvp list: ', data);
+				if (data.Status) {
+					setRSVPlist(data.RSVP);
+				}
+				setRSVPloading(false);
+			} catch (err) {
+				console.log('there is error in fetch rsvp list: ', err);
+			}
+		};
+
+		const getAllEvents = async () => {
+			setEventsLoading(true);
+			try {
+				const { data } = await axios.post(
+					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+					{
+						Action: 'H',
+						Token: props.token,
+						eventTitle: null,
+						eventDate: null,
+						eventTime: null,
+						eventDescription: null,
+						imgUrl: null,
+						locationDetail: null,
+						eventType: null,
+					},
+				);
+				console.log('this is events: ', data);
+				if (data.Status) {
+					setEvents(data.EventsDB);
+				}
+				setEventsLoading(false);
+			} catch (err) {
+				console.log('there is error in fetch blog history: ', err);
+			}
+		};
+
 		getAllBlogs();
+		getAllRSVIPs();
+		getAllEvents();
 	}, []);
 
 	let blogSection = null;
+	let rsvpSection = null;
+	let eventSection = null;
 
-	if (loading) {
+	if (blogLoading) {
 		blogSection = <CircularProgress />;
 	} else {
-		blogSection = (
-			<Grid item xs={12} sm={12} md={12}>
-				<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
-					My Blogs
-				</Typography>
-				<SlideShow slideItems={myBlogs} isEvent={false} />
-			</Grid>
+		blogSection = <SlideShow slideItems={myBlogs} isEvent={false} />;
+	}
+	if (rsvpLoading) {
+		rsvpSection = <CircularProgress />;
+	} else {
+		rsvpSection = (
+			<SlideShow
+				slideItems={rsvpList}
+				isEvent={true}
+				myEvent={false}
+				rsvpEvent={true}
+			/>
+		);
+	}
+
+	if (eventsLoading) {
+		eventSection = <CircularProgress />;
+	} else {
+		eventSection = (
+			<SlideShow
+				slideItems={events}
+				isEvent={true}
+				myEvent={true}
+				rsvpEvent={false}
+			/>
 		);
 	}
 
@@ -63,7 +144,24 @@ const Profile = (props) => {
 				<Grid item xs={12} sm={12} md={12}>
 					<AccountSection />
 				</Grid>
-				{blogSection}
+				<Grid item xs={12} sm={12} md={12}>
+					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
+						My Blogs
+					</Typography>
+					{blogSection}
+				</Grid>
+				<Grid item xs={12} sm={12} md={12}>
+					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
+						My RSVPs
+					</Typography>
+					{rsvpSection}
+				</Grid>
+				<Grid item xs={12} sm={12} md={12}>
+					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
+						My Events
+					</Typography>
+					{eventSection}
+				</Grid>
 			</Grid>
 		</Container>
 	);

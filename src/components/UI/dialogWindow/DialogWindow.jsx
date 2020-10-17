@@ -52,7 +52,7 @@ const DialogWindow = (props) => {
 				Create Event
 			</DialogTitle>
 		);
-		dialogContent = <CreateEvent />;
+		dialogContent = <CreateEvent onClose={props.handleClose} />;
 	}
 	return (
 		<Dialog

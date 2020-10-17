@@ -26,7 +26,10 @@ function App(props) {
 				<Route exact path='/create-event' component={CreateEvent} />
 				<Route exact path='/profile' component={Profile} />
 				<Route path='/logout' component={Logout} />
+				<Redirect exact from='/cancel-rsvp' to='/profile' />
+
 				<Redirect exact from='/' to='/home' />
+				<Redirect exact from='/*' to='/home' />
 			</Switch>
 		);
 	} else {
