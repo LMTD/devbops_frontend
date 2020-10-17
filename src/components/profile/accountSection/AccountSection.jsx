@@ -30,7 +30,7 @@ const AccountSection = (props) => {
 				{
 					Action: 'U',
 					Token: props.token,
-					newPassword: formData.password === '' ? null : formData.password,
+					Password: formData.password === '' ? null : formData.password,
 					Email: formData.email,
 					FirstName: formData.firstName,
 					LastName: formData.lastName,
@@ -130,7 +130,8 @@ const AccountSection = (props) => {
 								<TextField
 									id='password'
 									aria-describedby='my-helper-text'
-									defaultValue='*************************'
+									// defaultValue='*************************'
+
 									// fullWidth
 									name='password'
 									inputRef={register()}
