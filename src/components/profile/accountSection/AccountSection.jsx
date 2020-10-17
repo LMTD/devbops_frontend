@@ -13,8 +13,10 @@ import { useForm } from 'react-hook-form';
 import Alert from '@material-ui/lab/Alert';
 import { AccountCircle } from '@material-ui/icons';
 import * as actions from '../../../store/actions/auth';
+
 const AccountSection = (props) => {
 	const [isModifyMode, setIsModifyMode] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
 
 	const handleModifyMode = () => {
@@ -38,8 +40,10 @@ const AccountSection = (props) => {
 					Country: formData.country,
 				},
 			);
-			if (data.status) {
+			if (data.Status) {
 				console.log('this is update user: ', data);
+				console.log('this is props in account section : ', props);
+				setLoading(true);
 				props.updateUserSuccess(
 					formData.email,
 					formData.firstName,
@@ -47,6 +51,7 @@ const AccountSection = (props) => {
 					formData.city,
 					formData.country,
 				);
+				setLoading(false);
 			}
 			console.log('this is data from update user : ', data);
 		} catch (err) {
@@ -108,7 +113,7 @@ const AccountSection = (props) => {
 									aria-describedby='my-helper-text'
 									defaultValue={props.email}
 									// fullWidth
-									name='username'
+									name='email'
 									inputRef={register()}
 								/>
 							) : (
