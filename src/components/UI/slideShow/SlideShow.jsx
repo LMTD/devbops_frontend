@@ -1,11 +1,12 @@
 import React from 'react';
 import Carousel from 'react-elastic-carousel';
 import SlideItem from './slideItem/SlideItem';
+import moment from 'moment';
 
 import './SlideShow.css';
 
 const SlideShow = (props) => {
-	// console.log('this is props: ', props);
+	console.log('this is props: ', props);
 
 	let items = null;
 	if (props.isEvent) {
@@ -23,14 +24,16 @@ const SlideShow = (props) => {
 		});
 	} else {
 		items = props.slideItems.map((item) => {
-			const { blogTitle, blogBody, blogAuthor, ...others } = item;
 			return (
 				<SlideItem
-					key={blogTitle}
-					blogTitle={blogTitle}
-					blogBody={blogBody}
-					blogAuthor={blogAuthor}
-					otherProps={others}
+					key={item.blogName + item.UserName}
+					blogTitle={item.blogName}
+					blogBody={item.BlogContent}
+					blogAuthor={item.UserName}
+					blogDate={item.BlogDate}
+					blogTime={item.BlogTime}
+					blogLocation={item.BlogLocation}
+					blogComment={item.BlogComment}
 				/>
 			);
 		});

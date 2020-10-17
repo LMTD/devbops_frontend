@@ -36,7 +36,7 @@ const DialogWindow = (props) => {
 				/>
 			);
 		} else {
-			DialogContent = <Register handleSwitchMode={handleSwitchMode} />;
+			dialogContent = <Register handleSwitchMode={handleSwitchMode} />;
 		}
 	} else if (props.openPostBlog) {
 		dialogTitle = (

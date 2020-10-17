@@ -45,7 +45,16 @@ const Login = (props) => {
 				setAlertSeverity('success');
 				setAlertMessage('Login Successfully');
 				props.clearRegisterSuccess();
-				props.authSuccess(data.Token, true);
+				props.authSuccess(
+					data.Token,
+					true,
+					data.Username,
+					data.Email,
+					data.FirstName,
+					data.LastName,
+					data.City,
+					data.Country,
+				);
 				props.onClose();
 			} else {
 				setAlertSeverity('error');
@@ -122,8 +131,28 @@ const Login = (props) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		authSuccess: (token, launchClicked) =>
-			dispatch(actions.authSuccess(token, launchClicked)),
+		authSuccess: (
+			token,
+			launchClicked,
+			username,
+			email,
+			firstName,
+			lastName,
+			city,
+			country,
+		) =>
+			dispatch(
+				actions.authSuccess(
+					token,
+					launchClicked,
+					username,
+					email,
+					firstName,
+					lastName,
+					city,
+					country,
+				),
+			),
 	};
 };
 export default connect(null, mapDispatchToProps)(Login);
