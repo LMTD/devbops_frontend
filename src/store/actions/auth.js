@@ -75,6 +75,7 @@ export const updateUserSuccess = (
 	city,
 	country,
 ) => {
+	// console.log('this is updateUserData in reducd');
 	let userData = localStorage.getItem('userData');
 	userData = JSON.parse(userData);
 	userData.email = email;
@@ -82,6 +83,7 @@ export const updateUserSuccess = (
 	userData.lastName = lastName;
 	userData.city = city;
 	userData.country = country;
+	// console.log('this is userData in update user: ', userData);
 	localStorage.setItem('userData', JSON.stringify(userData));
 
 	return {
