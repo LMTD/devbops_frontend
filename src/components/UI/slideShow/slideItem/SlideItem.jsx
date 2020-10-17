@@ -11,12 +11,10 @@ import {
 	CardHeader,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { makeStyles } from '@material-ui/core/styles';
 
-import EventDetail from '../../eventDetail/EventDetail';
-import BlogDetail from '../../blogDetail/BlogDetail';
+import EventDetail from '../../../eventDetail/EventDetail';
+import BlogDetail from '../../../blogDetail/BlogDetail';
 
 const useStyles = makeStyles({
 	root: {
@@ -41,7 +39,7 @@ const SlideItem = (props) => {
 	};
 	let item = null;
 	let itemDetail = null;
-	if (props.otherProps.isEvent) {
+	if (props.isEvent) {
 		item = (
 			<Card className={classes.root}>
 				<CardActionArea onClick={handleClickOpen}>
@@ -81,11 +79,11 @@ const SlideItem = (props) => {
 				<CardHeader
 					avatar={
 						<Avatar aria-label='recipe' className={classes.avatar}>
-							R
+							{props.blogAuthor[0]}
 						</Avatar>
 					}
 					title={props.blogTitle}
-					subheader={props.otherProps.date}
+					subheader={props.blogDate}
 				/>
 				<CardActionArea>
 					<CardContent onClick={handleClickOpen}>
@@ -102,11 +100,13 @@ const SlideItem = (props) => {
 			<BlogDetail
 				open={open}
 				handleClose={handleClose}
-				title={props.blogTitle}
+				blogTitle={props.blogTitle}
 				blogBody={props.blogBody}
-				author={props.blogAuthor}
-				location={props.otherProps.location}
-				otherProps={props.otherProps}
+				blogAuthor={props.blogAuthor}
+				blogDate={props.blogDate}
+				blogTime={props.blogTime}
+				blogLocation={props.blogLocation}
+				blogComment={props.blogComment}
 			/>
 		);
 	}

@@ -74,7 +74,10 @@ const BlogDetail = (props) => {
 			onClose={props.handleClose}
 			maxWidth='md'
 			aria-labelledby='responsive-dialog-title'>
-			<DialogContent style={{ padding: '12px 24px' }} dividers>
+			<DialogContent
+				style={{ padding: '12px 24px' }}
+				dividers
+				onClick={handleShowCommentInputField}>
 				<Grid container spacing={2}>
 					<Grid
 						item
@@ -83,7 +86,7 @@ const BlogDetail = (props) => {
 						md={4}
 						style={{ borderBottom: '1px solid black' }}>
 						<Typography component='h4' variant='h4'>
-							{props.title}
+							{props.blogTitle}
 						</Typography>
 					</Grid>
 					<Grid
@@ -100,7 +103,7 @@ const BlogDetail = (props) => {
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							{props.author}
+							{props.blogAuthor}
 						</Typography>
 					</Grid>
 					<Grid
@@ -117,8 +120,9 @@ const BlogDetail = (props) => {
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							{moment().format('dddd')}
-							{moment().format('MMMM Do YYYY')}
+							{/* {moment().format('dddd')}
+							{moment().format('MMMM Do YYYY')} */}
+							{`${props.blogDate}, ${props.blogTime}`}
 						</Typography>
 					</Grid>
 					<Grid
@@ -135,7 +139,7 @@ const BlogDetail = (props) => {
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							{props.location}
+							{props.blogLocation}
 						</Typography>
 					</Grid>
 
@@ -146,12 +150,7 @@ const BlogDetail = (props) => {
 					</Grid>
 
 					<Grid item>
-						{/* <IconButton aria-label='add to favorites'>
-							<ThumbUpIcon />
-						</IconButton> */}
-						<Button component='p' onClick={handleShowCommentInputField}>
-							Comment
-						</Button>
+						<Button component='p'>Comment</Button>
 					</Grid>
 					{showCommentInputField ? commentForm : null}
 				</Grid>

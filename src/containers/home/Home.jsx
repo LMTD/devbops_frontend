@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import SlideShow from '../../components/home/slideShow/SlideShow';
+import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const popularOnlineEvents = [
 	{
@@ -254,19 +254,19 @@ const Home = () => {
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
 						Popular Online Events
 					</Typography>
-					<SlideShow slideItems={popularOnlineEvents} isEvent={true} />
+					{/* <SlideShow slideItems={popularOnlineEvents} isEvent={true} /> */}
 				</Grid>
 				<Grid item xs={12} sm={12}>
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
 						Trending Events
 					</Typography>
-					<SlideShow slideItems={trendingEvents} isEvent={true} />
+					{/* <SlideShow slideItems={trendingEvents} isEvent={true} /> */}
 				</Grid>
 				<Grid item xs={12} sm={12}>
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
 						Recent Blogs
 					</Typography>
-					<SlideShow slideItems={recentBlogs} isEvent={false} />
+					{/* <SlideShow slideItems={recentBlogs} isEvent={false} /> */}
 				</Grid>
 			</Grid>
 		</Container>

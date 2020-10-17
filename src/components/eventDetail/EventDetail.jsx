@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import DialogTitle from '../../UI/dialogTitle/DialogTitle';
+import DialogTitle from '../UI/dialogTitle/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
