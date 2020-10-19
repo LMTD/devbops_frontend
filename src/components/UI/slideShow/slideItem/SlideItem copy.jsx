@@ -70,61 +70,89 @@ const SlideItem = (props) => {
 			</div>
 		);
 	}
-
 	if (props.isEvent) {
 		// console.log('this is props in event : ', props);
-		// item = (
-		// 	<Card className={classes.root}>
-		// 		<CardActionArea onClick={handleClickOpen}>
-		// 			{imageArea}
-		// 			<CardContent>
-		// 				<Typography gutterBottom variant='h5' component='h2'>
-		// 					{props.eventTitle}
-		// 				</Typography>
-		// 				<Typography variant='body2' color='textSecondary' component='p'>
-		// 					{props.eventDescription.length > 40
-		// 						? props.eventDescription.slice(0, 40) + '...'
-		// 						: props.eventDescription}
-		// 				</Typography>
-		// 			</CardContent>
-		// 		</CardActionArea>
-		// 	</Card>
-		// );
-		// itemDetail = (
-		// 	<EventDetail open={open} handleClose={handleClose} {...props} />
-		// );
+		item = (
+			<Card className={classes.root}>
+				<CardActionArea onClick={handleClickOpen}>
+					{imageArea}
+
+					<CardContent>
+						<Typography gutterBottom variant='h5' component='h2'>
+							{props.eventTitle}
+						</Typography>
+						<Typography variant='body2' color='textSecondary' component='p'>
+							{props.eventDescription.length > 40
+								? props.eventDescription.slice(0, 40) + '...'
+								: props.eventDescription}
+						</Typography>
+					</CardContent>
+				</CardActionArea>
+			</Card>
+		);
+
+		itemDetail = (
+			<EventDetail
+				open={open}
+				handleClose={handleClose}
+				eventTitle={props.eventTitle}
+				eventDescription={props.eventDescription}
+				// eventImageUrl={props.eventImageUrl === '' ? logo : props.eventImageUrl}
+				eventImageUrl={props.eventImageUrl}
+				eventLocation={props.eventLocation}
+				eventDate={props.eventDate}
+				eventTime={props.eventTime}
+				eventRSVPList={props.eventRSVPList}
+				eventOrganizer={props.eventOrganizer}
+				eventType={props.eventType}
+				myEvent={props.myEvent}
+				rsvpEvent={props.rsvpEvent}
+			/>
+		);
 	} else {
 		item = (
 			<Card className={classes.root}>
 				<CardHeader
 					avatar={
 						<Avatar aria-label='recipe' className={classes.avatar}>
-							{props.UserName[0]}
+							{props.blogAuthor[0]}
 						</Avatar>
 					}
-					title={props.blogName}
-					subheader={props.BlogDate}
+					title={props.blogTitle}
+					subheader={props.blogDate}
 				/>
 				<CardActionArea>
 					<CardContent onClick={handleClickOpen}>
 						<Typography variant='body2' color='textSecondary' component='p'>
-							{props.BlogContent.length > 150
-								? props.BlogContent.slice(0, 150) + '...'
-								: props.BlogContent}
+							{props.blogBody.length > 150
+								? props.blogBody.slice(0, 150) + '...'
+								: props.blogBody}
 						</Typography>
 					</CardContent>
 				</CardActionArea>
 			</Card>
 		);
 		itemDetail = (
-			<BlogDetail open={open} handleClose={handleClose} {...props} />
+			<BlogDetail
+				open={open}
+				handleClose={handleClose}
+				blogTitle={props.blogTitle}
+				blogBody={props.blogBody}
+				blogAuthor={props.blogAuthor}
+				blogDate={props.blogDate}
+				blogTime={props.blogTime}
+				blogLocation={props.blogLocation}
+				blogComment={props.blogComment}
+				updateComment={props.updateComment}
+			/>
 		);
 	}
 
 	return (
 		<div>
-			{item}
-			{itemDetail}
+			{/* {item}
+			{itemDetail} */}
+			123
 		</div>
 	);
 };

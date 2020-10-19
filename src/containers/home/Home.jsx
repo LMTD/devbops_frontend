@@ -12,6 +12,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import * as actions from '../../store/actions/profile';
+
 import { connect } from 'react-redux';
 
 import SlideShow from '../../components/UI/slideShow/SlideShow';
@@ -25,7 +27,7 @@ const Home = (props) => {
 	const [isOnlineEventLoading, setIsOnlineEventLoading] = useState(false);
 
 	useEffect(() => {
-		console.log('this is useeff');
+		// console.log('this is useeff');
 		const fetchEvents = async () => {
 			setIsOnlineEventLoading(true);
 			setIsEventLoading(true);
@@ -98,6 +100,7 @@ const Home = (props) => {
 
 		fetchEvents();
 		fetchBlogs();
+		props.onFetchBlogs(props.token);
 	}, []);
 
 	const updateComment = (blogName, userName, comment) => {
@@ -132,24 +135,24 @@ const Home = (props) => {
 	let trendingOnlineEvents = <CircularProgress />;
 	let trendingEvents = <CircularProgress />;
 	let blogs = <CircularProgress />;
-	if (!isOnlineEventLoading) {
-		trendingOnlineEvents = (
-			<SlideShow slideItems={allOnlineEvents} isEvent={true} />
-		);
-	}
-	if (!isEventLoading) {
-		trendingEvents = <SlideShow slideItems={allEvents} isEvent={true} />;
-	}
+	// if (!isOnlineEventLoading) {
+	// 	trendingOnlineEvents = (
+	// 		<SlideShow slideItems={allOnlineEvents} isEvent={true} />
+	// 	);
+	// }
+	// if (!isEventLoading) {
+	// 	trendingEvents = <SlideShow slideItems={allEvents} isEvent={true} />;
+	// }
 
-	if (!isBlogLoading) {
-		blogs = (
-			<SlideShow
-				slideItems={allBlogs}
-				isEvent={false}
-				updateComment={updateComment}
-			/>
-		);
-	}
+	// if (!isBlogLoading) {
+	// 	blogs = (
+	// 		<SlideShow
+	// 			slideItems={allBlogs}
+	// 			isEvent={false}
+	// 			updateComment={updateComment}
+	// 		/>
+	// 	);
+	// }
 	return (
 		<Container>
 			<Grid container spacing={3}>
@@ -215,7 +218,15 @@ const Home = (props) => {
 };
 const mapStateToProps = (state) => {
 	return {
-		token: state.token,
+		token: state.auth.token,
 	};
 };
-export default connect(mapStateToProps)(Home);
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onFetchEvents: (token, action) =>
+			dispatch(actions.onFetchEvents(token, action)),
+		onFetchBlogs: (token) => dispatch(actions.onFetchBlogs(token)),
+	};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

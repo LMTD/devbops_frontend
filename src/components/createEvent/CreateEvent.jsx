@@ -280,7 +280,7 @@ const CreateEvent = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		token: state.token,
+		token: state.auth.token,
 	};
 };
 export default connect(mapStateToProps)(CreateEvent);
