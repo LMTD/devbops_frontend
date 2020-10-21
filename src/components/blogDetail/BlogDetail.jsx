@@ -38,7 +38,7 @@ const BlogDetail = (props) => {
 				{
 					Action: 'Q',
 					Token: props.token,
-					BlogSubject: props.blogTitle,
+					BlogSubject: props.blogName,
 					BlogBody: null,
 					Location: null,
 					Date: null,
@@ -49,7 +49,11 @@ const BlogDetail = (props) => {
 			console.log('this is data: ', data);
 			if (data.Status) {
 				setShowCommentInputField(false);
-				props.updateComment(props.blogTitle, props.username, formData.comment);
+				props.updateComment(
+					props.blogName,
+					props.UserName,
+					formData.BlogComment,
+				);
 			}
 		} catch (err) {
 			console.log('there is error in comment: ', err);
@@ -94,7 +98,7 @@ const BlogDetail = (props) => {
 	);
 	let commentSection = null;
 	if (showCommentInputField) {
-		commentSection = Object.entries(props.blogComment).map((commentEntry) => (
+		commentSection = Object.entries(props.BlogComment).map((commentEntry) => (
 			<Grid container spacing={4}>
 				<Grid item xs={1} sm={1} md={1}>
 					<Avatar aria-label='recipe' style={{ background: red[500] }}>
@@ -109,6 +113,42 @@ const BlogDetail = (props) => {
 		));
 	}
 
+	let commentButton = null;
+
+	if (JSON.stringify(props.BlogComment) === '{}') {
+		commentButton = (
+			<Button component='span' onClick={handleShowCommentInputField}>
+				There is no comment here, be the first one :)
+			</Button>
+		);
+	} else {
+		commentButton = (
+			<Button component='p' onClick={handleShowCommentInputField}>
+				Comment
+				{`${
+					Object.keys(props.BlogComment).length > 0
+						? '(' + Object.keys(props.BlogComment).length + ')'
+						: ''
+				}`}
+			</Button>
+		);
+	}
+
+	let deleteButton = null;
+
+	if (props.isProfile) {
+		deleteButton = (
+			<Button
+				autoFocus
+				onClick={() => {
+					alert('deleted');
+				}}
+				color='secondary'
+				variant='contained'>
+				Delete
+			</Button>
+		);
+	}
 	return (
 		<Dialog
 			disableBackdropClick
@@ -125,7 +165,7 @@ const BlogDetail = (props) => {
 						md={4}
 						style={{ borderBottom: '1px solid black' }}>
 						<Typography component='h4' variant='h4'>
-							{props.blogTitle}
+							{props.blogName}
 						</Typography>
 					</Grid>
 					<Grid
@@ -142,7 +182,7 @@ const BlogDetail = (props) => {
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							{props.blogAuthor}
+							{props.UserName}
 						</Typography>
 					</Grid>
 					<Grid
@@ -159,7 +199,7 @@ const BlogDetail = (props) => {
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							{`${props.blogDate}, ${props.blogTime}`}
+							{`${props.BlogDate}, ${props.BlogTime}`}
 						</Typography>
 					</Grid>
 					<Grid
@@ -176,25 +216,18 @@ const BlogDetail = (props) => {
 							variant='subtitle2'
 							color='textSecondary'
 							display='block'>
-							{props.blogLocation}
+							{props.BlogLocation}
 						</Typography>
 					</Grid>
 
 					<Grid item>
 						<Typography component='p' variant='subtitle2' color='textSecondary'>
-							{props.blogBody}
+							{props.BlogContent}
 						</Typography>
 					</Grid>
 
 					<Grid item xs={12} sm={12} md={12}>
-						<Button component='p' onClick={handleShowCommentInputField}>
-							Comment
-							{`${
-								Object.keys(props.blogComment).length > 0
-									? '(' + Object.keys(props.blogComment).length + ')'
-									: ''
-							}`}
-						</Button>
+						{commentButton}
 					</Grid>
 					<Grid item xs={12} sm={12} md={12}>
 						{commentSection}
@@ -204,10 +237,11 @@ const BlogDetail = (props) => {
 				</Grid>
 			</DialogContent>
 			<DialogActions>
+				{deleteButton}
 				<Button
 					autoFocus
 					onClick={props.handleClose}
-					color='secondary'
+					color='primary'
 					variant='contained'>
 					Cancel
 				</Button>
@@ -217,8 +251,8 @@ const BlogDetail = (props) => {
 };
 const mapStateToProps = (state) => {
 	return {
-		token: state.token,
-		username: state.username,
+		token: state.auth.token,
+		username: state.auth.username,
 	};
 };
 export default connect(mapStateToProps)(BlogDetail);
