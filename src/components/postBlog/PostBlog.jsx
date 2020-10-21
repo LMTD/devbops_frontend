@@ -4,10 +4,13 @@ import { Grid, Container, Button, TextField } from '@material-ui/core';
 import axios from 'axios';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 
 const PostBlog = (props) => {
 	const { register, handleSubmit, watch, reset } = useForm();
 	const watchFields = watch(['blogSubject', 'blogBody', 'location']);
+
+	let history = useHistory();
 
 	const handlePostBlog = async (formData) => {
 		console.log('this is form data: ', formData);
@@ -27,12 +30,13 @@ const PostBlog = (props) => {
 				},
 			);
 			console.log('this is data from post blog: ', data);
+			if (data.Status) {
+				history.push('/sadadas');
+				props.onClose();
+			}
 		} catch (error) {
 			console.log(error);
 		}
-
-		reset();
-		props.onClose();
 	};
 
 	return (

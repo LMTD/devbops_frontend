@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import Alert from '@material-ui/lab/Alert';
 import { AccountCircle } from '@material-ui/icons';
 import * as actions from '../../../store/actions/auth';
-
+import CreateEvent from '../../createEvent/CreateEvent';
 const AccountSection = (props) => {
 	const [isModifyMode, setIsModifyMode] = useState(false);
 	const [loading, setLoading] = useState(false);

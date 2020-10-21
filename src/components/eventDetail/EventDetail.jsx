@@ -1,5 +1,4 @@
-import React from 'react';
-import moment from 'moment';
+import React, { useState } from 'react';
 import {
 	Dialog,
 	DialogContent,
@@ -10,12 +9,16 @@ import {
 	Grid,
 	DialogActions,
 	Button,
+	Avatar,
 } from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
-
+import axios from 'axios';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import DialogTitle from '../UI/dialogTitle/DialogTitle';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	root: {
 		display: 'flex',
 		boxShadow: 'none',
@@ -33,9 +36,155 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 const EventDetail = (props) => {
+	let history = useHistory();
 	const classes = useStyles();
+	const [editEventMode, setEditEventMode] = useState(false);
+	const handleRSVP = async () => {
+		try {
+			console.log('this is event title: ', props);
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Token: props.token,
+					Action: 'V',
+					eventTitle: props.eventTitle,
+					eventDate: null,
+					eventTime: null,
+					eventDescription: null,
+					imgUrl: null,
+					locationDetail: null,
+					eventType: null,
+				},
+			);
+			console.log('this is data in rsvp event: ', data);
+			if (data.Status) {
+				history.push('/asd');
+			}
+		} catch (err) {
+			console.log('there is an error in rsvp: ', err);
+		}
+	};
 
-	// console.log('this is other props: ', props.otherProps);
+	const cancelRSVP = async () => {
+		try {
+			// console.log('this is event title: ', props);
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Action: 'CV',
+					Token: props.token,
+					eventTitle: props.eventTitle,
+					eventDate: null,
+					eventTime: null,
+					eventDescription: null,
+					imgUrl: null,
+					locationDetail: null,
+					eventType: null,
+				},
+			);
+			console.log('this is data in cancel rsvp: ', data);
+			if (data.Status) {
+				history.push('/cancel-rsvp');
+			}
+		} catch (err) {
+			console.log('there is an error in rsvp: ', err);
+		}
+	};
+
+	const deleteEvent = async () => {
+		try {
+			// console.log('this is event title: ', props);
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Action: 'D',
+					Token: props.token,
+					eventTitle: props.eventTitle,
+					eventDate: null,
+					eventTime: null,
+					eventDescription: null,
+					imgUrl: null,
+					locationDetail: null,
+					eventType: null,
+				},
+			);
+			console.log('this is data in cancel rsvp: ', data);
+			if (data.Status) {
+				history.push('/cancel-rsvp');
+				props.handleClose();
+			}
+		} catch (err) {
+			console.log('there is an error in rsvp: ', err);
+		}
+	};
+
+	let rsvpButton = null;
+	// console.log('this is url : ', window.location.href);
+	if (window.location.href.includes('profile')) {
+		rsvpButton = (
+			<Button
+				autoFocus
+				onClick={cancelRSVP}
+				color='secondary'
+				variant='contained'>
+				Cancel RSVP
+			</Button>
+		);
+	} else {
+		rsvpButton = (
+			<Button
+				autoFocus
+				onClick={handleRSVP}
+				color='secondary'
+				variant='contained'
+				disabled={props.eventRSVPList.includes(props.username)}>
+				{`RSVP ${
+					props.eventRSVPList.length > 0
+						? '(' + props.eventRSVPList.length + ')'
+						: ''
+				}`}
+			</Button>
+		);
+	}
+	if (props.myEvent) {
+		rsvpButton = (
+			<Button
+				autoFocus
+				color='secondary'
+				variant='contained'
+				onClick={deleteEvent}>
+				Delete
+			</Button>
+		);
+	}
+	let imageArea = null;
+
+	if (props.eventImageUrl !== '') {
+		imageArea = (
+			<CardMedia
+				className={classes.cover}
+				component='img'
+				alt={`Iamge of ${props.eventTitle}`}
+				image={props.eventImageUrl}
+				height={400}
+			/>
+		);
+	} else {
+		imageArea = (
+			<div style={{ height: '225px', width: '225px' }}>
+				<Avatar
+					aria-label='recipe'
+					style={{
+						fontSize: '10em',
+						width: '100%',
+						height: '100%',
+						backgroundColor: red[500],
+					}}>
+					{props.eventTitle[0]}
+				</Avatar>
+			</div>
+		);
+	}
 
 	return (
 		<Dialog
@@ -45,17 +194,11 @@ const EventDetail = (props) => {
 			maxWidth='md'
 			aria-labelledby='responsive-dialog-title'>
 			<DialogTitle id='customized-dialog-title' onClose={props.handleClose}>
-				{props.title}
+				{props.eventTitle}
 			</DialogTitle>
 			<DialogContent style={{ padding: '12px 24px' }} dividers>
 				<Card className={classes.root}>
-					<CardMedia
-						className={classes.cover}
-						component='img'
-						alt={`Iamge of ${props.title}`}
-						image={props.imageUrl}
-						height={225}
-					/>
+					{imageArea}
 					<div className={classes.details}>
 						<CardContent className={classes.content}>
 							<Grid container spacing={2}>
@@ -68,8 +211,9 @@ const EventDetail = (props) => {
 										variant='subtitle2'
 										color='textSecondary'
 										display='block'>
-										{moment().format('dddd')},{' '}
-										{moment().format('MMMM Do YYYY, h:mm a')}
+										{/* {moment().format('dddd')},{' '}
+										{moment().format('MMMM Do YYYY, h:mm a')} */}
+										{`${props.eventDate}, ${props.eventTime}`}
 									</Typography>
 								</Grid>
 								<Grid item xs={12} sm={12} md={6}>
@@ -80,7 +224,7 @@ const EventDetail = (props) => {
 										component='p'
 										variant='subtitle2'
 										color='textSecondary'>
-										{props.location}
+										{props.eventLocation}
 									</Typography>
 								</Grid>
 								<Grid item>
@@ -94,25 +238,21 @@ const EventDetail = (props) => {
 										{props.eventDescription}
 									</Typography>
 								</Grid>
+								<Grid item xs={12} sm={12} md={12}></Grid>
 							</Grid>
 						</CardContent>
 					</div>
 				</Card>
 			</DialogContent>
-			<DialogActions>
-				<Button
-					autoFocus
-					onClick={() => {
-						alert('RSVP successfully');
-					}}
-					color='secondary'
-					variant='contained'>
-					RSVP
-				</Button>
-			</DialogActions>
+			<DialogActions>{rsvpButton}</DialogActions>
 		</Dialog>
 		// <div>123</div>
 	);
 };
-
-export default EventDetail;
+const mapStateToProps = (state) => {
+	return {
+		token: state.token,
+		username: state.username,
+	};
+};
+export default connect(mapStateToProps)(EventDetail);

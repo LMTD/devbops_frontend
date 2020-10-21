@@ -17,6 +17,7 @@ import blue from '@material-ui/core/colors/blue';
 import axios from 'axios';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 
 const CreateEvent = (props) => {
 	const { register, handleSubmit, watch } = useForm();
@@ -31,7 +32,7 @@ const CreateEvent = (props) => {
 		'locationDetail',
 		'eventDescription',
 	]);
-
+	let history = useHistory();
 	const handleRadioChange = (event) => {
 		setEventType(event.target.value);
 	};
@@ -55,6 +56,10 @@ const CreateEvent = (props) => {
 			);
 
 			console.log('this is data from create event: ', data);
+			if (data.Status) {
+				history.push('/sadadas');
+				props.onClose();
+			}
 		} catch (err) {
 			console.log('this is err: ', err);
 		}
