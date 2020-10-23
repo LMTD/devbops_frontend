@@ -20,6 +20,7 @@ pipeline {
             steps {
                 echo "in the test stage"
                 sh 'npm test'
+                sh "a"
             }
         }
 
