@@ -19,7 +19,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo "in the test stage"
-                sh 'npm test'
+                sh 'npm run test-once'
                 
             }
         }
