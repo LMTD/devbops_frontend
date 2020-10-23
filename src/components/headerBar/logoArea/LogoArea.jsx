@@ -5,7 +5,7 @@ import logo from '../../../images/devBopsLogo.png';
 
 const LogoArea = () => {
 	return (
-		<div style={{ flexGrow: 1 }}>
+		<div className='logoComponent' style={{ flexGrow: 1 }}>
 			<Link to='/'>
 				<img
 					src={logo}
