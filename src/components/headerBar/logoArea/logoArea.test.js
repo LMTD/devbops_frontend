@@ -17,13 +17,13 @@ describe('Logo Area Component', () => {
 	});
 
 	it('Should render LogoArea component without error', () => {
-		const wrapper = findByTestAtrr(component, 'logoComponent');
+		const wrapper = findByTestAtrr(component, 'logo-component');
 
 		expect(wrapper.length).toBe(1);
 	});
 
 	it('Should render the logo', () => {
-		const logo = findByTestAtrr(component, 'logoImage');
+		const logo = findByTestAtrr(component, 'logo-image');
 		expect(logo.length).toBe(1);
 	});
 });
