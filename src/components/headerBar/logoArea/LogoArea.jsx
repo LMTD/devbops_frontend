@@ -5,9 +5,10 @@ import logo from '../../../images/devBopsLogo.png';
 
 const LogoArea = () => {
 	return (
-		<div className='logoComponent' style={{ flexGrow: 1 }}>
+		<div data-test='logoComponent' style={{ flexGrow: 1 }}>
 			<Link to='/'>
 				<img
+					data-test='logoImage'
 					src={logo}
 					alt='Baskit Logo'
 					style={{
