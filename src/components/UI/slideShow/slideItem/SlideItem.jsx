@@ -13,8 +13,8 @@ import {
 import { red } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 
-import EventDetail from '../../../eventDetail/EventDetail';
-import BlogDetail from '../../../blogDetail/BlogDetail';
+import ProfileBlogDetail from '../../../profile/profileBlogDetail/ProfileBlogDetail';
+import ProfileEventDetail from '../../../profile/profileEventDetail/ProfileEventDetail';
 
 const useStyles = makeStyles({
 	root: {
@@ -41,15 +41,15 @@ const SlideItem = (props) => {
 	let itemDetail = null;
 	let imageArea = null;
 
-	console.log('this is props in slideItem: ', props);
+	// console.log('this is props in slideItem: ', props);
 
-	if (props.eventImageUrl !== '' && props.eventImageUrl !== 'None') {
+	if (props.Event_image !== '' && props.Event_image !== 'None') {
 		imageArea = (
 			<CardMedia
 				component='img'
 				alt='Contemplative Reptile'
 				// image={props.eventImageUrl === '' ? logo : props.eventImageUrl}
-				image={props.eventImageUrl}
+				image={props.Event_image}
 				height={225}
 				// width={400}
 			/>
@@ -65,7 +65,7 @@ const SlideItem = (props) => {
 						height: '100%',
 						backgroundColor: red[500],
 					}}>
-					{props.eventTitle[0]}
+					{props.event_name[0]}
 				</Avatar>
 			</div>
 		);
@@ -73,26 +73,29 @@ const SlideItem = (props) => {
 
 	if (props.isEvent) {
 		// console.log('this is props in event : ', props);
-		// item = (
-		// 	<Card className={classes.root}>
-		// 		<CardActionArea onClick={handleClickOpen}>
-		// 			{imageArea}
-		// 			<CardContent>
-		// 				<Typography gutterBottom variant='h5' component='h2'>
-		// 					{props.eventTitle}
-		// 				</Typography>
-		// 				<Typography variant='body2' color='textSecondary' component='p'>
-		// 					{props.eventDescription.length > 40
-		// 						? props.eventDescription.slice(0, 40) + '...'
-		// 						: props.eventDescription}
-		// 				</Typography>
-		// 			</CardContent>
-		// 		</CardActionArea>
-		// 	</Card>
-		// );
-		// itemDetail = (
-		// 	<EventDetail open={open} handleClose={handleClose} {...props} />
-		// );
+		item = (
+			<Card className={classes.root}>
+				<CardActionArea onClick={handleClickOpen}>
+					{imageArea}
+					<CardContent>
+						<Typography gutterBottom variant='h5' component='h2'>
+							{props.event_name}
+						</Typography>
+						<Typography variant='body2' color='textSecondary' component='p'>
+							{props.Event_desc.length > 40
+								? props.Event_desc.slice(0, 40) + '...'
+								: props.Event_desc}
+						</Typography>
+					</CardContent>
+				</CardActionArea>
+			</Card>
+		);
+
+		if (props.isProfile) {
+			itemDetail = (
+				<ProfileEventDetail open={open} handleClose={handleClose} {...props} />
+			);
+		}
 	} else {
 		item = (
 			<Card className={classes.root}>
@@ -116,9 +119,12 @@ const SlideItem = (props) => {
 				</CardActionArea>
 			</Card>
 		);
-		itemDetail = (
-			<BlogDetail open={open} handleClose={handleClose} {...props} />
-		);
+
+		if (props.isProfile) {
+			itemDetail = (
+				<ProfileBlogDetail open={open} handleClose={handleClose} {...props} />
+			);
+		}
 	}
 
 	return (

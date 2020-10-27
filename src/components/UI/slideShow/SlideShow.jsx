@@ -9,7 +9,7 @@ const SlideShow = (props) => {
 	let items = null;
 	let sectionContents = null;
 
-	// console.log('this is props in slideshow: ', props.slideItems);
+	console.log('this is props in slideshow: ', props);
 	if (props.slideItems.length > 0) {
 		if (!props.isEvent) {
 			items = props.slideItems.map((item) => {
@@ -63,8 +63,6 @@ const SlideShow = (props) => {
 	}
 
 	return sectionContents;
-
-	// return <div>123</div>;
 };
 
 export default SlideShow;
