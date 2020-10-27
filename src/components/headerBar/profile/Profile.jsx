@@ -46,14 +46,18 @@ const ProfileArea = (props) => {
 	}, [open]);
 
 	return (
-		<div>
+		<div data-test='profile-component'>
 			<IconButton
 				ref={anchorRef}
 				aria-controls={open ? 'menu-list-grow' : undefined}
 				aria-haspopup='true'
 				color='inherit'
 				onClick={handleToggle}>
-				<AccountCircle fontSize='large' style={{ color: 'black' }} />
+				<AccountCircle
+					fontSize='large'
+					style={{ color: 'black' }}
+					data-test='account-icon'
+				/>
 			</IconButton>
 			<Popper
 				open={open}
@@ -75,7 +79,7 @@ const ProfileArea = (props) => {
 									autoFocusItem={open}
 									id='menu-list-grow'
 									onKeyDown={handleListKeyDown}>
-									<MenuItem onClick={handleClose}>
+									<MenuItem onClick={handleClose} data-test='my-porfile-link'>
 										<Link
 											component={RouterLink}
 											to='/profile'
@@ -85,7 +89,7 @@ const ProfileArea = (props) => {
 											My Profile
 										</Link>
 									</MenuItem>
-									<MenuItem onClick={handleClose}>
+									<MenuItem onClick={handleClose} data-test='logout-link'>
 										<Link
 											component={RouterLink}
 											to='/logout'

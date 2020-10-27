@@ -28,7 +28,7 @@ const RightSection = (props) => {
 		setOpenCreateEvent(false);
 	};
 	return (
-		<div>
+		<div data-test='right-section-component'>
 			<Grid container spacing={3}>
 				<Grid item>
 					<Button>
@@ -42,19 +42,19 @@ const RightSection = (props) => {
 					</Button>
 				</Grid>
 				{props.isAuthenticated ? (
-					<Grid item>
+					<Grid item data-test='create-event-button'>
 						<Button onClick={handleCreateEventOpen}>Create Event</Button>
 					</Grid>
 				) : null}
 				{props.isAuthenticated ? (
-					<Grid item>
+					<Grid item data-test='post-blog-button'>
 						<Button onClick={handlePostBlogOpen}>Post A Blog</Button>
 					</Grid>
 				) : null}
 				{props.isAuthenticated ? (
-					<Profile />
+					<Profile data-test='profile-area' />
 				) : (
-					<Grid item>
+					<Grid item data-test='launch-devbops-button'>
 						<Button
 							style={{
 								background: 'white',
