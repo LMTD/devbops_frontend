@@ -7,9 +7,6 @@ import {
 	Dialog,
 	DialogContent,
 	Typography,
-	Card,
-	IconButton,
-	CardContent,
 	Avatar,
 	TextField,
 	Grid,
@@ -18,7 +15,6 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 const ProfileBlogDetail = (props) => {
 	const [showCommentInputField, setShowCommentInputField] = useState(false);
@@ -98,57 +94,42 @@ const ProfileBlogDetail = (props) => {
 	);
 	let commentSection = null;
 	if (showCommentInputField) {
-		commentSection = Object.entries(props.BlogComment).map((commentEntry) => (
-			<Grid container spacing={4}>
-				<Grid item xs={1} sm={1} md={1}>
-					<Avatar aria-label='recipe' style={{ background: red[500] }}>
-						{commentEntry[0][0]}
-					</Avatar>
-				</Grid>
-				<Grid item xs={11} sm={11} md={11}>
-					<Grid style={{ fontStyle: 'italic' }}>{commentEntry[0]}</Grid>
-					<Grid>{commentEntry[1]}</Grid>
-				</Grid>
+		commentSection = (
+			<Grid item xs={12} sm={12} md={12}>
+				{Object.entries(props.BlogComment).map((commentEntry) => (
+					<Grid container spacing={4}>
+						<Grid item xs={1} sm={1} md={1}>
+							<Avatar aria-label='recipe' style={{ background: red[500] }}>
+								{commentEntry[0][0]}
+							</Avatar>
+						</Grid>
+						<Grid item xs={11} sm={11} md={11}>
+							<Grid style={{ fontStyle: 'italic' }}>{commentEntry[0]}</Grid>
+							<Grid>{commentEntry[1]}</Grid>
+						</Grid>
+					</Grid>
+				))}
 			</Grid>
-		));
+		);
 	}
 
 	let commentButton = null;
 
-	if (JSON.stringify(props.BlogComment) === '{}') {
+	if (JSON.stringify(props.BlogComment) !== '{}') {
 		commentButton = (
-			<Button component='span' onClick={handleShowCommentInputField}>
-				There is no comment here, be the first one :)
-			</Button>
-		);
-	} else {
-		commentButton = (
-			<Button component='p' onClick={handleShowCommentInputField}>
-				Comment
-				{`${
-					Object.keys(props.BlogComment).length > 0
-						? '(' + Object.keys(props.BlogComment).length + ')'
-						: ''
-				}`}
-			</Button>
+			<Grid item xs={12} sm={12} md={12}>
+				<Button component='p' onClick={handleShowCommentInputField}>
+					Comment
+					{`${
+						Object.keys(props.BlogComment).length > 0
+							? '(' + Object.keys(props.BlogComment).length + ')'
+							: ''
+					}`}
+				</Button>
+			</Grid>
 		);
 	}
 
-	let deleteButton = null;
-
-	if (props.isProfile) {
-		deleteButton = (
-			<Button
-				autoFocus
-				onClick={() => {
-					alert('deleted');
-				}}
-				color='secondary'
-				variant='contained'>
-				Delete
-			</Button>
-		);
-	}
 	return (
 		<Dialog
 			disableBackdropClick
@@ -220,18 +201,23 @@ const ProfileBlogDetail = (props) => {
 						</Typography>
 					</Grid>
 
-					<Grid item>
-						<Typography component='p' variant='subtitle2' color='textSecondary'>
+					<Grid
+						item
+						xs={12}
+						sm={12}
+						md={12}
+						style={{
+							borderBottom: '0.8px solid #ccc5c5',
+							padding: '20px 0',
+						}}>
+						<Typography component='p' variant='subtitle2' color='textPrimary'>
 							{props.BlogContent}
 						</Typography>
 					</Grid>
 
-					<Grid item xs={12} sm={12} md={12}>
-						{commentButton}
-					</Grid>
-					<Grid item xs={12} sm={12} md={12}>
-						{commentSection}
-					</Grid>
+					{commentButton}
+
+					{commentSection}
 
 					{showCommentInputField ? commentForm : null}
 				</Grid>

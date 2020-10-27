@@ -20,6 +20,9 @@ const useStyles = makeStyles({
 	root: {
 		maxWidth: 345,
 		margin: '0 20px',
+		'&:hover': {
+			cursor: 'pointer',
+		},
 	},
 	avatar: {
 		backgroundColor: red[500],
@@ -74,8 +77,8 @@ const SlideItem = (props) => {
 	if (props.isEvent) {
 		// console.log('this is props in event : ', props);
 		item = (
-			<Card className={classes.root}>
-				<CardActionArea onClick={handleClickOpen}>
+			<Card className={classes.root} onClick={handleClickOpen}>
+				<CardActionArea>
 					{imageArea}
 					<CardContent>
 						<Typography gutterBottom variant='h5' component='h2'>
@@ -98,7 +101,7 @@ const SlideItem = (props) => {
 		}
 	} else {
 		item = (
-			<Card className={classes.root}>
+			<Card className={classes.root} onClick={handleClickOpen}>
 				<CardHeader
 					avatar={
 						<Avatar aria-label='recipe' className={classes.avatar}>
@@ -109,7 +112,7 @@ const SlideItem = (props) => {
 					subheader={props.BlogDate}
 				/>
 				<CardActionArea>
-					<CardContent onClick={handleClickOpen}>
+					<CardContent>
 						<Typography variant='body2' color='textSecondary' component='p'>
 							{props.BlogContent.length > 150
 								? props.BlogContent.slice(0, 150) + '...'
