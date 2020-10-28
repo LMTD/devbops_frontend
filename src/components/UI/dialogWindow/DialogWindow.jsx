@@ -59,7 +59,8 @@ const DialogWindow = (props) => {
 			disableBackdropClick
 			open={props.openAuth || props.openPostBlog || props.openCreateEvent}
 			onClose={props.handleClose}
-			aria-labelledby='responsive-dialog-title'>
+			aria-labelledby='responsive-dialog-title'
+			maxWidth='md'>
 			{dialogTitle}
 			<DialogContent style={{ padding: '12px 24px' }} dividers>
 				{dialogContent}

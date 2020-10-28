@@ -7,7 +7,6 @@ import Main from './containers/main/Main';
 import About from './containers/about/About';
 import Home from './containers/home/Home';
 import Profile from './containers/profile/Profile';
-import CreateEvent from './containers/createEvent/CreateEvent';
 import Logout from './containers/auth/logout/Logout';
 import * as actions from './store/actions/auth';
 

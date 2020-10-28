@@ -7,12 +7,9 @@ import {
 	TextField,
 	Button,
 	Grid,
-	Link,
 	CircularProgress,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { Link as RouterLink } from 'react-router-dom';
-import { DataUsageSharp } from '@material-ui/icons';
 
 const Register = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
