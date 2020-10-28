@@ -35,8 +35,8 @@ const HeaderBar = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		isAuthenticated: state.token !== null,
-		launchClicked: state.launchClicked,
+		isAuthenticated: state.auth.token !== null,
+		launchClicked: state.auth.launchClicked,
 	};
 };
 

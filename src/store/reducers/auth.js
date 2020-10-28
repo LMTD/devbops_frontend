@@ -11,10 +11,10 @@ const initialState = {
 	launchFirstClicked: false,
 };
 
-const reducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case actionTypes.AUTH_SUCCESS:
-			// console.log('this is actions: ', action);
+			// console.log('this is state in auth: ', state);
 			return {
 				...state,
 				token: action.token,
@@ -41,9 +41,10 @@ const reducer = (state = initialState, action) => {
 				city: action.newCity,
 				country: action.newCountry,
 			};
+
 		default:
-			return initialState;
+			return state;
 	}
 };
 
-export default reducer;
+export default authReducer;

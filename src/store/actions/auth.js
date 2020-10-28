@@ -44,7 +44,7 @@ export const authCheckState = () => {
 	return (dispatch) => {
 		let userData = localStorage.getItem('userData');
 		userData = JSON.parse(userData);
-
+		// console.log('this is userData in authcheck: ', userData);
 		if (userData !== null) {
 			dispatch(
 				authSuccess(
@@ -59,7 +59,7 @@ export const authCheckState = () => {
 				),
 			);
 		} else {
-			// dispatch(logout());
+			dispatch(logout());
 		}
 	};
 };
