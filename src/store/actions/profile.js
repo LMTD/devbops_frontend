@@ -17,7 +17,7 @@ export const onFetchEvents = (token, action) => {
 					imgUrl: null,
 					locationDetail: null,
 					eventType: null,
-				},
+				}
 			);
 			// console.log('this is data: ', data);
 
@@ -68,7 +68,7 @@ export const onFetchBlogs = (token) => {
 					Date: null,
 					Time: null,
 					Comment: null,
-				},
+				}
 			);
 			console.log('this is blogs fetching: ', data);
 
@@ -104,7 +104,7 @@ export const onDeleteEvent = (token, eventTitle) => {
 					imgUrl: null,
 					locationDetail: null,
 					eventType: null,
-				},
+				}
 			);
 			console.log('this is data in on delete event: ', data);
 
@@ -137,7 +137,7 @@ export const onUpdateEvent = (
 	eventType,
 	locationDetail,
 	imgUrl,
-	eventDescription,
+	eventDescription
 ) => {
 	return async (dispatch) => {
 		try {
@@ -149,7 +149,7 @@ export const onUpdateEvent = (
 				eventType,
 				locationDetail,
 				imgUrl,
-				eventDescription,
+				eventDescription
 			);
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
@@ -163,7 +163,7 @@ export const onUpdateEvent = (
 					locationDetail: locationDetail,
 					imgUrl: imgUrl,
 					eventDescription: eventDescription,
-				},
+				}
 			);
 			console.log('this is data in on  onUpdateEvent: ', data);
 
@@ -195,7 +195,7 @@ export const onDeleteBlog = (token, blogSubject) => {
 					Date: null,
 					Time: null,
 					Comment: null,
-				},
+				}
 			);
 			console.log('this is delete blog: ', data);
 
@@ -213,5 +213,38 @@ export const deleteBlogSuccess = (blogSubject) => {
 	return {
 		type: actionTypes.DELETE_BLOG_SUCCESS,
 		deletedBlogSubject: blogSubject,
+	};
+};
+
+export const onCancelRSVP = (token, eventTitle) => {
+	return async (dispatch) => {
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Token: token,
+					Action: 'CV',
+					eventTitle: eventTitle,
+					eventDate: null,
+					eventTime: null,
+					eventDescription: null,
+					imgUrl: null,
+					locationDetail: null,
+					eventType: null,
+				}
+			);
+			console.log('this is data in on cancel rsvp event: ', data);
+
+			if (data.Status) {
+				// dispatch(cancelRSVPSuccess(eventTitle));
+			}
+		} catch (err) {}
+	};
+};
+
+export const cancelRSVPSuccess = (eventTitle) => {
+	return {
+		type: actionTypes.CANCEL_RSVP_SUCCESS,
+		cancelledRSVP: eventTitle,
 	};
 };

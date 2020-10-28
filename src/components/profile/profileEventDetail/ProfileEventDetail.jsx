@@ -53,10 +53,6 @@ const ProfileEventDetail = (props) => {
 	const [selectedFile, setSelectedFile] = useState(props.Event_image);
 	const [isSelectImageMode, setIsSelectImageMode] = useState(false);
 
-
-	
-
-
 	const handleDeleteEvent = () => {
 		console.log('handle delete event clicked')
 		props.onDeleteEvent(props.token, props.event_name);
@@ -85,6 +81,26 @@ const ProfileEventDetail = (props) => {
 		setIsSelectImageMode(false);
 		setSelectedFile(event.target.files[0]);
 	};
+
+	const handleEditEventForm = (formData) => {
+		console.log('edit event form is clicked: ', FormData);
+		props.onUpdateEvent(
+			props.token,
+			formData.eventTitle,
+			formData.eventDate,
+			formData.eventTime,
+			formData.eventType,
+			formData.locationDetail,
+			selectedFile,
+			formData.eventDescription,
+		);
+		handleEditMode();
+	};
+
+	const handleCancelRSVP = () => {
+		console.log('handleCancelRSVP clicked')
+		props.onCancelRSVP(props.token, props.event_name);
+	}
 
 	let eventImageSection = (
 		<CardContent
@@ -223,21 +239,6 @@ const ProfileEventDetail = (props) => {
 		);
 	}
 
-	const handleEditEventForm = (formData) => {
-		console.log('edit event form is clicked: ', FormData);
-		props.onUpdateEvent(
-			props.token,
-			formData.eventTitle,
-			formData.eventDate,
-			formData.eventTime,
-			formData.eventType,
-			formData.locationDetail,
-			selectedFile,
-			formData.eventDescription,
-		);
-		handleEditMode();
-	};
-
 	let eventSection = null;
 	let editFormSection = null;
 	let rsvpList = null;
@@ -366,7 +367,7 @@ const ProfileEventDetail = (props) => {
 		}
 		
 	} else if (props.isRsvpList === true) {
-			editFormSection = (<EventDetail {...props} imageArea={imageArea} />)
+			editFormSection = (<EventDetail {...props} imageArea={imageArea} handleCancelRSVP={handleCancelRSVP} />)
 		
 	}
 	eventSection = (
@@ -418,6 +419,9 @@ const mapDispatchToProps = (dispatch) => {
 					eventDescription,
 				),
 			),
+		onCancelRSVP: (token, eventTitle) => {
+			dispatch(actions.onCancelRSVP(token, eventTitle))
+		}
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileEventDetail);
