@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import {
 	Dialog,
 	DialogContent,
-	Typography,
 	Card,
 	CardContent,
 	CardMedia,
@@ -21,12 +20,13 @@ import {
 import { red, blue } from '@material-ui/core/colors';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import DialogTitle from '../../UI/dialogTitle/DialogTitle';
 import moment from 'moment';
 import * as actions from '../../../store/actions/profile';
+import EventDetail from './eventDetail/EventDetail';
+import ListData from '../../UI/listData/ListData';
+
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -54,6 +54,7 @@ const ProfileEventDetail = (props) => {
 	const [isSelectImageMode, setIsSelectImageMode] = useState(false);
 
 	const handleDeleteEvent = () => {
+		console.log('handle delete event clicked')
 		props.onDeleteEvent(props.token, props.event_name);
 	};
 
@@ -80,6 +81,26 @@ const ProfileEventDetail = (props) => {
 		setIsSelectImageMode(false);
 		setSelectedFile(event.target.files[0]);
 	};
+
+	const handleEditEventForm = (formData) => {
+		console.log('edit event form is clicked: ', FormData);
+		props.onUpdateEvent(
+			props.token,
+			formData.eventTitle,
+			formData.eventDate,
+			formData.eventTime,
+			formData.eventType,
+			formData.locationDetail,
+			selectedFile,
+			formData.eventDescription,
+		);
+		handleEditMode();
+	};
+
+	const handleCancelRSVP = () => {
+		console.log('handleCancelRSVP clicked')
+		props.onCancelRSVP(props.token, props.event_name);
+	}
 
 	let eventImageSection = (
 		<CardContent
@@ -190,7 +211,7 @@ const ProfileEventDetail = (props) => {
 
 	let imageArea = null;
 
-	if (props.Event_image !== '') {
+	if (props.Event_image !== '' && props.Event_image !== 'None') {
 		imageArea = (
 			<CardMedia
 				className={classes.cover}
@@ -207,9 +228,10 @@ const ProfileEventDetail = (props) => {
 					aria-label='recipe'
 					style={{
 						fontSize: '10em',
-						width: '100%',
+						width: '80%',
 						height: '100%',
 						backgroundColor: red[500],
+						margin: '0 auto'
 					}}>
 					{props.event_name[0]}
 				</Avatar>
@@ -217,141 +239,13 @@ const ProfileEventDetail = (props) => {
 		);
 	}
 
-	const handleEditEventForm = (formData) => {
-		console.log('edit event form is clicked: ', FormData);
-		props.onUpdateEvent(
-			props.token,
-			formData.eventTitle,
-			formData.eventDate,
-			formData.eventTime,
-			formData.eventType,
-			formData.locationDetail,
-			selectedFile,
-			formData.eventDescription,
-		);
-		handleEditMode();
-	};
-
 	let eventSection = null;
 	let editFormSection = null;
-	if (!props.isRsvpList) {
+	let rsvpList = null;
+	if (props.isRsvpList === false) {
 		if (!isEditEventMode) {
-			editFormSection = (
-				<div>
-					<DialogContent style={{ padding: '12px 24px' }} dividers>
-						<Card className={classes.root}>
-							<Grid container spacing={2}>
-								<Grid item xs={12} sm={12} md={5}>
-									{imageArea}
-								</Grid>
-								<Grid item xs={12} sm={12} md={7}>
-									<div className={classes.details}>
-										<CardContent className={classes.content}>
-											<Grid container spacing={2}>
-												<Grid
-													item
-													xs={12}
-													sm={12}
-													md={12}
-													style={{ textAlign: 'center' }}>
-													<Typography variant='h4'>
-														{props.event_name}
-													</Typography>
-												</Grid>
-
-												<Grid item xs={2} sm={2} md={2}>
-													<label
-														htmlFor='eventDate'
-														style={{
-															display: 'inline-block',
-															fontSize: '1.3em',
-															fontWeight: 'bolder',
-														}}>
-														Date
-													</label>
-												</Grid>
-												<Grid item xs={5} sm={5} md={5}>
-													<Typography variant='subtitle1'>
-														{props.Event_date}
-													</Typography>
-												</Grid>
-
-												<Grid item xs={2} sm={2} md={2}>
-													<label
-														htmlFor='eventTime'
-														style={{
-															display: 'inline-block',
-															fontSize: '1.3em',
-															fontWeight: 'bolder',
-														}}>
-														Time
-													</label>
-												</Grid>
-												<Grid item xs={3} sm={3} md={3}>
-													<Typography variant='subtitle1'>
-														{props.Event_time}
-													</Typography>
-												</Grid>
-
-												<Grid item xs={2} sm={2} md={2}>
-													<label
-														htmlFor='eventLocation'
-														style={{
-															display: 'inline-block',
-															fontSize: '1.3em',
-															fontWeight: 'bolder',
-														}}>
-														{props.Online}
-													</label>
-												</Grid>
-
-												<Grid item xs={10} sm={10} md={10}>
-													<Typography variant='h6'>
-														{props.Event_location}
-													</Typography>
-												</Grid>
-												<Grid item xs={12} sm={12} md={12}>
-													<label
-														htmlFor='eventLocation'
-														style={{
-															display: 'inline-block',
-															fontSize: '1.3em',
-															fontWeight: 'bolder',
-														}}>
-														Event Description
-													</label>
-												</Grid>
-												<Grid item xs={12} sm={12} md={12}>
-													<Typography
-														component='p'
-														variant='subtitle2'
-														color='textPrimary'>
-														{props.Event_desc}
-													</Typography>
-												</Grid>
-											</Grid>
-										</CardContent>
-									</div>
-								</Grid>
-							</Grid>
-						</Card>
-					</DialogContent>
-					<DialogActions>
-						<Button
-							color='primary'
-							variant='contained'
-							onClick={handleEditMode}>
-							Update Event
-						</Button>
-						<Button
-							color='secondary'
-							variant='contained'
-							onClick={handleDeleteEvent}>
-							Delete
-						</Button>
-					</DialogActions>
-				</div>
-			);
+			editFormSection = (<EventDetail {...props} handleEditMode={handleEditMode} handleDeleteEvent={handleDeleteEvent} imageArea={imageArea} />);
+			
 		} else if (isEditEventMode) {
 			editFormSection = (
 				<form onSubmit={handleSubmit(handleEditEventForm)}>
@@ -471,7 +365,12 @@ const ProfileEventDetail = (props) => {
 				</form>
 			);
 		}
-		eventSection = (
+		
+	} else if (props.isRsvpList === true) {
+			editFormSection = (<EventDetail {...props} imageArea={imageArea} handleCancelRSVP={handleCancelRSVP} />)
+		
+	}
+	eventSection = (
 			<Dialog
 				disableBackdropClick
 				open={props.open}
@@ -481,10 +380,10 @@ const ProfileEventDetail = (props) => {
 				<DialogTitle id='customized-dialog-title' onClose={props.handleClose}>
 					{isEditEventMode ? 'Edit Mode' : props.event_name}
 				</DialogTitle>
-				{editFormSection}
+			{editFormSection}
+			
 			</Dialog>
 		);
-	}
 	return eventSection;
 };
 const mapStateToProps = (state) => {
@@ -520,6 +419,9 @@ const mapDispatchToProps = (dispatch) => {
 					eventDescription,
 				),
 			),
+		onCancelRSVP: (token, eventTitle) => {
+			dispatch(actions.onCancelRSVP(token, eventTitle))
+		}
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileEventDetail);
