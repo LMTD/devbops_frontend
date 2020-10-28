@@ -46,7 +46,6 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 const ProfileEventDetail = (props) => {
-	let history = useHistory();
 	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
 	const classes = useStyles();
 	const [isEditEventMode, setIsEditEventMode] = useState(false);
@@ -218,8 +217,18 @@ const ProfileEventDetail = (props) => {
 		);
 	}
 
-	const handleEditEventForm = (FormData) => {
-		console.log('edit event form is clicked');
+	const handleEditEventForm = (formData) => {
+		console.log('edit event form is clicked: ', FormData);
+		props.onUpdateEvent(
+			props.token,
+			formData.eventTitle,
+			formData.eventDate,
+			formData.eventTime,
+			formData.eventType,
+			formData.locationDetail,
+			selectedFile,
+			formData.eventDescription,
+		);
 		handleEditMode();
 	};
 
@@ -489,6 +498,28 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		onDeleteEvent: (token, eventTitle) =>
 			dispatch(actions.onDeleteEvent(token, eventTitle)),
+		onUpdateEvent: (
+			token,
+			eventTitle,
+			eventDate,
+			eventTime,
+			eventType,
+			locationDetail,
+			imgUrl,
+			eventDescription,
+		) =>
+			dispatch(
+				actions.onUpdateEvent(
+					token,
+					eventTitle,
+					eventDate,
+					eventTime,
+					eventType,
+					locationDetail,
+					imgUrl,
+					eventDescription,
+				),
+			),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileEventDetail);

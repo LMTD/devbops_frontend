@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import moment from 'moment';
 import { useForm } from 'react-hook-form';
 import { red } from '@material-ui/core/colors';
 
@@ -8,90 +7,25 @@ import {
 	DialogContent,
 	Typography,
 	Avatar,
-	TextField,
 	Grid,
 	DialogActions,
 	Button,
 } from '@material-ui/core';
-import axios from 'axios';
 import { connect } from 'react-redux';
+import * as actions from '../../../store/actions/profile';
 
 const ProfileBlogDetail = (props) => {
 	const [showCommentInputField, setShowCommentInputField] = useState(false);
-	const { register, handleSubmit, watch } = useForm();
-	const watchComment = watch('comment');
 
 	const handleShowCommentInputField = () => {
 		setShowCommentInputField(!showCommentInputField);
 	};
 
-	const submitComment = async (formData) => {
-		console.log('this is comment form data: ', formData);
-
-		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'Q',
-					Token: props.token,
-					BlogSubject: props.blogName,
-					BlogBody: null,
-					Location: null,
-					Date: null,
-					Time: null,
-					Comment: formData.comment,
-				},
-			);
-			console.log('this is data: ', data);
-			if (data.Status) {
-				setShowCommentInputField(false);
-				props.updateComment(
-					props.blogName,
-					props.UserName,
-					formData.BlogComment,
-				);
-			}
-		} catch (err) {
-			console.log('there is error in comment: ', err);
-		}
+	const handleDeleteBlog = () => {
+		props.onDeleteBlog(props.token, props.blogName);
+		props.handleClose();
 	};
 
-	const commentForm = (
-		<Grid item sm={12}>
-			<form onSubmit={handleSubmit(submitComment)}>
-				<TextField
-					variant='outlined'
-					size='small'
-					fullWidth
-					multiline
-					name='comment'
-					label='Comment'
-					type='text'
-					id='comment'
-					inputRef={register({ required: true })}
-				/>
-
-				{watchComment ? (
-					<div>
-						<Button
-							variant='contained'
-							color='primary'
-							type='submit'
-							style={{ margin: '6px 0' }}>
-							Post Comment
-						</Button>
-						<Button
-							variant='contained'
-							color='secondary'
-							onClick={handleShowCommentInputField}
-							style={{ margin: ' 0 6px' }}>
-							Cancel Comment
-						</Button>
-					</div>
-				) : null}
-			</form>
-		</Grid>
-	);
 	let commentSection = null;
 	if (showCommentInputField) {
 		commentSection = (
@@ -218,16 +152,12 @@ const ProfileBlogDetail = (props) => {
 					{commentButton}
 
 					{commentSection}
-
-					{showCommentInputField ? commentForm : null}
 				</Grid>
 			</DialogContent>
 			<DialogActions>
 				<Button
 					autoFocus
-					onClick={() => {
-						alert('deleted');
-					}}
+					onClick={handleDeleteBlog}
 					color='secondary'
 					variant='contained'>
 					Delete
@@ -243,10 +173,12 @@ const ProfileBlogDetail = (props) => {
 		</Dialog>
 	);
 };
-const mapStateToProps = (state) => {
+
+const mapDispatchToProps = (dispatch) => {
 	return {
-		token: state.auth.token,
-		username: state.auth.username,
+		onDeleteBlog: (token, blogSubject) =>
+			dispatch(actions.onDeleteBlog(token, blogSubject)),
 	};
 };
-export default connect(mapStateToProps)(ProfileBlogDetail);
+
+export default connect(null, mapDispatchToProps)(ProfileBlogDetail);

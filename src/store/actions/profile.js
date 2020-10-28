@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import moment from 'moment';
 
 export const onFetchEvents = (token, action) => {
 	return async (dispatch) => {
@@ -125,5 +126,92 @@ export const deleteEventSuccess = (eventTitle) => {
 	return {
 		type: actionTypes.DELETE_EVENT_SUCCESS,
 		deletedEventTitle: eventTitle,
+	};
+};
+
+export const onUpdateEvent = (
+	token,
+	eventTitle,
+	eventDate,
+	eventTime,
+	eventType,
+	locationDetail,
+	imgUrl,
+	eventDescription,
+) => {
+	return async (dispatch) => {
+		try {
+			console.log(
+				token,
+				eventTitle,
+				eventDate,
+				eventTime,
+				eventType,
+				locationDetail,
+				imgUrl,
+				eventDescription,
+			);
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Token: token,
+					Action: 'U',
+					eventTitle: eventTitle,
+					eventDate: moment(eventDate).format('dddd MMM  Do YYYY'),
+					eventTime: moment(`${eventDate}, ${eventTime}`).format('h:mm a'),
+					eventType: eventType,
+					locationDetail: locationDetail,
+					imgUrl: imgUrl,
+					eventDescription: eventDescription,
+				},
+			);
+			console.log('this is data in on  onUpdateEvent: ', data);
+
+			// if (data.Status) {
+			// 	dispatch(deleteEventSuccess(eventTitle));
+			// }
+		} catch (err) {
+			// console.log(
+			// 	'there is an error with action: ',
+			// 	action,
+			// 	' and this is error: ',
+			// 	err,
+			// );
+		}
+	};
+};
+
+export const onDeleteBlog = (token, blogSubject) => {
+	return async (dispatch) => {
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
+				{
+					Action: 'D',
+					Token: token,
+					BlogSubject: blogSubject,
+					BlogBody: null,
+					Location: null,
+					Date: null,
+					Time: null,
+					Comment: null,
+				},
+			);
+			console.log('this is delete blog: ', data);
+
+			if (data.Status) {
+				dispatch(deleteBlogSuccess(blogSubject));
+			}
+		} catch (err) {
+			console.log('there is error in fetch blog history: ', err);
+			return [];
+		}
+	};
+};
+
+export const deleteBlogSuccess = (blogSubject) => {
+	return {
+		type: actionTypes.DELETE_BLOG_SUCCESS,
+		deletedBlogSubject: blogSubject,
 	};
 };

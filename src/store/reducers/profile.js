@@ -32,6 +32,14 @@ const profileReducer = (state = initialState, action) => {
 				),
 			};
 
+		case actionTypes.DELETE_BLOG_SUCCESS:
+			return {
+				...state,
+				myBlogs: state.myBlogs.filter(
+					(blog) => blog.blogName !== action.deletedBlogSubject,
+				),
+			};
+
 		default:
 			return state;
 	}
