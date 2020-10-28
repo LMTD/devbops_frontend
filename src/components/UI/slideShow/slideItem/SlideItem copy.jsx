@@ -13,16 +13,13 @@ import {
 import { red } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 
-import ProfileBlogDetail from '../../../profile/profileBlogDetail/ProfileBlogDetail';
-import ProfileEventDetail from '../../../profile/profileEventDetail/ProfileEventDetail';
+import EventDetail from '../../../eventDetail/EventDetail';
+import BlogDetail from '../../../blogDetail/BlogDetail';
 
 const useStyles = makeStyles({
 	root: {
 		maxWidth: 345,
 		margin: '0 20px',
-		'&:hover': {
-			cursor: 'pointer',
-		},
 	},
 	avatar: {
 		backgroundColor: red[500],
@@ -44,15 +41,15 @@ const SlideItem = (props) => {
 	let itemDetail = null;
 	let imageArea = null;
 
-	// console.log('this is props in slideItem: ', props);
+	console.log('this is props in slideItem: ', props);
 
-	if (props.Event_image !== '' && props.Event_image !== 'None') {
+	if (props.eventImageUrl !== '' && props.eventImageUrl !== 'None') {
 		imageArea = (
 			<CardMedia
 				component='img'
 				alt='Contemplative Reptile'
 				// image={props.eventImageUrl === '' ? logo : props.eventImageUrl}
-				image={props.Event_image}
+				image={props.eventImageUrl}
 				height={225}
 				// width={400}
 			/>
@@ -68,72 +65,94 @@ const SlideItem = (props) => {
 						height: '100%',
 						backgroundColor: red[500],
 					}}>
-					{props.event_name[0]}
+					{props.eventTitle[0]}
 				</Avatar>
 			</div>
 		);
 	}
-
 	if (props.isEvent) {
 		// console.log('this is props in event : ', props);
 		item = (
-			<Card className={classes.root} onClick={handleClickOpen}>
-				<CardActionArea>
+			<Card className={classes.root}>
+				<CardActionArea onClick={handleClickOpen}>
 					{imageArea}
+
 					<CardContent>
 						<Typography gutterBottom variant='h5' component='h2'>
-							{props.event_name}
+							{props.eventTitle}
 						</Typography>
 						<Typography variant='body2' color='textSecondary' component='p'>
-							{props.Event_desc.length > 40
-								? props.Event_desc.slice(0, 40) + '...'
-								: props.Event_desc}
+							{props.eventDescription.length > 40
+								? props.eventDescription.slice(0, 40) + '...'
+								: props.eventDescription}
 						</Typography>
 					</CardContent>
 				</CardActionArea>
 			</Card>
 		);
 
-		if (props.isProfile) {
-			itemDetail = (
-				<ProfileEventDetail open={open} handleClose={handleClose} {...props} />
-			);
-		}
+		itemDetail = (
+			<EventDetail
+				open={open}
+				handleClose={handleClose}
+				eventTitle={props.eventTitle}
+				eventDescription={props.eventDescription}
+				// eventImageUrl={props.eventImageUrl === '' ? logo : props.eventImageUrl}
+				eventImageUrl={props.eventImageUrl}
+				eventLocation={props.eventLocation}
+				eventDate={props.eventDate}
+				eventTime={props.eventTime}
+				eventRSVPList={props.eventRSVPList}
+				eventOrganizer={props.eventOrganizer}
+				eventType={props.eventType}
+				myEvent={props.myEvent}
+				rsvpEvent={props.rsvpEvent}
+			/>
+		);
 	} else {
 		item = (
-			<Card className={classes.root} onClick={handleClickOpen}>
+			<Card className={classes.root}>
 				<CardHeader
 					avatar={
 						<Avatar aria-label='recipe' className={classes.avatar}>
-							{props.UserName[0]}
+							{props.blogAuthor[0]}
 						</Avatar>
 					}
-					title={props.blogName}
-					subheader={props.BlogDate}
+					title={props.blogTitle}
+					subheader={props.blogDate}
 				/>
 				<CardActionArea>
-					<CardContent>
+					<CardContent onClick={handleClickOpen}>
 						<Typography variant='body2' color='textSecondary' component='p'>
-							{props.BlogContent.length > 150
-								? props.BlogContent.slice(0, 150) + '...'
-								: props.BlogContent}
+							{props.blogBody.length > 150
+								? props.blogBody.slice(0, 150) + '...'
+								: props.blogBody}
 						</Typography>
 					</CardContent>
 				</CardActionArea>
 			</Card>
 		);
-
-		if (props.isProfile) {
-			itemDetail = (
-				<ProfileBlogDetail open={open} handleClose={handleClose} {...props} />
-			);
-		}
+		itemDetail = (
+			<BlogDetail
+				open={open}
+				handleClose={handleClose}
+				blogTitle={props.blogTitle}
+				blogBody={props.blogBody}
+				blogAuthor={props.blogAuthor}
+				blogDate={props.blogDate}
+				blogTime={props.blogTime}
+				blogLocation={props.blogLocation}
+				blogComment={props.blogComment}
+				updateComment={props.updateComment}
+			/>
+		);
 	}
 
 	return (
 		<div>
-			{item}
-			{itemDetail}
+			{/* {item}
+			{itemDetail} */}
+			123
 		</div>
 	);
 };

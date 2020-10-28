@@ -1,139 +1,79 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import {
 	Grid,
 	Container,
 	Typography,
 	CircularProgress,
 } from '@material-ui/core';
+import * as actions from '../../store/actions/profile';
 import AccountSection from '../../components/profile/accountSection/AccountSection';
 import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const Profile = (props) => {
 	const [blogLoading, setBlogLoading] = useState(false);
-	const [myBlogs, setMyBlogs] = useState([]);
 	const [rsvpLoading, setRSVPloading] = useState(false);
-	const [rsvpList, setRSVPlist] = useState([]);
 	const [eventsLoading, setEventsLoading] = useState(false);
-	const [events, setEvents] = useState([]);
+
 	useEffect(() => {
-		const getAllBlogs = async () => {
-			setBlogLoading(true);
-			try {
-				const { data } = await axios.post(
-					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-					{
-						Action: 'H',
-						Token: props.token,
-						BlogSubject: null,
-						BlogBody: null,
-						Location: null,
-						Date: null,
-						Time: null,
-						Comment: null,
-					},
-				);
-				console.log('this is blogs: ', data);
-				if (data.Status) {
-					setMyBlogs(data.BlogsDB);
-				}
-				setBlogLoading(false);
-			} catch (err) {
-				console.log('there is error in fetch blog history: ', err);
-			}
-		};
-
-		const getAllRSVIPs = async () => {
-			setRSVPloading(true);
-			try {
-				const { data } = await axios.post(
-					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-					{
-						Token: props.token,
-						Action: 'VH',
-						eventTitle: null,
-						eventDate: null,
-						eventTime: null,
-						eventDescription: null,
-						imgUrl: null,
-						locationDetail: null,
-						eventType: null,
-					},
-				);
-				console.log('this is rsvp list: ', data);
-				if (data.Status) {
-					setRSVPlist(data.RSVP);
-				}
-				setRSVPloading(false);
-			} catch (err) {
-				console.log('there is error in fetch rsvp list: ', err);
-			}
-		};
-
-		const getAllEvents = async () => {
-			setEventsLoading(true);
-			try {
-				const { data } = await axios.post(
-					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-					{
-						Action: 'H',
-						Token: props.token,
-						eventTitle: null,
-						eventDate: null,
-						eventTime: null,
-						eventDescription: null,
-						imgUrl: null,
-						locationDetail: null,
-						eventType: null,
-					},
-				);
-				console.log('this is events: ', data);
-				if (data.Status) {
-					setEvents(data.EventsDB);
-				}
-				setEventsLoading(false);
-			} catch (err) {
-				console.log('there is error in fetch blog history: ', err);
-			}
-		};
-
-		getAllBlogs();
-		getAllRSVIPs();
-		getAllEvents();
+		// console.log('this is use effect in profile');
+		// const { onFetchBlogs, onFetchEvents } = props;
+		setRSVPloading(true);
+		props.onFetchEvents(props.token, 'VH');
+		setRSVPloading(false);
+		setEventsLoading(true);
+		props.onFetchEvents(props.token, 'H');
+		setEventsLoading(false);
+		setBlogLoading(true);
+		props.onFetchBlogs(props.token);
+		setBlogLoading(false);
 	}, []);
+
+	// props.onFetchEvents(props.token, 'VH');
+	// props.onFetchEvents(props.token, 'H');
+	// props.onFetchBlogs(props.token);
 
 	let blogSection = null;
 	let rsvpSection = null;
 	let eventSection = null;
+	// console.log('this is props in profile: ', props);
 
-	if (blogLoading) {
-		blogSection = <CircularProgress />;
-	} else {
-		blogSection = <SlideShow slideItems={myBlogs} isEvent={false} />;
-	}
 	if (rsvpLoading) {
 		rsvpSection = <CircularProgress />;
 	} else {
 		rsvpSection = (
 			<SlideShow
-				slideItems={rsvpList}
+				token={props.token}
+				slideItems={props.myRsvpList}
 				isEvent={true}
-				myEvent={false}
-				rsvpEvent={true}
+				isProfile={true}
+				isRsvpList={true}
 			/>
 		);
 	}
-
 	if (eventsLoading) {
 		eventSection = <CircularProgress />;
 	} else {
 		eventSection = (
 			<SlideShow
-				slideItems={events}
+				token={props.token}
+				slideItems={props.myEvents}
 				isEvent={true}
-				myEvent={true}
-				rsvpEvent={false}
+				isProfile={true}
+				isRsvpList={false}
+			/>
+		);
+	}
+	if (blogLoading) {
+		blogSection = <CircularProgress />;
+	} else {
+		blogSection = (
+			<SlideShow
+				token={props.token}
+				slideItems={props.myBlogs}
+				isEvent={false}
+				isProfile={true}
+				isRsvpList={false}
 			/>
 		);
 	}
@@ -167,8 +107,20 @@ const Profile = (props) => {
 	);
 };
 const mapStateToProps = (state) => {
+	// console.log('this is state: ', state);
 	return {
-		token: state.token,
+		token: state.auth.token,
+		myRsvpList: state.profile.myRsvpList,
+		myBlogs: state.profile.myBlogs,
+		myEvents: state.profile.myEvents,
 	};
 };
-export default connect(mapStateToProps)(Profile);
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onFetchEvents: (token, action) =>
+			dispatch(actions.onFetchEvents(token, action)),
+		onFetchBlogs: (token) => dispatch(actions.onFetchBlogs(token)),
+	};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

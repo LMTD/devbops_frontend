@@ -41,7 +41,7 @@ const EventDetail = (props) => {
 	const [editEventMode, setEditEventMode] = useState(false);
 	const handleRSVP = async () => {
 		try {
-			console.log('this is event title: ', props);
+			// console.log('this is event title: ', props);
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
 				{
@@ -251,8 +251,8 @@ const EventDetail = (props) => {
 };
 const mapStateToProps = (state) => {
 	return {
-		token: state.token,
-		username: state.username,
+		token: state.auth.token,
+		username: state.auth.username,
 	};
 };
 export default connect(mapStateToProps)(EventDetail);

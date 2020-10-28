@@ -274,13 +274,13 @@ const AccountSection = (props) => {
 };
 const mapStateToProps = (state) => {
 	return {
-		token: state.token,
-		username: state.username,
-		email: state.email,
-		firstName: state.firstName,
-		lastName: state.lastName,
-		city: state.city,
-		country: state.country,
+		token: state.auth.token,
+		username: state.auth.username,
+		email: state.auth.email,
+		firstName: state.auth.firstName,
+		lastName: state.auth.lastName,
+		city: state.auth.city,
+		country: state.auth.country,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
