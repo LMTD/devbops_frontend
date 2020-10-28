@@ -15,14 +15,18 @@ import {
 	RadioGroup,
 	FormControlLabel,
 	Radio,
+	Fab,
+	CardActionArea,
 } from '@material-ui/core';
-import { red } from '@material-ui/core/colors';
+import { red, blue } from '@material-ui/core/colors';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import DialogTitle from '../../UI/dialogTitle/DialogTitle';
 import moment from 'moment';
+import * as actions from '../../../store/actions/profile';
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -49,113 +53,10 @@ const ProfileEventDetail = (props) => {
 	const [eventType, setEventType] = useState(props.Online);
 	const [selectedFile, setSelectedFile] = useState(props.Event_image);
 	const [isSelectImageMode, setIsSelectImageMode] = useState(false);
-	const handleRSVP = async () => {
-		try {
-			// console.log('this is event title: ', props);
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: props.token,
-					Action: 'V',
-					eventTitle: props.eventTitle,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				},
-			);
-			console.log('this is data in rsvp event: ', data);
-			if (data.Status) {
-				history.push('/asd');
-			}
-		} catch (err) {
-			console.log('there is an error in rsvp: ', err);
-		}
+
+	const handleDeleteEvent = () => {
+		props.onDeleteEvent(props.token, props.event_name);
 	};
-
-	const cancelRSVP = async () => {
-		try {
-			// console.log('this is event title: ', props);
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Action: 'CV',
-					Token: props.token,
-					eventTitle: props.eventTitle,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				},
-			);
-			console.log('this is data in cancel rsvp: ', data);
-			if (data.Status) {
-				history.push('/cancel-rsvp');
-			}
-		} catch (err) {
-			console.log('there is an error in rsvp: ', err);
-		}
-	};
-
-	const deleteEvent = async () => {
-		try {
-			// console.log('this is event title: ', props);
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Action: 'D',
-					Token: props.token,
-					eventTitle: props.eventTitle,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				},
-			);
-			console.log('this is data in cancel rsvp: ', data);
-			if (data.Status) {
-				history.push('/cancel-rsvp');
-				props.handleClose();
-			}
-		} catch (err) {
-			console.log('there is an error in rsvp: ', err);
-		}
-	};
-
-	let rsvpButton = null;
-
-	if (window.location.href.includes('profile')) {
-		rsvpButton = (
-			<Button
-				autoFocus
-				onClick={cancelRSVP}
-				color='secondary'
-				variant='contained'>
-				Cancel RSVP
-			</Button>
-		);
-	} else {
-		rsvpButton = (
-			<Button
-				autoFocus
-				onClick={handleRSVP}
-				color='secondary'
-				variant='contained'
-				disabled={props.eventRSVPList.includes(props.username)}>
-				{`RSVP ${
-					props.eventRSVPList.length > 0
-						? '(' + props.eventRSVPList.length + ')'
-						: ''
-				}`}
-			</Button>
-		);
-	}
 
 	const handleEditMode = () => {
 		setIsEditEventMode(!isEditEventMode);
@@ -185,7 +86,7 @@ const ProfileEventDetail = (props) => {
 		<CardContent
 			style={{
 				border: '1px solid rgba(0, 0, 0, 0.23)',
-				height: '75%',
+				height: '80%',
 			}}>
 			<TextField
 				accept='image/*'
@@ -228,7 +129,7 @@ const ProfileEventDetail = (props) => {
 
 	if (!isSelectImageMode) {
 		eventImageSection = (
-			<CardActionArea onClick={imageResetHandler}>
+			<CardActionArea onClick={imageResetHandler} style={{ height: '100%' }}>
 				{/* <img width='100%' src={selectedFile} alt='the img that you uploaded' /> */}
 				{selectedFile ? (
 					<img
@@ -288,17 +189,6 @@ const ProfileEventDetail = (props) => {
 		);
 	}
 
-	if (props.myEvent) {
-		rsvpButton = (
-			<Button
-				autoFocus
-				color='secondary'
-				variant='contained'
-				onClick={deleteEvent}>
-				Delete
-			</Button>
-		);
-	}
 	let imageArea = null;
 
 	if (props.Event_image !== '') {
@@ -336,10 +226,6 @@ const ProfileEventDetail = (props) => {
 	let eventSection = null;
 	let editFormSection = null;
 	if (!props.isRsvpList) {
-		console.log(
-			'this: ',
-			moment(props.Event_date, ['dddd MMM Do YY']).format('YYYY/MM/DD'),
-		);
 		if (!isEditEventMode) {
 			editFormSection = (
 				<div>
@@ -451,7 +337,7 @@ const ProfileEventDetail = (props) => {
 						<Button
 							color='secondary'
 							variant='contained'
-							onClick={props.handleClose}>
+							onClick={handleDeleteEvent}>
 							Delete
 						</Button>
 					</DialogActions>
@@ -569,8 +455,8 @@ const ProfileEventDetail = (props) => {
 						<Button
 							color='secondary'
 							variant='contained'
-							onClick={props.handleClose}>
-							Delete
+							onClick={handleEditMode}>
+							Cancel
 						</Button>
 					</DialogActions>
 				</form>
@@ -598,4 +484,11 @@ const mapStateToProps = (state) => {
 		username: state.auth.username,
 	};
 };
-export default connect(mapStateToProps)(ProfileEventDetail);
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onDeleteEvent: (token, eventTitle) =>
+			dispatch(actions.onDeleteEvent(token, eventTitle)),
+	};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileEventDetail);

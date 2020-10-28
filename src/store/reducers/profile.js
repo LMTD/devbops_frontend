@@ -24,6 +24,14 @@ const profileReducer = (state = initialState, action) => {
 				myBlogs: action.myBlogs,
 			};
 
+		case actionTypes.DELETE_EVENT_SUCCESS:
+			return {
+				...state,
+				myEvents: state.myEvents.filter(
+					(event) => event.event_name !== action.deletedEventTitle,
+				),
+			};
+
 		default:
 			return state;
 	}

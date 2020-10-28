@@ -87,3 +87,43 @@ export const getBlogsSuccess = (blogs) => {
 		myBlogs: blogs,
 	};
 };
+
+export const onDeleteEvent = (token, eventTitle) => {
+	return async (dispatch) => {
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Token: token,
+					Action: 'D',
+					eventTitle: eventTitle,
+					eventDate: null,
+					eventTime: null,
+					eventDescription: null,
+					imgUrl: null,
+					locationDetail: null,
+					eventType: null,
+				},
+			);
+			console.log('this is data in on delete event: ', data);
+
+			if (data.Status) {
+				dispatch(deleteEventSuccess(eventTitle));
+			}
+		} catch (err) {
+			// console.log(
+			// 	'there is an error with action: ',
+			// 	action,
+			// 	' and this is error: ',
+			// 	err,
+			// );
+		}
+	};
+};
+
+export const deleteEventSuccess = (eventTitle) => {
+	return {
+		type: actionTypes.DELETE_EVENT_SUCCESS,
+		deletedEventTitle: eventTitle,
+	};
+};

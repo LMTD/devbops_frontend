@@ -43,6 +43,7 @@ const Profile = (props) => {
 	} else {
 		rsvpSection = (
 			<SlideShow
+				token={props.token}
 				slideItems={props.myRsvpList}
 				isEvent={true}
 				isProfile={true}
@@ -55,6 +56,7 @@ const Profile = (props) => {
 	} else {
 		eventSection = (
 			<SlideShow
+				token={props.token}
 				slideItems={props.myEvents}
 				isEvent={true}
 				isProfile={true}
@@ -67,6 +69,7 @@ const Profile = (props) => {
 	} else {
 		blogSection = (
 			<SlideShow
+				token={props.token}
 				slideItems={props.myBlogs}
 				isEvent={false}
 				isProfile={true}
