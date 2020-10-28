@@ -26,14 +26,7 @@ export const onFetchEvents = (token, action) => {
 			} else if (data.Status && data.hasOwnProperty('EventsDB')) {
 				dispatch(getEventsSuccess(data.EventsDB));
 			}
-		} catch (err) {
-			// console.log(
-			// 	'there is an error with action: ',
-			// 	action,
-			// 	' and this is error: ',
-			// 	err,
-			// );
-		}
+		} catch (err) {}
 	};
 };
 
@@ -49,7 +42,7 @@ const getRsvpListSuccess = (rsvpList) => {
 const getEventsSuccess = (events) => {
 	// console.log('this is events: ', events);
 	return {
-		type: actionTypes.GET_EVENTS_SUCCESS,
+		type: actionTypes.GET_MY_EVENTS_SUCCESS,
 		myEvents: events,
 	};
 };
@@ -84,7 +77,7 @@ export const onFetchBlogs = (token) => {
 
 export const getBlogsSuccess = (blogs) => {
 	return {
-		type: actionTypes.GET_BLOGS_SUCCESS,
+		type: actionTypes.GET_MY_BLOGS_SUCCESS,
 		myBlogs: blogs,
 	};
 };
@@ -124,7 +117,7 @@ export const onDeleteEvent = (token, eventTitle) => {
 
 export const deleteEventSuccess = (eventTitle) => {
 	return {
-		type: actionTypes.DELETE_EVENT_SUCCESS,
+		type: actionTypes.DELETE_MY_EVENT_SUCCESS,
 		deletedEventTitle: eventTitle,
 	};
 };
@@ -211,7 +204,7 @@ export const onDeleteBlog = (token, blogSubject) => {
 
 export const deleteBlogSuccess = (blogSubject) => {
 	return {
-		type: actionTypes.DELETE_BLOG_SUCCESS,
+		type: actionTypes.DELETE_MY_BLOG_SUCCESS,
 		deletedBlogSubject: blogSubject,
 	};
 };
