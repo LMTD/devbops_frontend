@@ -47,6 +47,8 @@ const ProfileEventDetail = (props) => {
 	const classes = useStyles();
 	const [isEditEventMode, setIsEditEventMode] = useState(false);
 	const [eventType, setEventType] = useState(props.Online);
+	const [selectedFile, setSelectedFile] = useState(props.Event_image);
+	const [isSelectImageMode, setIsSelectImageMode] = useState(false);
 	const handleRSVP = async () => {
 		try {
 			// console.log('this is event title: ', props);
@@ -162,6 +164,95 @@ const ProfileEventDetail = (props) => {
 	const handleRadioChange = (event) => {
 		setEventType(event.target.value);
 	};
+
+	const imageResetHandler = () => {
+		setSelectedFile(null);
+		setIsSelectImageMode(true);
+	};
+
+	const handleUploadClick = (event) => {
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onloadend = function (e) {
+			setSelectedFile(reader.result);
+		};
+		setIsSelectImageMode(false);
+		setSelectedFile(event.target.files[0]);
+	};
+
+	let eventImageSection = (
+		<CardContent
+			style={{
+				border: '1px solid rgba(0, 0, 0, 0.23)',
+				height: '75%',
+			}}>
+			<TextField
+				accept='image/*'
+				id='contained-button-file'
+				multiple
+				type='file'
+				name='eventImage'
+				fullWidth
+				inputRef={register()}
+				onChange={handleUploadClick}
+				style={{ display: 'none' }}
+			/>
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					height: '100%',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}>
+				<label htmlFor='contained-button-file'>
+					<Fab
+						component='span'
+						style={{
+							color: blue[900],
+							margin: 10,
+						}}>
+						<AddPhotoAlternateIcon />
+					</Fab>
+				</label>
+
+				<label
+					htmlFor='contained-button-file'
+					style={{ cursor: 'pointer', color: '#9a9494' }}>
+					Click to add main event image (optional)
+				</label>
+			</div>
+		</CardContent>
+	);
+
+	if (!isSelectImageMode) {
+		eventImageSection = (
+			<CardActionArea onClick={imageResetHandler}>
+				{/* <img width='100%' src={selectedFile} alt='the img that you uploaded' /> */}
+				{selectedFile ? (
+					<img
+						width='100%'
+						src={selectedFile}
+						alt='the img that you uploaded'
+					/>
+				) : (
+					<div style={{ height: '100%' }}>
+						<Avatar
+							aria-label='recipe'
+							style={{
+								fontSize: '10em',
+								width: '100%',
+								height: '100%',
+								backgroundColor: red[500],
+							}}>
+							{props.event_name[0]}
+						</Avatar>
+					</div>
+				)}
+			</CardActionArea>
+		);
+	}
 
 	let eventDetail = null;
 
@@ -373,7 +464,7 @@ const ProfileEventDetail = (props) => {
 						<Card className={classes.root}>
 							<Grid container spacing={2}>
 								<Grid item xs={12} sm={12} md={5}>
-									{imageArea}
+									{eventImageSection}
 								</Grid>
 								<Grid item xs={12} sm={12} md={7}>
 									<div className={classes.details}>
