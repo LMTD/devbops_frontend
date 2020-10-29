@@ -64,7 +64,13 @@ const BlogDetail = (props) => {
 	);
 	let commentSection = null;
 
-	if (props.onPostingBlogComment) {
+	if (JSON.stringify(props.BlogComment) === '{}') {
+		commentSection = (
+			<Typography component='p' variant='body2'>
+				There is no comment so far
+			</Typography>
+		);
+	} else if (props.onPostingBlogComment) {
 		commentSection = <CircularProgress />;
 	} else {
 		commentSection = Object.entries(props.BlogComment).map((commentEntry) => (
