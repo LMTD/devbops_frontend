@@ -20,8 +20,8 @@ import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const Home = (props) => {
 	const [filterValue, setFilterValue] = useState('All Events');
-	const { register, handleSubmit, errors, watch } = useForm();
-
+	const { register, handleSubmit, watch } = useForm();
+	const watchFields = watch(['searchTerm']);
 	useEffect(() => {
 		console.log('this is use effect in home ');
 		props.fetchEvents(props.token);
@@ -31,11 +31,20 @@ const Home = (props) => {
 	const handleChangeFilterValue = (event) => {
 		setFilterValue(event.target.value);
 
-		props.filteringEvents(event.target.value, props.allEvents);
+		props.searchingBlogsAndEvents(
+			event.target.value,
+			watchFields.searchTerm,
+			props.allEvents,
+		);
 	};
 
 	const handleSearch = (formData) => {
 		console.log('this is handle search: ', formData);
+		props.searchingBlogsAndEvents(
+			filterValue,
+			formData.searchTerm,
+			props.allEvents,
+		);
 	};
 
 	let allEventSection = null;
@@ -113,7 +122,9 @@ const Home = (props) => {
 					</Grid>
 
 					{props.onLoadingHomeData ? (
-						<CircularProgress />
+						<Grid item xs={12} sm={12}>
+							<CircularProgress />
+						</Grid>
 					) : (
 						<Grid item xs={12} sm={12}>
 							<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
@@ -155,6 +166,10 @@ const mapDispatchToProps = (dispatch) => {
 		fetchBlogs: (token) => dispatch(actions.fetchBlogs(token)),
 		filteringEvents: (filterValue, events) =>
 			dispatch(actions.filteringEvents(filterValue, events)),
+		searchingBlogsAndEvents: (filterValue, searchTerm, events) =>
+			dispatch(
+				actions.searchingBlogsAndEvents(filterValue, searchTerm, events),
+			),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

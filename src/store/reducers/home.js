@@ -114,6 +114,13 @@ const homeReducer = (state = initialState, action) => {
 				onLoadingHomeData: false,
 			};
 
+		case actionTypes.SEARCH_BLOGS_AND_EVENTS_SUCCESS:
+			return {
+				...state,
+				filteredEvents: action.matchedEvents,
+				onLoadingHomeData: false,
+			};
+
 		default:
 			return state;
 	}
