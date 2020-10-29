@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
-import moment from 'moment';
 
 const onFetchEvents = () => {
 	return {
@@ -8,7 +7,7 @@ const onFetchEvents = () => {
 	};
 };
 
-const onFetchEvents = (allEvents, onlineEvents) => {
+const getEventsSuccess = (allEvents, onlineEvents) => {
 	return {
 		type: actionTypes.GET_EVENTS_SUCCESS,
 		allEvents: allEvents,
@@ -32,17 +31,89 @@ export const fetchEvents = (token) => {
 					imgUrl: null,
 					locationDetail: null,
 					eventType: null,
-				}
+				},
 			);
 			console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
 				const allOnlineEvents = data.EventsDB.filter(
-					(event) => event.Online === 'Online'
+					(event) => event.Online === 'Online',
 				);
 				console.log('this is allOnlineEvents: ', allOnlineEvents);
 				dispatch(getEventsSuccess(data.EventsDB, allOnlineEvents));
 			}
 		} catch (err) {}
+	};
+};
+
+const getBlogsSuccess = (blogs) => {
+	return {
+		type: actionTypes.GET_BLOGS_SUCCESS,
+		allBlogs: blogs,
+	};
+};
+
+export const fetchBlogs = (token) => {
+	return async (dispatch) => {
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
+				{
+					Token: token,
+					Action: 'R',
+					BlogSubject: null,
+					BlogBody: null,
+					Date: null,
+					Time: null,
+					Comment: null,
+					Location: null,
+				},
+			);
+
+			console.log('this is data in blogs: ', data);
+
+			if (data.Status) {
+				dispatch(getBlogsSuccess(data.BlogsDB));
+			}
+		} catch (err) {
+			console.log('there is an error in fetch all events: ', err);
+		}
+	};
+};
+
+const rsvpEventSuccess = (rsvpEventTitle, username) => {
+	return {
+		type: actionTypes.RSVP_EVENT_SUCCESS,
+		rsvpEventTitle: rsvpEventTitle,
+		rsvpUsername: username,
+	};
+};
+
+export const rsvpEvent = (token, eventTitle, username) => {
+	return async (dispatch) => {
+		// dispatch(onFetchEvents());
+		try {
+			// console.log('this is event title: ', props);
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Token: token,
+					Action: 'V',
+					eventTitle: eventTitle,
+					eventDate: null,
+					eventTime: null,
+					eventDescription: null,
+					imgUrl: null,
+					locationDetail: null,
+					eventType: null,
+				},
+			);
+			console.log('this is data in rsvp event: ', data);
+			if (data.Status) {
+				dispatch(rsvpEventSuccess(eventTitle, username));
+			}
+		} catch (err) {
+			console.log('there is an error in rsvp: ', err);
+		}
 	};
 };

@@ -28,7 +28,7 @@ const profileReducer = (state = initialState, action) => {
 			return {
 				...state,
 				myEvents: state.myEvents.filter(
-					(event) => event.event_name !== action.deletedEventTitle
+					(event) => event.event_name !== action.deletedEventTitle,
 				),
 			};
 
@@ -36,7 +36,7 @@ const profileReducer = (state = initialState, action) => {
 			return {
 				...state,
 				myBlogs: state.myBlogs.filter(
-					(blog) => blog.blogName !== action.deletedBlogSubject
+					(blog) => blog.blogName !== action.deletedBlogSubject,
 				),
 			};
 
@@ -44,7 +44,7 @@ const profileReducer = (state = initialState, action) => {
 			return {
 				...state,
 				myRsvpList: state.myRsvpList.filter(
-					(rsvp) => rsvp !== action.cancelledRSVP
+					(rsvp) => rsvp.event_name !== action.cancelledRSVP,
 				),
 			};
 
