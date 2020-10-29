@@ -215,7 +215,7 @@ export const searchingBlogsAndEvents = (
 			filteredEvents = events;
 		}
 
-		if (searchTerm.length > 0) {
+		if (searchTerm !== '') {
 			filteredEvents = filteredEvents.filter(
 				(event) =>
 					event.Event_date.indexOf(searchTerm) !== -1 ||

@@ -31,6 +31,7 @@ const Home = (props) => {
 	const handleChangeFilterValue = (event) => {
 		setFilterValue(event.target.value);
 
+		console.log('this is watchFields.searchTerm: ', watchFields.searchTerm);
 		props.searchingBlogsAndEvents(
 			event.target.value,
 			watchFields.searchTerm,
