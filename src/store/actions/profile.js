@@ -134,16 +134,6 @@ export const onUpdateEvent = (
 ) => {
 	return async (dispatch) => {
 		try {
-			console.log(
-				token,
-				eventTitle,
-				eventDate,
-				eventTime,
-				eventType,
-				locationDetail,
-				imgUrl,
-				eventDescription,
-			);
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
 				{
@@ -160,10 +150,41 @@ export const onUpdateEvent = (
 			);
 			console.log('this is data in on  onUpdateEvent: ', data);
 
-			// if (data.Status) {
-			// 	dispatch(deleteEventSuccess(eventTitle));
-			// }
+			if (data.Status) {
+				dispatch(
+					updatedEventSuccess(
+						eventTitle,
+						eventDate,
+						eventTime,
+						eventType,
+						locationDetail,
+						imgUrl,
+						eventDescription,
+					),
+				);
+			}
 		} catch (err) {}
+	};
+};
+
+const updatedEventSuccess = (
+	eventTitle,
+	eventDate,
+	eventTime,
+	eventType,
+	locationDetail,
+	imgUrl,
+	eventDescription,
+) => {
+	return {
+		type: actionTypes.UPDATE_EVENT_SUCCESS,
+		eventTitle: eventTitle,
+		eventDate: eventDate,
+		eventTime: eventTime,
+		eventType: eventType,
+		locationDetail: locationDetail,
+		imgUrl: imgUrl,
+		eventDescription: eventDescription,
 	};
 };
 

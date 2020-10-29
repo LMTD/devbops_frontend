@@ -48,6 +48,23 @@ const profileReducer = (state = initialState, action) => {
 				),
 			};
 
+		case actionTypes.UPDATE_EVENT_SUCCESS:
+			return {
+				...state,
+				myEvents: state.myEvents.map((event) => {
+					const updatedEvent = JSON.parse(JSON.stringify(event));
+					if (event.event_name === action.eventTitle) {
+						updatedEvent.Event_date = action.eventDate;
+						updatedEvent.Event_desc = action.eventDescription;
+						updatedEvent.Event_image = action.imgUrl;
+						updatedEvent.Event_location = action.locationDetail;
+						updatedEvent.Event_time = action.eventTime;
+						updatedEvent.Online = action.eventType;
+					}
+					return updatedEvent;
+				}),
+			};
+
 		default:
 			return state;
 	}
