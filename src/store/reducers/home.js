@@ -4,9 +4,12 @@ const initialState = {
 	allBlogs: [],
 	allEvents: [],
 	allOnlineEvents: [],
+	filteredEvents: [],
+	filteredBlogs: [],
 	onFetchingEvents: true,
 	onFetchingBlogs: true,
 	onPostingBlogComment: false,
+	onLoadingHomeData: false,
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -22,6 +25,7 @@ const homeReducer = (state = initialState, action) => {
 				...state,
 				allEvents: action.allEvents,
 				allOnlineEvents: action.allOnlineEvents,
+				filteredEvents: action.allEvents,
 				onFetchingEvents: false,
 			};
 
@@ -29,6 +33,7 @@ const homeReducer = (state = initialState, action) => {
 			return {
 				...state,
 				allBlogs: action.allBlogs,
+				filteredBlogs: action.allBlogs,
 				onFetchingBlogs: false,
 			};
 
@@ -46,6 +51,16 @@ const homeReducer = (state = initialState, action) => {
 					return event;
 				}),
 				allOnlineEvents: state.allOnlineEvents.map((event) => {
+					if (event.event_name === action.rsvpEventTitle) {
+						if (event.RSVP.indexOf(action.rsvpUsername) === -1) {
+							const updatedEvent = JSON.parse(JSON.stringify(event));
+							updatedEvent.RSVP.push(action.rsvpUsername);
+							return updatedEvent;
+						}
+					}
+					return event;
+				}),
+				filteredEvents: state.allEvents.map((event) => {
 					if (event.event_name === action.rsvpEventTitle) {
 						if (event.RSVP.indexOf(action.rsvpUsername) === -1) {
 							const updatedEvent = JSON.parse(JSON.stringify(event));
@@ -75,7 +90,35 @@ const homeReducer = (state = initialState, action) => {
 					}
 					return blog;
 				}),
+				filteredBlogs: state.allBlogs.map((blog) => {
+					if (blog.blogName === action.blogSubject) {
+						const updatedBlog = JSON.parse(JSON.stringify(blog));
+						updatedBlog.BlogComment[action.username] = action.blogComment;
+						return updatedBlog;
+					}
+					return blog;
+				}),
 				onPostingBlogComment: false,
+			};
+
+		case actionTypes.ON_FILTER:
+			return {
+				...state,
+				onLoadingHomeData: true,
+			};
+
+		case actionTypes.FILTER_EVENTS_SUCCESS:
+			return {
+				...state,
+				filteredEvents: action.filteredEvents,
+				onLoadingHomeData: false,
+			};
+
+		case actionTypes.SEARCH_BLOGS_AND_EVENTS_SUCCESS:
+			return {
+				...state,
+				filteredEvents: action.matchedEvents,
+				onLoadingHomeData: false,
 			};
 
 		default:

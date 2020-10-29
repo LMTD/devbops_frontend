@@ -159,3 +159,82 @@ export const postBlogComment = (token, username, blogSubject, blogComment) => {
 		}
 	};
 };
+
+const onFilter = () => {
+	return {
+		type: actionTypes.ON_FILTER,
+	};
+};
+
+const filterEventsSuccess = (filteredEvents) => {
+	return {
+		type: actionTypes.FILTER_EVENTS_SUCCESS,
+		filteredEvents: filteredEvents,
+	};
+};
+
+export const filteringEvents = (filterValue, events) => {
+	return (dispatch) => {
+		dispatch(onFilter());
+		let filteredEvents = null;
+
+		if (filterValue === 'Only Online') {
+			filteredEvents = events.filter((event) => event.Online === 'Online');
+		} else if (filterValue === 'Only In-Person') {
+			filteredEvents = events.filter((event) => event.Online !== 'Online');
+		} else {
+			filteredEvents = events;
+		}
+
+		dispatch(filterEventsSuccess(filteredEvents));
+	};
+};
+
+const searchBlogsAndEventsSuccess = (matchedEvents) => {
+	return {
+		type: actionTypes.SEARCH_BLOGS_AND_EVENTS_SUCCESS,
+		matchedEvents: matchedEvents,
+	};
+};
+
+export const searchingBlogsAndEvents = (
+	filterValue,
+	searchTerm,
+	events,
+	// blogs,
+) => {
+	return (dispatch) => {
+		dispatch(onFilter());
+		let filteredEvents = null;
+		// let fiteredBlogs = null;
+		if (filterValue === 'Only Online') {
+			filteredEvents = events.filter((event) => event.Online === 'Online');
+		} else if (filterValue === 'Only In-Person') {
+			filteredEvents = events.filter((event) => event.Online !== 'Online');
+		} else {
+			filteredEvents = events;
+		}
+
+		if (searchTerm !== '') {
+			filteredEvents = filteredEvents.filter(
+				(event) =>
+					event.Event_date.indexOf(searchTerm) !== -1 ||
+					event.Event_desc.indexOf(searchTerm) !== -1 ||
+					event.Event_location.indexOf(searchTerm) !== -1 ||
+					event.Event_time.indexOf(searchTerm) !== -1 ||
+					event.event_name.indexOf(searchTerm) !== -1,
+			);
+		}
+
+		// fiteredBlogs = blogs.filter(
+		// 	(blog) =>
+		// 		blog.BlogComment.indexOf(searchTerm) !== -1 ||
+		// 		blog.BlogContent.indexOf(searchTerm) !== -1 ||
+		// 		blog.BlogDate.indexOf(searchTerm) !== -1 ||
+		// 		blog.BlogLocation.indexOf(searchTerm) !== -1 ||
+		// 		blog.BlogTime.indexOf(searchTerm) !== -1 ||
+		// 		blog.blogName.indexOf(searchTerm) !== -1);
+
+		dispatch(searchBlogsAndEventsSuccess(filteredEvents));
+	};
+};
