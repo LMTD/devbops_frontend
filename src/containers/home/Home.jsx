@@ -12,147 +12,71 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import * as actions from '../../store/actions/profile';
+import * as actions from '../../store/actions/home';
 
 import { connect } from 'react-redux';
 
 import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const Home = (props) => {
-	const [allEvents, setAllEvents] = useState([]);
-	const [isEventLoading, setIsEventLoading] = useState(false);
-	const [allBlogs, setAllBlogs] = useState([]);
-	const [isBlogLoading, setIsBlogLoading] = useState(false);
-	const [allOnlineEvents, setAllOnlineEvents] = useState([]);
-	const [isOnlineEventLoading, setIsOnlineEventLoading] = useState(false);
+	const [events, setEvents] = useState();
+	const [blogs, setBlogs] = useState();
+	const [onlineEvents, setOnlineEvents] = useState();
 
 	useEffect(() => {
-		// console.log('this is useeff');
-		const fetchEvents = async () => {
-			setIsOnlineEventLoading(true);
-			setIsEventLoading(true);
-
-			try {
-				const { data } = await axios.post(
-					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-					{
-						Token: props.token,
-						Action: 'R',
-						eventTitle: null,
-						eventDate: null,
-						eventTime: null,
-						eventDescription: null,
-						imgUrl: null,
-						locationDetail: null,
-						eventType: null,
-					},
-				);
-
-				if (data.Status) {
-					console.log('this is data from fetch all events: ', data);
-
-					const fetchedAllOnlineEvents = data.EventsDB.filter(
-						(event) => event.Online === 'Online',
-					);
-					console.log(
-						'this is fetchedAllOnlineEvents: ',
-						fetchedAllOnlineEvents,
-					);
-					setIsEventLoading(true);
-					setAllEvents(data.EventsDB);
-					setIsEventLoading(false);
-					setAllOnlineEvents(fetchedAllOnlineEvents);
-				}
-			} catch (err) {
-				console.log('there is an error in fetch all events: ', err);
-			}
-			setIsOnlineEventLoading(false);
-			setIsEventLoading(false);
-		};
-
-		const fetchBlogs = async () => {
-			try {
-				setIsBlogLoading(true);
-				const { data } = await axios.post(
-					'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-					{
-						Token: props.token,
-						Action: 'R',
-						BlogSubject: null,
-						BlogBody: null,
-						Date: null,
-						Time: null,
-						Comment: null,
-						Location: null,
-					},
-				);
-
-				console.log('this is data in blogs: ', data);
-
-				if (data.Status) {
-					setAllBlogs(data.BlogsDB);
-				}
-			} catch (err) {
-				console.log('there is an error in fetch all events: ', err);
-			}
-			setIsBlogLoading(false);
-		};
-
-		fetchEvents();
-		fetchBlogs();
-		props.onFetchBlogs(props.token);
+		console.log('this is use effect in home ');
+		props.fetchEvents(props.token);
+		props.fetchBlogs(props.token);
+		setEvents(props.allEvents);
+		setOnlineEvents(props.allOnlineEvents);
+		setBlogs(props.allBlogs);
 	}, []);
 
-	const updateComment = (blogName, userName, comment) => {
-		const blogs = [...allBlogs];
-		console.log('this is blogname beofr map: ', blogName);
-		const updatedBlogs = blogs.map((blog) => {
-			if (blog.blogName === blogName) {
-				console.log(
-					'name matched: ',
-					blog.blogName,
-					'and this is userName: ',
-					userName,
-				);
-				const updatedBlog = { ...blog };
-				const updatedBlogComment = {
-					...updatedBlog.BlogComment,
-				};
-				updatedBlogComment[userName] = comment;
+	let onlineEventSection = null;
+	let allEventSection = null;
+	let blogSection = null;
 
-				// updatedBlogComment[userName] = comment;
-				console.log('this is updatedBlogComment: ', updatedBlogComment);
+	if (props.onFetchingEvents) {
+		onlineEventSection = <CircularProgress />;
+		allEventSection = <CircularProgress />;
+	} else {
+		onlineEventSection = (
+			<SlideShow
+				slideItems={props.allOnlineEvents}
+				token={props.token}
+				username={props.username}
+				isEvent={true}
+				isProfile={false}
+				isRsvpList={false}
+			/>
+		);
+		allEventSection = (
+			<SlideShow
+				slideItems={props.allEvents}
+				token={props.token}
+				username={props.username}
+				isEvent={true}
+				isProfile={false}
+				isRsvpList={false}
+			/>
+		);
+	}
 
-				return { ...updatedBlog, BlogComment: updatedBlogComment };
-			}
-			return blog;
-		});
+	if (props.onFetchingBlogs) {
+		blogSection = <CircularProgress />;
+	} else {
+		blogSection = (
+			<SlideShow
+				slideItems={props.allBlogs}
+				token={props.token}
+				username={props.username}
+				isEvent={false}
+				isProfile={false}
+				isRsvpList={false}
+			/>
+		);
+	}
 
-		// console.log('this is updateBlogs: ', updatedBlogs);
-		setAllBlogs(updatedBlogs);
-	};
-
-	let trendingOnlineEvents = <CircularProgress />;
-	let trendingEvents = <CircularProgress />;
-	let blogs = <CircularProgress />;
-	// if (!isOnlineEventLoading) {
-	// 	trendingOnlineEvents = (
-	// 		<SlideShow slideItems={allOnlineEvents} isEvent={true} />
-	// 	);
-	// }
-	// if (!isEventLoading) {
-	// 	trendingEvents = <SlideShow slideItems={allEvents} isEvent={true} />;
-	// }
-
-	// if (!isBlogLoading) {
-	// 	blogs = (
-	// 		<SlideShow
-	// 			slideItems={allBlogs}
-	// 			isEvent={false}
-	// 			updateComment={updateComment}
-	// 		/>
-	// 	);
-	// }
 	return (
 		<Container>
 			<Grid container spacing={3}>
@@ -198,19 +122,19 @@ const Home = (props) => {
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
 						Popular Online Events
 					</Typography>
-					{trendingOnlineEvents}
+					{onlineEventSection}
 				</Grid>
 				<Grid item xs={12} sm={12}>
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
 						Trending Events
 					</Typography>
-					{trendingEvents}
+					{allEventSection}
 				</Grid>
 				<Grid item xs={12} sm={12}>
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
 						Recent Blogs
 					</Typography>
-					{blogs}
+					{blogSection}
 				</Grid>
 			</Grid>
 		</Container>
@@ -219,14 +143,19 @@ const Home = (props) => {
 const mapStateToProps = (state) => {
 	return {
 		token: state.auth.token,
+		username: state.auth.username,
+		onFetchingEvents: state.home.onFetchingEvents,
+		onFetchingBlogs: state.home.onFetchingBlogs,
+		allOnlineEvents: state.home.allOnlineEvents,
+		allEvents: state.home.allEvents,
+		allBlogs: state.home.allBlogs,
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onFetchEvents: (token, action) =>
-			dispatch(actions.onFetchEvents(token, action)),
-		onFetchBlogs: (token) => dispatch(actions.onFetchBlogs(token)),
+		fetchEvents: (token) => dispatch(actions.fetchEvents(token)),
+		fetchBlogs: (token) => dispatch(actions.fetchBlogs(token)),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

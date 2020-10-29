@@ -15,11 +15,15 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ProfileBlogDetail from '../../../profile/profileBlogDetail/ProfileBlogDetail';
 import ProfileEventDetail from '../../../profile/profileEventDetail/ProfileEventDetail';
+import EventDetail from '../../../home/eventDetail/EventDetail';
+import BlogDetail from '../../../home/blogDetail/BlogDetail';
 
 const useStyles = makeStyles({
 	root: {
 		maxWidth: 345,
 		margin: '0 20px',
+		height: '100%',
+		width: '100%',
 		'&:hover': {
 			cursor: 'pointer',
 		},
@@ -98,6 +102,10 @@ const SlideItem = (props) => {
 			itemDetail = (
 				<ProfileEventDetail open={open} handleClose={handleClose} {...props} />
 			);
+		} else {
+			itemDetail = (
+				<EventDetail open={open} handleClose={handleClose} {...props} />
+			);
 		}
 	} else {
 		item = (
@@ -127,11 +135,15 @@ const SlideItem = (props) => {
 			itemDetail = (
 				<ProfileBlogDetail open={open} handleClose={handleClose} {...props} />
 			);
+		} else {
+			itemDetail = (
+				<BlogDetail open={open} handleClose={handleClose} {...props} />
+			);
 		}
 	}
 
 	return (
-		<div>
+		<div style={{ width: '100%' }}>
 			{item}
 			{itemDetail}
 		</div>

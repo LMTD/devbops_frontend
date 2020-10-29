@@ -25,8 +25,6 @@ import DialogTitle from '../../UI/dialogTitle/DialogTitle';
 import moment from 'moment';
 import * as actions from '../../../store/actions/profile';
 import EventDetail from './eventDetail/EventDetail';
-import ListData from '../../UI/listData/ListData';
-
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -41,12 +39,11 @@ const useStyles = makeStyles(() => ({
 		flex: '1 0 auto',
 	},
 	cover: {
-		width: 400,
-		margin: '0 20px',
+		marginRight: '30px',
 	},
 }));
 const ProfileEventDetail = (props) => {
-	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
+	const { register, handleSubmit } = useForm();
 	const classes = useStyles();
 	const [isEditEventMode, setIsEditEventMode] = useState(false);
 	const [eventType, setEventType] = useState(props.Online);
@@ -54,7 +51,7 @@ const ProfileEventDetail = (props) => {
 	const [isSelectImageMode, setIsSelectImageMode] = useState(false);
 
 	const handleDeleteEvent = () => {
-		console.log('handle delete event clicked')
+		console.log('handle delete event clicked');
 		props.onDeleteEvent(props.token, props.event_name);
 	};
 
@@ -98,9 +95,9 @@ const ProfileEventDetail = (props) => {
 	};
 
 	const handleCancelRSVP = () => {
-		console.log('handleCancelRSVP clicked')
+		console.log('handleCancelRSVP clicked');
 		props.onCancelRSVP(props.token, props.event_name);
-	}
+	};
 
 	let eventImageSection = (
 		<CardContent
@@ -231,7 +228,7 @@ const ProfileEventDetail = (props) => {
 						width: '80%',
 						height: '100%',
 						backgroundColor: red[500],
-						margin: '0 auto'
+						margin: '0 auto',
 					}}>
 					{props.event_name[0]}
 				</Avatar>
@@ -241,11 +238,16 @@ const ProfileEventDetail = (props) => {
 
 	let eventSection = null;
 	let editFormSection = null;
-	let rsvpList = null;
 	if (props.isRsvpList === false) {
 		if (!isEditEventMode) {
-			editFormSection = (<EventDetail {...props} handleEditMode={handleEditMode} handleDeleteEvent={handleDeleteEvent} imageArea={imageArea} />);
-			
+			editFormSection = (
+				<EventDetail
+					{...props}
+					handleEditMode={handleEditMode}
+					handleDeleteEvent={handleDeleteEvent}
+					imageArea={imageArea}
+				/>
+			);
 		} else if (isEditEventMode) {
 			editFormSection = (
 				<form onSubmit={handleSubmit(handleEditEventForm)}>
@@ -365,32 +367,29 @@ const ProfileEventDetail = (props) => {
 				</form>
 			);
 		}
-		
 	} else if (props.isRsvpList === true) {
-			editFormSection = (<EventDetail {...props} imageArea={imageArea} handleCancelRSVP={handleCancelRSVP} />)
-		
+		editFormSection = (
+			<EventDetail
+				{...props}
+				imageArea={imageArea}
+				handleCancelRSVP={handleCancelRSVP}
+			/>
+		);
 	}
 	eventSection = (
-			<Dialog
-				disableBackdropClick
-				open={props.open}
-				onClose={props.handleClose}
-				maxWidth='md'
-				aria-labelledby='responsive-dialog-title'>
-				<DialogTitle id='customized-dialog-title' onClose={props.handleClose}>
-					{isEditEventMode ? 'Edit Mode' : props.event_name}
-				</DialogTitle>
+		<Dialog
+			disableBackdropClick
+			open={props.open}
+			onClose={props.handleClose}
+			maxWidth='md'
+			aria-labelledby='responsive-dialog-title'>
+			<DialogTitle id='customized-dialog-title' onClose={props.handleClose}>
+				{isEditEventMode ? 'Edit Mode' : props.event_name}
+			</DialogTitle>
 			{editFormSection}
-			
-			</Dialog>
-		);
+		</Dialog>
+	);
 	return eventSection;
-};
-const mapStateToProps = (state) => {
-	return {
-		token: state.auth.token,
-		username: state.auth.username,
-	};
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -420,8 +419,8 @@ const mapDispatchToProps = (dispatch) => {
 				),
 			),
 		onCancelRSVP: (token, eventTitle) => {
-			dispatch(actions.onCancelRSVP(token, eventTitle))
-		}
+			dispatch(actions.onCancelRSVP(token, eventTitle));
+		},
 	};
 };
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileEventDetail);
+export default connect(null, mapDispatchToProps)(ProfileEventDetail);

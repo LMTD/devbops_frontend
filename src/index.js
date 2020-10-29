@@ -9,18 +9,20 @@ import App from './App';
 import './index.css';
 import authReducer from './store/reducers/auth';
 import profileReducer from './store/reducers/profile';
+import homeReducer from './store/reducers/home';
 import * as serviceWorker from './serviceWorker';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
+	home: homeReducer,
 	profile: profileReducer,
 	auth: authReducer,
 });
 
 const store = createStore(
 	rootReducer,
-	composeEnhancers(applyMiddleware(thunk)),
+	composeEnhancers(applyMiddleware(thunk))
 );
 
 ReactDOM.render(
@@ -31,7 +33,7 @@ ReactDOM.render(
 			</React.StrictMode>
 		</BrowserRouter>
 	</Provider>,
-	document.getElementById('root'),
+	document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

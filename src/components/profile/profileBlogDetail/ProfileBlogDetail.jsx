@@ -10,58 +10,39 @@ import {
 	Grid,
 	DialogActions,
 	Button,
+	Divider,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actions from '../../../store/actions/profile';
 
 const ProfileBlogDetail = (props) => {
-	const [showCommentInputField, setShowCommentInputField] = useState(false);
-
-	const handleShowCommentInputField = () => {
-		setShowCommentInputField(!showCommentInputField);
-	};
-
 	const handleDeleteBlog = () => {
 		props.onDeleteBlog(props.token, props.blogName);
 		props.handleClose();
 	};
 
 	let commentSection = null;
-	if (showCommentInputField) {
+
+	if (JSON.stringify(props.BlogComment) === '{}') {
 		commentSection = (
-			<Grid item xs={12} sm={12} md={12}>
-				{Object.entries(props.BlogComment).map((commentEntry) => (
-					<Grid container spacing={4}>
-						<Grid item xs={1} sm={1} md={1}>
-							<Avatar aria-label='recipe' style={{ background: red[500] }}>
-								{commentEntry[0][0]}
-							</Avatar>
-						</Grid>
-						<Grid item xs={11} sm={11} md={11}>
-							<Grid style={{ fontStyle: 'italic' }}>{commentEntry[0]}</Grid>
-							<Grid>{commentEntry[1]}</Grid>
-						</Grid>
-					</Grid>
-				))}
-			</Grid>
+			<Typography component='p' variant='body2'>
+				There is no comment so far
+			</Typography>
 		);
-	}
-
-	let commentButton = null;
-
-	if (JSON.stringify(props.BlogComment) !== '{}') {
-		commentButton = (
-			<Grid item xs={12} sm={12} md={12}>
-				<Button component='p' onClick={handleShowCommentInputField}>
-					Comment
-					{`${
-						Object.keys(props.BlogComment).length > 0
-							? '(' + Object.keys(props.BlogComment).length + ')'
-							: ''
-					}`}
-				</Button>
+	} else {
+		commentSection = Object.entries(props.BlogComment).map((commentEntry) => (
+			<Grid container spacing={2}>
+				<Grid item xs={1} sm={1} md={1}>
+					<Avatar aria-label='recipe' style={{ background: red[500] }}>
+						{commentEntry[0][0]}
+					</Avatar>
+				</Grid>
+				<Grid item xs={11} sm={11} md={11}>
+					<Grid style={{ fontStyle: 'italic' }}>{commentEntry[0]}</Grid>
+					<Grid>{commentEntry[1]}</Grid>
+				</Grid>
 			</Grid>
-		);
+		));
 	}
 
 	return (
@@ -144,14 +125,14 @@ const ProfileBlogDetail = (props) => {
 							borderBottom: '0.8px solid #ccc5c5',
 							padding: '20px 0',
 						}}>
-						<Typography component='p' variant='subtitle2' color='textPrimary'>
+						<Typography component='p' variant='subtitle1' color='textPrimary'>
 							{props.BlogContent}
 						</Typography>
 					</Grid>
 
-					{commentButton}
-
-					{commentSection}
+					<Grid item xs={12} sm={12} md={12}>
+						{commentSection}
+					</Grid>
 				</Grid>
 			</DialogContent>
 			<DialogActions>

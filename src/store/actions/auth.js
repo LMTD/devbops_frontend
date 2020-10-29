@@ -8,7 +8,7 @@ export const authSuccess = (
 	firstName,
 	lastName,
 	city,
-	country,
+	country
 ) => {
 	const userData = {
 		token: token,
@@ -55,8 +55,8 @@ export const authCheckState = () => {
 					userData.firstName,
 					userData.lastName,
 					userData.city,
-					userData.country,
-				),
+					userData.country
+				)
 			);
 		} else {
 			dispatch(logout());
@@ -64,16 +64,12 @@ export const authCheckState = () => {
 	};
 };
 
-export const launchedClicked = () => {
-	return { type: actionTypes.LAUNCH_FIRST_CLICKED };
-};
-
 export const updateUserSuccess = (
 	email,
 	firstName,
 	lastName,
 	city,
-	country,
+	country
 ) => {
 	// console.log('this is updateUserData in reducd');
 	let userData = localStorage.getItem('userData');
