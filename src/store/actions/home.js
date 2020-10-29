@@ -117,3 +117,45 @@ export const rsvpEvent = (token, eventTitle, username) => {
 		}
 	};
 };
+
+const onPostingBlogComment = () => {
+	return {
+		type: actionTypes.ON_POSTING_BLOG_COMMENT,
+	};
+};
+
+const commentBlogSuccess = (username, blogSubject, blogComment) => {
+	return {
+		type: actionTypes.COMMENT_BLOG_SUCCESS,
+		username: username,
+		blogSubject: blogSubject,
+		blogComment: blogComment,
+	};
+};
+
+export const postBlogComment = (token, username, blogSubject, blogComment) => {
+	return async (dispatch) => {
+		dispatch(onPostingBlogComment());
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
+				{
+					Action: 'Q',
+					Token: token,
+					BlogSubject: blogSubject,
+					BlogBody: null,
+					Location: null,
+					Date: null,
+					Time: null,
+					Comment: blogComment,
+				},
+			);
+			console.log('this is data: ', data);
+			if (data.Status) {
+				dispatch(commentBlogSuccess(username, blogSubject, blogComment));
+			}
+		} catch (err) {
+			console.log('there is error in comment: ', err);
+		}
+	};
+};

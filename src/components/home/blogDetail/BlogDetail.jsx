@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import moment from 'moment';
+import React from 'react';
+
 import { useForm } from 'react-hook-form';
 import { red } from '@material-ui/core/colors';
 
@@ -7,97 +7,66 @@ import {
 	Dialog,
 	DialogContent,
 	Typography,
-	Card,
-	IconButton,
-	CardContent,
 	Avatar,
 	TextField,
 	Grid,
 	DialogActions,
 	Button,
+	CircularProgress,
+	Divider,
 } from '@material-ui/core';
-import axios from 'axios';
+
 import { connect } from 'react-redux';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import * as actions from '../../../store/actions/home';
 
 const BlogDetail = (props) => {
-	const [showCommentInputField, setShowCommentInputField] = useState(false);
-	const { register, handleSubmit, watch } = useForm();
+	const { register, handleSubmit, watch, reset } = useForm();
 	const watchComment = watch('comment');
-
-	const handleShowCommentInputField = () => {
-		setShowCommentInputField(!showCommentInputField);
-	};
 
 	const submitComment = async (formData) => {
 		console.log('this is comment form data: ', formData);
+		props.postBlogComment(
+			props.token,
+			props.username,
+			props.blogName,
+			formData.comment,
+		);
 
-		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'Q',
-					Token: props.token,
-					BlogSubject: props.blogName,
-					BlogBody: null,
-					Location: null,
-					Date: null,
-					Time: null,
-					Comment: formData.comment,
-				},
-			);
-			console.log('this is data: ', data);
-			if (data.Status) {
-				setShowCommentInputField(false);
-				props.updateComment(
-					props.blogName,
-					props.UserName,
-					formData.BlogComment,
-				);
-			}
-		} catch (err) {
-			console.log('there is error in comment: ', err);
-		}
+		reset();
 	};
 
 	const commentForm = (
-		<Grid item sm={12}>
-			<form onSubmit={handleSubmit(submitComment)}>
-				<TextField
-					variant='outlined'
-					size='small'
-					fullWidth
-					multiline
-					name='comment'
-					label='Comment'
-					type='text'
-					id='comment'
-					inputRef={register({ required: true })}
-				/>
+		<form onSubmit={handleSubmit(submitComment)}>
+			<TextField
+				variant='outlined'
+				size='small'
+				fullWidth
+				multiline
+				name='comment'
+				label='Comment'
+				type='text'
+				id='comment'
+				inputRef={register({ required: true })}
+			/>
 
-				{watchComment ? (
-					<div>
-						<Button
-							variant='contained'
-							color='primary'
-							type='submit'
-							style={{ margin: '6px 0' }}>
-							Post Comment
-						</Button>
-						<Button
-							variant='contained'
-							color='secondary'
-							onClick={handleShowCommentInputField}
-							style={{ margin: ' 0 6px' }}>
-							Cancel Comment
-						</Button>
-					</div>
-				) : null}
-			</form>
-		</Grid>
+			{watchComment ? (
+				<div>
+					<Button
+						variant='contained'
+						color='primary'
+						type='submit'
+						style={{ margin: '6px 0' }}>
+						Post Comment
+					</Button>
+				</div>
+			) : null}
+		</form>
 	);
 	let commentSection = null;
-	if (showCommentInputField) {
+
+	if (props.onPostingBlogComment) {
+		commentSection = <CircularProgress />;
+	} else {
 		commentSection = Object.entries(props.BlogComment).map((commentEntry) => (
 			<Grid container spacing={4}>
 				<Grid item xs={1} sm={1} md={1}>
@@ -113,42 +82,6 @@ const BlogDetail = (props) => {
 		));
 	}
 
-	let commentButton = null;
-
-	if (JSON.stringify(props.BlogComment) === '{}') {
-		commentButton = (
-			<Button component='span' onClick={handleShowCommentInputField}>
-				There is no comment here, be the first one :)
-			</Button>
-		);
-	} else {
-		commentButton = (
-			<Button component='p' onClick={handleShowCommentInputField}>
-				Comment
-				{`${
-					Object.keys(props.BlogComment).length > 0
-						? '(' + Object.keys(props.BlogComment).length + ')'
-						: ''
-				}`}
-			</Button>
-		);
-	}
-
-	let deleteButton = null;
-
-	if (props.isProfile) {
-		deleteButton = (
-			<Button
-				autoFocus
-				onClick={() => {
-					alert('deleted');
-				}}
-				color='secondary'
-				variant='contained'>
-				Delete
-			</Button>
-		);
-	}
 	return (
 		<Dialog
 			disableBackdropClick
@@ -220,24 +153,27 @@ const BlogDetail = (props) => {
 						</Typography>
 					</Grid>
 
-					<Grid item>
-						<Typography component='p' variant='subtitle2' color='textSecondary'>
+					<Grid item xs={12} sm={12} md={12}>
+						<Typography component='p' variant='subtitle1' color='textPrimary'>
 							{props.BlogContent}
 						</Typography>
 					</Grid>
-
 					<Grid item xs={12} sm={12} md={12}>
-						{commentButton}
+						<Divider
+							variant='fullWidth'
+							style={{ background: 'rgb(197 190 190)' }}
+						/>
 					</Grid>
+
 					<Grid item xs={12} sm={12} md={12}>
 						{commentSection}
 					</Grid>
-
-					{showCommentInputField ? commentForm : null}
+					<Grid item xs={12} sm={12} md={12}>
+						{commentForm}
+					</Grid>
 				</Grid>
 			</DialogContent>
 			<DialogActions>
-				{deleteButton}
 				<Button
 					autoFocus
 					onClick={props.handleClose}
@@ -249,10 +185,20 @@ const BlogDetail = (props) => {
 		</Dialog>
 	);
 };
+
 const mapStateToProps = (state) => {
 	return {
-		token: state.auth.token,
-		username: state.auth.username,
+		onPostingBlogComment: state.home.onPostingBlogComment,
 	};
 };
-export default connect(mapStateToProps)(BlogDetail);
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		postBlogComment: (token, username, blogSubject, blogComment) => {
+			dispatch(
+				actions.postBlogComment(token, username, blogSubject, blogComment),
+			);
+		},
+	};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(BlogDetail);

@@ -163,14 +163,7 @@ export const onUpdateEvent = (
 			// if (data.Status) {
 			// 	dispatch(deleteEventSuccess(eventTitle));
 			// }
-		} catch (err) {
-			// console.log(
-			// 	'there is an error with action: ',
-			// 	action,
-			// 	' and this is error: ',
-			// 	err,
-			// );
-		}
+		} catch (err) {}
 	};
 };
 

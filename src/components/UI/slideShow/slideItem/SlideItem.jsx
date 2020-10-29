@@ -16,6 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ProfileBlogDetail from '../../../profile/profileBlogDetail/ProfileBlogDetail';
 import ProfileEventDetail from '../../../profile/profileEventDetail/ProfileEventDetail';
 import EventDetail from '../../../home/eventDetail/EventDetail';
+import BlogDetail from '../../../home/blogDetail/BlogDetail';
 
 const useStyles = makeStyles({
 	root: {
@@ -133,6 +134,10 @@ const SlideItem = (props) => {
 		if (props.isProfile) {
 			itemDetail = (
 				<ProfileBlogDetail open={open} handleClose={handleClose} {...props} />
+			);
+		} else {
+			itemDetail = (
+				<BlogDetail open={open} handleClose={handleClose} {...props} />
 			);
 		}
 	}

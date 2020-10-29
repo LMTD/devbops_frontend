@@ -6,6 +6,7 @@ const initialState = {
 	allOnlineEvents: [],
 	onFetchingEvents: true,
 	onFetchingBlogs: true,
+	onPostingBlogComment: false,
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -37,12 +38,6 @@ const homeReducer = (state = initialState, action) => {
 				allEvents: state.allEvents.map((event) => {
 					if (event.event_name === action.rsvpEventTitle) {
 						if (event.RSVP.indexOf(action.rsvpUsername) === -1) {
-							console.log(
-								'in all events this is action.rsvpUsername: ',
-								action.rsvpUsername,
-								' and this is action.rsvpEventTitle: ',
-								action.rsvpEventTitle,
-							);
 							const updatedEvent = JSON.parse(JSON.stringify(event));
 							updatedEvent.RSVP.push(action.rsvpUsername);
 							return updatedEvent;
@@ -52,17 +47,7 @@ const homeReducer = (state = initialState, action) => {
 				}),
 				allOnlineEvents: state.allOnlineEvents.map((event) => {
 					if (event.event_name === action.rsvpEventTitle) {
-						console.log(
-							'in online events this is event.RSVP.indexOf(action.rsvpUsername): ',
-							event.RSVP.indexOf(action.rsvpUsername),
-						);
 						if (event.RSVP.indexOf(action.rsvpUsername) === -1) {
-							console.log(
-								'in online events this is action.rsvpUsername: ',
-								action.rsvpUsername,
-								' and this is action.rsvpEventTitle: ',
-								action.rsvpEventTitle,
-							);
 							const updatedEvent = JSON.parse(JSON.stringify(event));
 							updatedEvent.RSVP.push(action.rsvpUsername);
 							return updatedEvent;
@@ -71,6 +56,26 @@ const homeReducer = (state = initialState, action) => {
 					return event;
 				}),
 				onFetchingEvents: false,
+			};
+
+		case actionTypes.ON_POSTING_BLOG_COMMENT:
+			return {
+				...state,
+				onPostingBlogComment: true,
+			};
+
+		case actionTypes.COMMENT_BLOG_SUCCESS:
+			return {
+				...state,
+				allBlogs: state.allBlogs.map((blog) => {
+					if (blog.blogName === action.blogSubject) {
+						const updatedBlog = JSON.parse(JSON.stringify(blog));
+						updatedBlog.BlogComment[action.username] = action.blogComment;
+						return updatedBlog;
+					}
+					return blog;
+				}),
+				onPostingBlogComment: false,
 			};
 
 		default:
