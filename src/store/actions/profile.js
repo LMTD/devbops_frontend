@@ -26,14 +26,7 @@ export const onFetchEvents = (token, action) => {
 			} else if (data.Status && data.hasOwnProperty('EventsDB')) {
 				dispatch(getEventsSuccess(data.EventsDB));
 			}
-		} catch (err) {
-			// console.log(
-			// 	'there is an error with action: ',
-			// 	action,
-			// 	' and this is error: ',
-			// 	err,
-			// );
-		}
+		} catch (err) {}
 	};
 };
 
@@ -49,7 +42,7 @@ const getRsvpListSuccess = (rsvpList) => {
 const getEventsSuccess = (events) => {
 	// console.log('this is events: ', events);
 	return {
-		type: actionTypes.GET_EVENTS_SUCCESS,
+		type: actionTypes.GET_MY_EVENTS_SUCCESS,
 		myEvents: events,
 	};
 };
@@ -84,7 +77,7 @@ export const onFetchBlogs = (token) => {
 
 export const getBlogsSuccess = (blogs) => {
 	return {
-		type: actionTypes.GET_BLOGS_SUCCESS,
+		type: actionTypes.GET_MY_BLOGS_SUCCESS,
 		myBlogs: blogs,
 	};
 };
@@ -124,7 +117,7 @@ export const onDeleteEvent = (token, eventTitle) => {
 
 export const deleteEventSuccess = (eventTitle) => {
 	return {
-		type: actionTypes.DELETE_EVENT_SUCCESS,
+		type: actionTypes.DELETE_MY_EVENT_SUCCESS,
 		deletedEventTitle: eventTitle,
 	};
 };
@@ -170,14 +163,7 @@ export const onUpdateEvent = (
 			// if (data.Status) {
 			// 	dispatch(deleteEventSuccess(eventTitle));
 			// }
-		} catch (err) {
-			// console.log(
-			// 	'there is an error with action: ',
-			// 	action,
-			// 	' and this is error: ',
-			// 	err,
-			// );
-		}
+		} catch (err) {}
 	};
 };
 
@@ -211,7 +197,40 @@ export const onDeleteBlog = (token, blogSubject) => {
 
 export const deleteBlogSuccess = (blogSubject) => {
 	return {
-		type: actionTypes.DELETE_BLOG_SUCCESS,
+		type: actionTypes.DELETE_MY_BLOG_SUCCESS,
 		deletedBlogSubject: blogSubject,
+	};
+};
+
+export const onCancelRSVP = (token, eventTitle) => {
+	return async (dispatch) => {
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Token: token,
+					Action: 'CV',
+					eventTitle: eventTitle,
+					eventDate: null,
+					eventTime: null,
+					eventDescription: null,
+					imgUrl: null,
+					locationDetail: null,
+					eventType: null,
+				},
+			);
+			console.log('this is data in on cancel rsvp event: ', data);
+
+			if (data.Status) {
+				dispatch(cancelRSVPSuccess(eventTitle));
+			}
+		} catch (err) {}
+	};
+};
+
+export const cancelRSVPSuccess = (eventTitle) => {
+	return {
+		type: actionTypes.CANCEL_RSVP_SUCCESS,
+		cancelledRSVP: eventTitle,
 	};
 };

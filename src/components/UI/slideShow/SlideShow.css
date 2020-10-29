@@ -1,7 +1,9 @@
 .rec-carousel-wrapper {
 	margin: 40px 0;
 }
-
+.rec-item-wrapper {
+	height: 100%;
+}
 /* square buttons */
 .rec.rec-arrow {
 	/* border-radius: 0; */

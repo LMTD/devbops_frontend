@@ -59,6 +59,15 @@ const SlideShow = (props) => {
 			sectionContents = (
 				<Typography variant='h6'>You haven't posted any blog yet.</Typography>
 			);
+		} else if (
+			props.slideItems.length === 0 &&
+			!props.isProfile &&
+			props.isEvent &&
+			!props.isRsvpList
+		) {
+			sectionContents = (
+				<Typography variant='h6'>There is no event happening</Typography>
+			);
 		}
 	}
 
