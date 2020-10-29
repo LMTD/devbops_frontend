@@ -159,3 +159,42 @@ export const postBlogComment = (token, username, blogSubject, blogComment) => {
 		}
 	};
 };
+
+const onFilter = () => {
+	return {
+		type: actionTypes.ON_FILTER,
+	};
+};
+
+const filterEventsSuccess = (filteredEvents) => {
+	return {
+		type: actionTypes.FILTER_EVENTS_SUCCESS,
+		filteredEvents: filteredEvents,
+	};
+};
+
+export const filteringEvents = (filterValue, events) => {
+	return (dispatch) => {
+		dispatch(onFilter());
+
+		console.log(
+			'this is filterValue: ',
+			filterValue,
+			' this is events: ',
+			events,
+		);
+		let filteredEvents = null;
+
+		if (filterValue === 'Only Online') {
+			filteredEvents = events.filter((event) => event.Online === 'Online');
+		} else if (filterValue === 'Only In-Person') {
+			filteredEvents = events.filter((event) => event.Online !== 'Online');
+		} else {
+			filteredEvents = events;
+		}
+
+		console.log('this is filteredEvents: ', filteredEvents);
+
+		dispatch(filterEventsSuccess(filteredEvents));
+	};
+};

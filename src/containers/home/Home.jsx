@@ -10,8 +10,6 @@ import {
 	FormControl,
 	CircularProgress,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import * as actions from '../../store/actions/home';
 
 import { connect } from 'react-redux';
@@ -19,40 +17,29 @@ import { connect } from 'react-redux';
 import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const Home = (props) => {
-	const [events, setEvents] = useState();
-	const [blogs, setBlogs] = useState();
-	const [onlineEvents, setOnlineEvents] = useState();
+	const [filterValue, setFilterValue] = useState('All Events');
 
 	useEffect(() => {
 		console.log('this is use effect in home ');
 		props.fetchEvents(props.token);
 		props.fetchBlogs(props.token);
-		setEvents(props.allEvents);
-		setOnlineEvents(props.allOnlineEvents);
-		setBlogs(props.allBlogs);
 	}, []);
 
-	let onlineEventSection = null;
+	const handleChangeFilterValue = (event) => {
+		setFilterValue(event.target.value);
+
+		props.filteringEvents(event.target.value, props.allEvents);
+	};
+
 	let allEventSection = null;
 	let blogSection = null;
 
 	if (props.onFetchingEvents) {
-		onlineEventSection = <CircularProgress />;
 		allEventSection = <CircularProgress />;
 	} else {
-		onlineEventSection = (
-			<SlideShow
-				slideItems={props.allOnlineEvents}
-				token={props.token}
-				username={props.username}
-				isEvent={true}
-				isProfile={false}
-				isRsvpList={false}
-			/>
-		);
 		allEventSection = (
 			<SlideShow
-				slideItems={props.allEvents}
+				slideItems={props.filteredEvents}
 				token={props.token}
 				username={props.username}
 				isEvent={true}
@@ -67,7 +54,7 @@ const Home = (props) => {
 	} else {
 		blogSection = (
 			<SlideShow
-				slideItems={props.allBlogs}
+				slideItems={props.filteredBlogs}
 				token={props.token}
 				username={props.username}
 				isEvent={false}
@@ -100,15 +87,12 @@ const Home = (props) => {
 							{/* <InputLabel id='demo-simple-select-filled-label'>Age</InputLabel> */}
 							<Select
 								displayEmpty
-								value={''}
-								onChange={() => {
-									console.log('');
-								}}
+								value={filterValue}
+								onChange={handleChangeFilterValue}
 								style={{ height: '40px' }}>
-								<MenuItem value=''>Filter</MenuItem>
-								<MenuItem value={10}>Filter 1</MenuItem>
-								<MenuItem value={20}>Filter 2</MenuItem>
-								<MenuItem value={30}>Filter 3</MenuItem>
+								<MenuItem value='All Events'>All Events</MenuItem>
+								<MenuItem value='Only Online'>Only Online</MenuItem>
+								<MenuItem value='Only In-Person'>Only In-Person</MenuItem>
 							</Select>
 						</FormControl>
 					</FormControl>
@@ -118,24 +102,32 @@ const Home = (props) => {
 						Search
 					</Button>
 				</Grid>
-				<Grid item xs={12} sm={12}>
+				{/* <Grid item xs={12} sm={12}>
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
 						Popular Online Events
 					</Typography>
 					{onlineEventSection}
-				</Grid>
-				<Grid item xs={12} sm={12}>
-					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
-						Trending Events
-					</Typography>
-					{allEventSection}
-				</Grid>
-				<Grid item xs={12} sm={12}>
-					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
-						Recent Blogs
-					</Typography>
-					{blogSection}
-				</Grid>
+				</Grid> */}
+
+				{props.onLoadingHomeData ? <CircularProgress /> : null}
+
+				{props.onLoadingHomeData ? null : (
+					<Grid item xs={12} sm={12}>
+						<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
+							Trending Events
+						</Typography>
+						{allEventSection}
+					</Grid>
+				)}
+
+				{props.onLoadingHomeData ? null : (
+					<Grid item xs={12} sm={12}>
+						<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
+							Recent Blogs
+						</Typography>
+						{blogSection}
+					</Grid>
+				)}
 			</Grid>
 		</Container>
 	);
@@ -146,9 +138,12 @@ const mapStateToProps = (state) => {
 		username: state.auth.username,
 		onFetchingEvents: state.home.onFetchingEvents,
 		onFetchingBlogs: state.home.onFetchingBlogs,
-		allOnlineEvents: state.home.allOnlineEvents,
+		filteredEvents: state.home.filteredEvents,
+		filteredBlogs: state.home.filteredBlogs,
+		// allOnlineEvents: state.home.allOnlineEvents,
 		allEvents: state.home.allEvents,
 		allBlogs: state.home.allBlogs,
+		onLoadingHomeData: state.home.onLoadingHomeData,
 	};
 };
 
@@ -156,6 +151,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		fetchEvents: (token) => dispatch(actions.fetchEvents(token)),
 		fetchBlogs: (token) => dispatch(actions.fetchBlogs(token)),
+		filteringEvents: (filterValue, events) =>
+			dispatch(actions.filteringEvents(filterValue, events)),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
