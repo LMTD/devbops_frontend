@@ -176,13 +176,6 @@ const filterEventsSuccess = (filteredEvents) => {
 export const filteringEvents = (filterValue, events) => {
 	return (dispatch) => {
 		dispatch(onFilter());
-
-		console.log(
-			'this is filterValue: ',
-			filterValue,
-			' this is events: ',
-			events,
-		);
 		let filteredEvents = null;
 
 		if (filterValue === 'Only Online') {
