@@ -52,7 +52,6 @@ const ProfileEventDetail = (props) => {
 	const [isSelectImageMode, setIsSelectImageMode] = useState(false);
 
 	const handleDeleteEvent = () => {
-		console.log('handle delete event clicked');
 		props.onDeleteEvent(props.token, props.event_name);
 	};
 

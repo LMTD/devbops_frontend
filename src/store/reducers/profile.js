@@ -4,24 +4,49 @@ const initialState = {
 	myBlogs: [],
 	myRsvpList: [],
 	myEvents: [],
+	onFetchingMyBlogs: false,
+	onFetchingMyRsvpList: false,
+	onFetchingMyEvents: false,
+	alertMessage: '',
 };
 const profileReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case actionTypes.GET_RSVP_LIST_SUCCESS:
+		case actionTypes.ON_FETCHING_RSVP_LIST:
+			return {
+				onFetchingMyRsvpList: true,
+			};
+
+		case actionTypes.FETCH_RSVP_LIST_SUCCESS:
 			return {
 				...state,
 				myRsvpList: action.myRsvpList,
+				onFetchingMyRsvpList: false,
 			};
-		case actionTypes.GET_MY_EVENTS_SUCCESS:
+
+		case actionTypes.ON_FETCHING_MY_EVENTS:
+			return {
+				...state,
+				onFetchingMyEvents: true,
+			};
+
+		case actionTypes.FETCH_MY_EVENTS_SUCCESS:
 			return {
 				...state,
 				myEvents: action.myEvents,
+				onFetchingMyEvents: false,
 			};
 
-		case actionTypes.GET_MY_BLOGS_SUCCESS:
+		case actionTypes.ON_FETCHING_MY_BLOGS:
+			return {
+				...state,
+				onFetchingMyBlogs: true,
+			};
+
+		case actionTypes.FETCH_MY_BLOGS_SUCCESS:
 			return {
 				...state,
 				myBlogs: action.myBlogs,
+				onFetchingMyBlogs: false,
 			};
 
 		case actionTypes.DELETE_MY_EVENT_SUCCESS:
@@ -30,6 +55,7 @@ const profileReducer = (state = initialState, action) => {
 				myEvents: state.myEvents.filter(
 					(event) => event.event_name !== action.deletedEventTitle,
 				),
+				alertMessage: `${action.deletedEventTitle} Deleted Successfully`,
 			};
 
 		case actionTypes.DELETE_MY_BLOG_SUCCESS:
@@ -38,6 +64,7 @@ const profileReducer = (state = initialState, action) => {
 				myBlogs: state.myBlogs.filter(
 					(blog) => blog.blogName !== action.deletedBlogSubject,
 				),
+				alertMessage: `${action.deletedBlogSubject} Deleted Successfully`,
 			};
 
 		case actionTypes.CANCEL_RSVP_SUCCESS:
@@ -46,6 +73,7 @@ const profileReducer = (state = initialState, action) => {
 				myRsvpList: state.myRsvpList.filter(
 					(rsvp) => rsvp.event_name !== action.cancelledRSVP,
 				),
+				alertMessage: `Cancel ${action.cancelledRSVP}'s RSVP Successfully`,
 			};
 
 		case actionTypes.UPDATE_EVENT_SUCCESS:
