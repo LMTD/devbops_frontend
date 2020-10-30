@@ -81,6 +81,12 @@ export const fetchBlogs = (token) => {
 	};
 };
 
+const onRSVP = () => {
+	return {
+		type: actionTypes.ON_RSVP,
+	};
+};
+
 const rsvpEventSuccess = (rsvpEventTitle, username) => {
 	return {
 		type: actionTypes.RSVP_EVENT_SUCCESS,
@@ -91,7 +97,8 @@ const rsvpEventSuccess = (rsvpEventTitle, username) => {
 
 export const rsvpEvent = (token, eventTitle, username) => {
 	return async (dispatch) => {
-		// dispatch(onFetchEvents());
+		dispatch(onRSVP());
+
 		try {
 			// console.log('this is event title: ', props);
 			const { data } = await axios.post(
