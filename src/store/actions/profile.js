@@ -154,8 +154,8 @@ export const onUpdateEvent = (
 				dispatch(
 					updatedEventSuccess(
 						eventTitle,
-						eventDate,
-						eventTime,
+						moment(eventDate).format('dddd MMM  Do YYYY'),
+						moment(`${eventDate}, ${eventTime}`).format('h:mm a'),
 						eventType,
 						locationDetail,
 						imgUrl,
