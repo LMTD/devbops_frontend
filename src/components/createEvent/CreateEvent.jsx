@@ -19,6 +19,7 @@ import blue from '@material-ui/core/colors/blue';
 import axios from 'axios';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles(() => ({
 
 const CreateEvent = (props) => {
 	const classes = useStyles();
-
+	const history = useHistory();
 	const { register, handleSubmit, watch } = useForm();
 	const [eventType, setEventType] = useState('');
 	const [selectedFile, setSelectedFile] = useState('');
@@ -78,7 +79,7 @@ const CreateEvent = (props) => {
 
 			console.log('this is data from create event: ', data);
 			if (data.Status) {
-				// history.push('/sadadas');
+				history.push('/sadadas');
 				console.log('curent url: ', window.location.href);
 				props.onClose();
 			}
