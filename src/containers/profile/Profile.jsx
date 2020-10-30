@@ -6,39 +6,22 @@ import {
 	Typography,
 	CircularProgress,
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import * as actions from '../../store/actions/profile';
 import AccountSection from '../../components/profile/accountSection/AccountSection';
 import SlideShow from '../../components/UI/slideShow/SlideShow';
 
 const Profile = (props) => {
-	const [blogLoading, setBlogLoading] = useState(false);
-	const [rsvpLoading, setRSVPloading] = useState(false);
-	const [eventsLoading, setEventsLoading] = useState(false);
-
 	useEffect(() => {
-		// console.log('this is use effect in profile');
-		// const { onFetchBlogs, onFetchEvents } = props;
-		setRSVPloading(true);
-		props.onFetchEvents(props.token, 'VH');
-		setRSVPloading(false);
-		setEventsLoading(true);
-		props.onFetchEvents(props.token, 'H');
-		setEventsLoading(false);
-		setBlogLoading(true);
-		props.onFetchBlogs(props.token);
-		setBlogLoading(false);
+		props.fetchEvents(props.token, 'VH');
+		props.fetchEvents(props.token, 'H');
+		props.fetchBlogs(props.token);
 	}, []);
-
-	// props.onFetchEvents(props.token, 'VH');
-	// props.onFetchEvents(props.token, 'H');
-	// props.onFetchBlogs(props.token);
 
 	let blogSection = null;
 	let rsvpSection = null;
 	let eventSection = null;
-	// console.log('this is props in profile: ', props);
-
-	if (rsvpLoading) {
+	if (props.onFetchingMyRsvpList) {
 		rsvpSection = <CircularProgress />;
 	} else {
 		rsvpSection = (
@@ -51,7 +34,7 @@ const Profile = (props) => {
 			/>
 		);
 	}
-	if (eventsLoading) {
+	if (props.onFetchingMyEvents) {
 		eventSection = <CircularProgress />;
 	} else {
 		eventSection = (
@@ -64,7 +47,7 @@ const Profile = (props) => {
 			/>
 		);
 	}
-	if (blogLoading) {
+	if (props.onFetchingMyBlogs) {
 		blogSection = <CircularProgress />;
 	} else {
 		blogSection = (
@@ -78,11 +61,21 @@ const Profile = (props) => {
 		);
 	}
 
+	let alertMessage = null;
+
+	if (props.alertMessage !== '') {
+		alertMessage = <Alert severity='success'>{props.alertMessage}</Alert>;
+	}
+
 	return (
 		<Container fixed>
 			<Grid container spacing={3}>
 				<Grid item xs={12} sm={12} md={12}>
 					<AccountSection />
+				</Grid>
+
+				<Grid item xs={12} sm={12} md={12}>
+					{alertMessage}
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
 					<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
@@ -113,14 +106,18 @@ const mapStateToProps = (state) => {
 		myRsvpList: state.profile.myRsvpList,
 		myBlogs: state.profile.myBlogs,
 		myEvents: state.profile.myEvents,
+		onFetchingMyBlogs: state.profile.onFetchingMyBlogs,
+		onFetchingMyRsvpList: state.profile.onFetchingMyRsvpList,
+		onFetchingMyEvents: state.profile.onFetchingMyEvents,
+		alertMessage: state.profile.alertMessage,
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onFetchEvents: (token, action) =>
-			dispatch(actions.onFetchEvents(token, action)),
-		onFetchBlogs: (token) => dispatch(actions.onFetchBlogs(token)),
+		fetchEvents: (token, action) =>
+			dispatch(actions.fetchEvents(token, action)),
+		fetchBlogs: (token) => dispatch(actions.fetchBlogs(token)),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

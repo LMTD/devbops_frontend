@@ -10,6 +10,7 @@ const initialState = {
 	onFetchingBlogs: true,
 	onPostingBlogComment: false,
 	onLoadingHomeData: false,
+	onRSVP: false,
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -35,6 +36,12 @@ const homeReducer = (state = initialState, action) => {
 				allBlogs: action.allBlogs,
 				filteredBlogs: action.allBlogs,
 				onFetchingBlogs: false,
+			};
+
+		case actionTypes.ON_RSVP:
+			return {
+				...state,
+				onRSVP: true,
 			};
 
 		case actionTypes.RSVP_EVENT_SUCCESS:
@@ -71,6 +78,7 @@ const homeReducer = (state = initialState, action) => {
 					return event;
 				}),
 				onFetchingEvents: false,
+				onRSVP: false,
 			};
 
 		case actionTypes.ON_POSTING_BLOG_COMMENT:

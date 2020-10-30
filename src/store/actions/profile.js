@@ -2,8 +2,10 @@ import * as actionTypes from './actionTypes';
 import axios from 'axios';
 import moment from 'moment';
 
-export const onFetchEvents = (token, action) => {
+export const fetchEvents = (token, action) => {
 	return async (dispatch) => {
+		dispatch(onFetchingEvents());
+
 		try {
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
@@ -22,33 +24,41 @@ export const onFetchEvents = (token, action) => {
 			// console.log('this is data: ', data);
 
 			if (data.Status && data.hasOwnProperty('RSVP')) {
-				dispatch(getRsvpListSuccess(data.RSVP));
+				dispatch(fetchRsvpListSuccess(data.RSVP));
 			} else if (data.Status && data.hasOwnProperty('EventsDB')) {
-				dispatch(getEventsSuccess(data.EventsDB));
+				dispatch(fetchMyEventsSuccess(data.EventsDB));
 			}
 		} catch (err) {}
 	};
 };
 
-const getRsvpListSuccess = (rsvpList) => {
+const onFetchingEvents = () => {
+	return {
+		type: actionTypes.ON_FETCHING_MY_EVENTS,
+	};
+};
+
+const fetchRsvpListSuccess = (rsvpList) => {
 	// console.log('this is rsvpList: ', rsvpList);
 
 	return {
-		type: actionTypes.GET_RSVP_LIST_SUCCESS,
+		type: actionTypes.FETCH_RSVP_LIST_SUCCESS,
 		myRsvpList: rsvpList,
 	};
 };
 
-const getEventsSuccess = (events) => {
+const fetchMyEventsSuccess = (events) => {
 	// console.log('this is events: ', events);
 	return {
-		type: actionTypes.GET_MY_EVENTS_SUCCESS,
+		type: actionTypes.FETCH_MY_EVENTS_SUCCESS,
 		myEvents: events,
 	};
 };
 
-export const onFetchBlogs = (token) => {
+export const fetchBlogs = (token) => {
 	return async (dispatch) => {
+		dispatch(onFetchingMyBlogs());
+
 		try {
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
@@ -66,7 +76,7 @@ export const onFetchBlogs = (token) => {
 			console.log('this is blogs fetching: ', data);
 
 			if (data.Status) {
-				dispatch(getBlogsSuccess(data.BlogsDB));
+				dispatch(fetchBlogsSuccess(data.BlogsDB));
 			}
 		} catch (err) {
 			console.log('there is error in fetch blog history: ', err);
@@ -75,9 +85,15 @@ export const onFetchBlogs = (token) => {
 	};
 };
 
-export const getBlogsSuccess = (blogs) => {
+const onFetchingMyBlogs = () => {
 	return {
-		type: actionTypes.GET_MY_BLOGS_SUCCESS,
+		type: actionTypes.ON_FETCHING_MY_BLOGS,
+	};
+};
+
+export const fetchBlogsSuccess = (blogs) => {
+	return {
+		type: actionTypes.FETCH_MY_BLOGS_SUCCESS,
 		myBlogs: blogs,
 	};
 };
@@ -103,6 +119,7 @@ export const onDeleteEvent = (token, eventTitle) => {
 
 			if (data.Status) {
 				dispatch(deleteEventSuccess(eventTitle));
+				window.scrollTo(0, 0);
 			}
 		} catch (err) {
 			// console.log(
@@ -134,16 +151,6 @@ export const onUpdateEvent = (
 ) => {
 	return async (dispatch) => {
 		try {
-			console.log(
-				token,
-				eventTitle,
-				eventDate,
-				eventTime,
-				eventType,
-				locationDetail,
-				imgUrl,
-				eventDescription,
-			);
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
 				{
@@ -160,10 +167,41 @@ export const onUpdateEvent = (
 			);
 			console.log('this is data in on  onUpdateEvent: ', data);
 
-			// if (data.Status) {
-			// 	dispatch(deleteEventSuccess(eventTitle));
-			// }
+			if (data.Status) {
+				dispatch(
+					updatedEventSuccess(
+						eventTitle,
+						moment(eventDate).format('dddd MMM  Do YYYY'),
+						moment(`${eventDate}, ${eventTime}`).format('h:mm a'),
+						eventType,
+						locationDetail,
+						imgUrl,
+						eventDescription,
+					),
+				);
+			}
 		} catch (err) {}
+	};
+};
+
+const updatedEventSuccess = (
+	eventTitle,
+	eventDate,
+	eventTime,
+	eventType,
+	locationDetail,
+	imgUrl,
+	eventDescription,
+) => {
+	return {
+		type: actionTypes.UPDATE_EVENT_SUCCESS,
+		eventTitle: eventTitle,
+		eventDate: eventDate,
+		eventTime: eventTime,
+		eventType: eventType,
+		locationDetail: locationDetail,
+		imgUrl: imgUrl,
+		eventDescription: eventDescription,
 	};
 };
 
@@ -187,6 +225,7 @@ export const onDeleteBlog = (token, blogSubject) => {
 
 			if (data.Status) {
 				dispatch(deleteBlogSuccess(blogSubject));
+				window.scrollTo(0, 0);
 			}
 		} catch (err) {
 			console.log('there is error in fetch blog history: ', err);
@@ -223,6 +262,7 @@ export const onCancelRSVP = (token, eventTitle) => {
 
 			if (data.Status) {
 				dispatch(cancelRSVPSuccess(eventTitle));
+				window.scrollTo(0, 0);
 			}
 		} catch (err) {}
 	};

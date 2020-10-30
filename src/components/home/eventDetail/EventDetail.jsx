@@ -11,6 +11,7 @@ import {
 	CardMedia,
 	Avatar,
 	Link,
+	CircularProgress,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,7 +42,7 @@ const EventDetail = (props) => {
 
 	const handleRSVP = () => {
 		props.rsvpEvent(props.token, props.event_name, props.username);
-		props.handleClose();
+		// props.handleClose();
 	};
 
 	let imageArea = null;
@@ -207,6 +208,7 @@ const EventDetail = (props) => {
 				</Card>
 			</DialogContent>
 			<DialogActions>
+				{props.onRSVP ? <CircularProgress /> : null}
 				<Button
 					color='primary'
 					variant='contained'
@@ -218,6 +220,13 @@ const EventDetail = (props) => {
 		</Dialog>
 	);
 };
+
+const mapStateToProps = (state) => {
+	return {
+		onRSVP: state.home.onRSVP,
+	};
+};
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		rsvpEvent: (token, eventTitle, username) => {
@@ -225,4 +234,4 @@ const mapDispatchToProps = (dispatch) => {
 		},
 	};
 };
-export default connect(null, mapDispatchToProps)(EventDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(EventDetail);

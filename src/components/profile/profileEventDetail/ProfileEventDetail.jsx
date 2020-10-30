@@ -16,6 +16,7 @@ import {
 	Radio,
 	Fab,
 	CardActionArea,
+	Typography,
 } from '@material-ui/core';
 import { red, blue } from '@material-ui/core/colors';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
@@ -51,7 +52,6 @@ const ProfileEventDetail = (props) => {
 	const [isSelectImageMode, setIsSelectImageMode] = useState(false);
 
 	const handleDeleteEvent = () => {
-		console.log('handle delete event clicked');
 		props.onDeleteEvent(props.token, props.event_name);
 	};
 
@@ -83,7 +83,7 @@ const ProfileEventDetail = (props) => {
 		console.log('edit event form is clicked: ', FormData);
 		props.onUpdateEvent(
 			props.token,
-			formData.eventTitle,
+			props.event_name,
 			formData.eventDate,
 			formData.eventTime,
 			formData.eventType,
@@ -262,7 +262,7 @@ const ProfileEventDetail = (props) => {
 										<CardContent className={classes.content}>
 											<Grid container spacing={2}>
 												<Grid item xs={12} sm={12} md={12}>
-													<TextField
+													{/* <TextField
 														variant='outlined'
 														size='small'
 														fullWidth
@@ -271,7 +271,17 @@ const ProfileEventDetail = (props) => {
 														defaultValue={props.event_name}
 														type='text'
 														inputRef={register({ required: true })}
-													/>
+													/> */}
+													<Grid
+														item
+														xs={12}
+														sm={12}
+														md={12}
+														style={{ textAlign: 'center' }}>
+														<Typography variant='h4'>
+															{props.event_name}
+														</Typography>
+													</Grid>
 												</Grid>
 												<Grid item xs={12} sm={12} md={6}>
 													<TextField
