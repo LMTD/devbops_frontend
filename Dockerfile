@@ -19,8 +19,8 @@ RUN apt-get update && apt-get install -y apache2 \
     curl -sL https://deb.nodesource.com/setup_10.x | -E bash - \
     apt-get install -y nodejs
 
-COPY ./* /var/www/devbops_frontend/
-RUN npm install /var/www/devbops_frontend
+COPY ./* /var/www/html/devbops_frontend/
+RUN npm install /var/www/html/devbops_frontend
 
 COPY ./devbops.com.conf /etc/apache2/sites-available/devbops.com.conf
 
@@ -30,5 +30,5 @@ RUN a2enmod rewrite
 RUN systemctl restart apache2
 
 EXPOSE 80
-WORKDIR /var/www/devbops_event_microservice
+WORKDIR /var/www/html/devbops_frontend
 
