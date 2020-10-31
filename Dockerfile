@@ -14,8 +14,7 @@
 
 FROM debian:latest
 
-RUN apt-get update && apt-get install -y apache2 \
-    install curl \
+RUN apt-get update && apt-get install -y apache2  && apt-get install curl \
     curl -sL https://deb.nodesource.com/setup_10.x | -E bash - \
     apt-get install -y nodejs
 
