@@ -16,10 +16,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import blue from '@material-ui/core/colors/blue';
-import axios from 'axios';
+import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
+import * as homeActions from '../../store/actions/home';
+import * as profileActions from '../../store/actions/profile';
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -42,8 +43,7 @@ const useStyles = makeStyles(() => ({
 
 const CreateEvent = (props) => {
 	const classes = useStyles();
-	const history = useHistory();
-	const { register, handleSubmit, watch } = useForm();
+	const { register, handleSubmit, watch, reset } = useForm();
 	const [eventType, setEventType] = useState('');
 	const [selectedFile, setSelectedFile] = useState('');
 	const [isSelectImageMode, setIsSelectImageMode] = useState(true);
@@ -58,34 +58,37 @@ const CreateEvent = (props) => {
 	const handleRadioChange = (event) => {
 		setEventType(event.target.value);
 	};
-	const handleCreateEvent = async (formData) => {
-		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Action: 'C',
-					Token: props.token,
-					eventTitle: formData.eventTitle,
-					eventDate: moment(formData.eventDate).format('dddd MMM  Do YYYY'),
-					eventTime: moment(
-						`${formData.eventDate}, ${formData.eventTime}`,
-					).format('h:mm a'),
-					eventType: formData.eventType,
-					locationDetail: formData.locationDetail,
-					imgUrl: selectedFile,
-					eventDescription: formData.eventDescription,
-				},
+	const handleCreateEvent = (formData) => {
+		const eventDate = moment(formData.eventDate).format('dddd MMM  Do YYYY');
+		const eventTime = moment(
+			`${formData.eventDate}, ${formData.eventTime}`
+		).format('h:mm a');
+		if (window.location.href.includes('/home')) {
+			props.createEventOnHome(
+				props.token,
+				props.username,
+				formData.eventTitle,
+				eventDate,
+				eventTime,
+				formData.eventType,
+				formData.locationDetail,
+				selectedFile,
+				formData.eventDescription
 			);
-
-			console.log('this is data from create event: ', data);
-			if (data.Status) {
-				history.push('/sadadas');
-				console.log('curent url: ', window.location.href);
-				props.onClose();
-			}
-		} catch (err) {
-			console.log('this is err: ', err);
+		} else if (window.location.href.includes('/profile')) {
+			props.createEventOnProfile(
+				props.token,
+				props.username,
+				formData.eventTitle,
+				eventDate,
+				eventTime,
+				formData.eventType,
+				formData.locationDetail,
+				selectedFile,
+				formData.eventDescription
+			);
 		}
+		// reset();
 	};
 
 	const handleUploadClick = (event) => {
@@ -109,7 +112,8 @@ const CreateEvent = (props) => {
 			style={{
 				border: '1px solid rgba(0, 0, 0, 0.23)',
 				height: '75%',
-			}}>
+			}}
+		>
 			<TextField
 				accept='image/*'
 				id='contained-button-file'
@@ -128,21 +132,24 @@ const CreateEvent = (props) => {
 					height: '100%',
 					alignItems: 'center',
 					justifyContent: 'center',
-				}}>
+				}}
+			>
 				<label htmlFor='contained-button-file'>
 					<Fab
 						component='span'
 						style={{
 							color: blue[900],
 							margin: 10,
-						}}>
+						}}
+					>
 						<AddPhotoAlternateIcon />
 					</Fab>
 				</label>
 
 				<label
 					htmlFor='contained-button-file'
-					style={{ cursor: 'pointer', color: '#9a9494' }}>
+					style={{ cursor: 'pointer', color: '#9a9494' }}
+				>
 					Click to add main event image (optional)
 				</label>
 			</div>
@@ -191,8 +198,15 @@ const CreateEvent = (props) => {
 		);
 	}
 
+	let alert = null;
+
+	if (props.alertMessage) {
+		alert = <Alert severity={props.alertType}>{props.alertMessage}</Alert>;
+	}
+
 	return (
 		<form onSubmit={handleSubmit(handleCreateEvent)}>
+			{alert}
 			<Card className={classes.root}>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={12} md={6}>
@@ -251,7 +265,8 @@ const CreateEvent = (props) => {
 												justifyContent: 'space-around',
 											}}
 											value={eventType}
-											onChange={handleRadioChange}>
+											onChange={handleRadioChange}
+										>
 											<FormControlLabel
 												value='Online'
 												control={<Radio />}
@@ -296,7 +311,8 @@ const CreateEvent = (props) => {
 													watchFields.locationDetail &&
 													watchFields.eventDescription
 												)
-											}>
+											}
+										>
 											Publish
 										</Button>
 									</Grid>
@@ -313,6 +329,62 @@ const CreateEvent = (props) => {
 const mapStateToProps = (state) => {
 	return {
 		token: state.auth.token,
+		username: state.auth.username,
+		alertMessage: state.home.alertMessage,
+		alertType: state.home.alertType,
 	};
 };
-export default connect(mapStateToProps)(CreateEvent);
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		createEventOnHome: (
+			token,
+			username,
+			eventTitle,
+			eventDate,
+			eventTime,
+			eventType,
+			locationDetail,
+			imgUrl,
+			eventDescription
+		) =>
+			dispatch(
+				homeActions.createEvent(
+					token,
+					username,
+					eventTitle,
+					eventDate,
+					eventTime,
+					eventType,
+					locationDetail,
+					imgUrl,
+					eventDescription
+				)
+			),
+		createEventOnProfile: (
+			token,
+			username,
+			eventTitle,
+			eventDate,
+			eventTime,
+			eventType,
+			locationDetail,
+			imgUrl,
+			eventDescription
+		) =>
+			dispatch(
+				profileActions.createEvent(
+					token,
+					username,
+					eventTitle,
+					eventDate,
+					eventTime,
+					eventType,
+					locationDetail,
+					imgUrl,
+					eventDescription
+				)
+			),
+	};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CreateEvent);

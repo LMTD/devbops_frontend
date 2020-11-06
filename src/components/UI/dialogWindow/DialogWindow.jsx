@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
-
+import { connect } from 'react-redux';
 import DialogTitle from '../dialogTitle/DialogTitle';
 import Login from '../../auth/Login';
 import Register from '../../auth/Register';
 import PostBlog from '../../postBlog/PostBlog';
 import CreateEvent from '../../createEvent/CreateEvent';
+import * as homeActions from '../../../store/actions/home';
+import * as profileActions from '../../../store/actions/profile';
 
 const DialogWindow = (props) => {
 	const [isLoginMode, setIsLoginMode] = useState(true);
@@ -53,6 +55,7 @@ const DialogWindow = (props) => {
 			</DialogTitle>
 		);
 		dialogContent = <CreateEvent onClose={props.handleClose} />;
+		props.clearAlertMessage();
 	}
 	return (
 		<Dialog
@@ -60,7 +63,8 @@ const DialogWindow = (props) => {
 			open={props.openAuth || props.openPostBlog || props.openCreateEvent}
 			onClose={props.handleClose}
 			aria-labelledby='responsive-dialog-title'
-			maxWidth='md'>
+			maxWidth='md'
+		>
 			{dialogTitle}
 			<DialogContent style={{ padding: '12px 24px' }} dividers>
 				{dialogContent}
@@ -69,4 +73,11 @@ const DialogWindow = (props) => {
 	);
 };
 
-export default DialogWindow;
+const mapDispatchToProps = (dispatch) => {
+	return {
+		clearAlertMessage: () => {
+			dispatch(homeActions.clearAlertMessage());
+		},
+	};
+};
+export default connect(null, mapDispatchToProps)(DialogWindow);
