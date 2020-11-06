@@ -8,6 +8,8 @@ const initialState = {
 	onFetchingMyRsvpList: false,
 	onFetchingMyEvents: false,
 	alertMessage: '',
+	createdAlertMessage: '',
+	createdAlertType: '',
 };
 const profileReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -53,7 +55,7 @@ const profileReducer = (state = initialState, action) => {
 			return {
 				...state,
 				myEvents: state.myEvents.filter(
-					(event) => event.event_name !== action.deletedEventTitle,
+					(event) => event.event_name !== action.deletedEventTitle
 				),
 				alertMessage: `${action.deletedEventTitle} Deleted Successfully`,
 			};
@@ -62,7 +64,7 @@ const profileReducer = (state = initialState, action) => {
 			return {
 				...state,
 				myBlogs: state.myBlogs.filter(
-					(blog) => blog.blogName !== action.deletedBlogSubject,
+					(blog) => blog.blogName !== action.deletedBlogSubject
 				),
 				alertMessage: `${action.deletedBlogSubject} Deleted Successfully`,
 			};
@@ -71,7 +73,7 @@ const profileReducer = (state = initialState, action) => {
 			return {
 				...state,
 				myRsvpList: state.myRsvpList.filter(
-					(rsvp) => rsvp.event_name !== action.cancelledRSVP,
+					(rsvp) => rsvp.event_name !== action.cancelledRSVP
 				),
 				alertMessage: `Cancel ${action.cancelledRSVP}'s RSVP Successfully`,
 			};
@@ -91,6 +93,40 @@ const profileReducer = (state = initialState, action) => {
 					}
 					return updatedEvent;
 				}),
+			};
+
+		case actionTypes.CREATED_EVENT_FAIL:
+			return {
+				...state,
+				createdAlertMessage: action.alertMessage,
+				createdAlertType: action.alertType,
+			};
+
+		case actionTypes.CREATED_EVENT_SUCCESS:
+			const newEvent = {
+				Event_date: action.eventDate,
+				Event_desc: action.eventDescription,
+				Event_image: action.imgUrl,
+				Event_location: action.locationDetail,
+				Online: action.eventType,
+				RSVP: [],
+				User: action.creator,
+				event_name: action.eventTitle,
+			};
+
+			console.log('this is neweVENT in profile: ', newEvent);
+
+			return {
+				...state,
+				createdAlertMessage: action.alertMessage,
+				createdAlertType: action.alertType,
+				myEvents: [...state.myEvents, { ...newEvent }],
+			};
+
+		case actionTypes.CLEAR_ALERT_MESSAGE:
+			return {
+				...state,
+				alertMessage: '',
 			};
 
 		default:
