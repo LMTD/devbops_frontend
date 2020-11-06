@@ -1,9 +1,9 @@
+import { act } from 'react-dom/test-utils';
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
 	allBlogs: [],
 	allEvents: [],
-	allOnlineEvents: [],
 	filteredEvents: [],
 	filteredBlogs: [],
 	onFetchingEvents: true,
@@ -11,6 +11,8 @@ const initialState = {
 	onPostingBlogComment: false,
 	onLoadingHomeData: false,
 	onRSVP: false,
+	alertMessage: '',
+	alertType: '',
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -19,15 +21,16 @@ const homeReducer = (state = initialState, action) => {
 			return {
 				...state,
 				onFetchingEvents: true,
+				alertMessage: '',
 			};
 
 		case actionTypes.GET_EVENTS_SUCCESS:
 			return {
 				...state,
 				allEvents: action.allEvents,
-				allOnlineEvents: action.allOnlineEvents,
 				filteredEvents: action.allEvents,
 				onFetchingEvents: false,
+				alertMessage: '',
 			};
 
 		case actionTypes.GET_BLOGS_SUCCESS:
@@ -36,12 +39,14 @@ const homeReducer = (state = initialState, action) => {
 				allBlogs: action.allBlogs,
 				filteredBlogs: action.allBlogs,
 				onFetchingBlogs: false,
+				alertMessage: '',
 			};
 
 		case actionTypes.ON_RSVP:
 			return {
 				...state,
 				onRSVP: true,
+				alertMessage: '',
 			};
 
 		case actionTypes.RSVP_EVENT_SUCCESS:
@@ -57,16 +62,7 @@ const homeReducer = (state = initialState, action) => {
 					}
 					return event;
 				}),
-				allOnlineEvents: state.allOnlineEvents.map((event) => {
-					if (event.event_name === action.rsvpEventTitle) {
-						if (event.RSVP.indexOf(action.rsvpUsername) === -1) {
-							const updatedEvent = JSON.parse(JSON.stringify(event));
-							updatedEvent.RSVP.push(action.rsvpUsername);
-							return updatedEvent;
-						}
-					}
-					return event;
-				}),
+
 				filteredEvents: state.allEvents.map((event) => {
 					if (event.event_name === action.rsvpEventTitle) {
 						if (event.RSVP.indexOf(action.rsvpUsername) === -1) {
@@ -79,12 +75,14 @@ const homeReducer = (state = initialState, action) => {
 				}),
 				onFetchingEvents: false,
 				onRSVP: false,
+				alertMessage: '',
 			};
 
 		case actionTypes.ON_POSTING_BLOG_COMMENT:
 			return {
 				...state,
 				onPostingBlogComment: true,
+				alertMessage: '',
 			};
 
 		case actionTypes.COMMENT_BLOG_SUCCESS:
@@ -107,12 +105,14 @@ const homeReducer = (state = initialState, action) => {
 					return blog;
 				}),
 				onPostingBlogComment: false,
+				alertMessage: '',
 			};
 
 		case actionTypes.ON_FILTER:
 			return {
 				...state,
 				onLoadingHomeData: true,
+				alertMessage: '',
 			};
 
 		case actionTypes.FILTER_EVENTS_SUCCESS:
@@ -120,6 +120,7 @@ const homeReducer = (state = initialState, action) => {
 				...state,
 				filteredEvents: action.filteredEvents,
 				onLoadingHomeData: false,
+				alertMessage: '',
 			};
 
 		case actionTypes.SEARCH_BLOGS_AND_EVENTS_SUCCESS:
@@ -127,6 +128,40 @@ const homeReducer = (state = initialState, action) => {
 				...state,
 				filteredEvents: action.matchedEvents,
 				onLoadingHomeData: false,
+				alertMessage: '',
+			};
+
+		case actionTypes.CREATED_EVENT_FAIL:
+			return {
+				...state,
+				alertMessage: action.alertMessage,
+				alertType: action.alertType,
+			};
+
+		case actionTypes.CREATED_EVENT_SUCCESS:
+			const newEvent = {
+				Event_date: action.eventDate,
+				Event_desc: action.eventDescription,
+				Event_image: action.imgUrl,
+				Event_location: action.locationDetail,
+				Online: action.eventType,
+				RSVP: [],
+				User: action.creator,
+				event_name: action.eventTitle,
+			};
+
+			return {
+				...state,
+				alertMessage: action.alertMessage,
+				alertType: action.alertType,
+				allEvents: [...state.allEvents, { ...newEvent }],
+				filteredEvents: [...state.filteredEvents, { ...newEvent }],
+			};
+
+		case actionTypes.CLEAR_ALERT_MESSAGE:
+			return {
+				...state,
+				alertMessage: '',
 			};
 
 		default:

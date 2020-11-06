@@ -31,13 +31,13 @@ export const fetchEvents = (token) => {
 					imgUrl: null,
 					locationDetail: null,
 					eventType: null,
-				},
+				}
 			);
 			console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
 				const allOnlineEvents = data.EventsDB.filter(
-					(event) => event.Online === 'Online',
+					(event) => event.Online === 'Online'
 				);
 				console.log('this is allOnlineEvents: ', allOnlineEvents);
 				dispatch(getEventsSuccess(data.EventsDB, allOnlineEvents));
@@ -67,7 +67,7 @@ export const fetchBlogs = (token) => {
 					Time: null,
 					Comment: null,
 					Location: null,
-				},
+				}
 			);
 
 			console.log('this is data in blogs: ', data);
@@ -113,7 +113,7 @@ export const rsvpEvent = (token, eventTitle, username) => {
 					imgUrl: null,
 					locationDetail: null,
 					eventType: null,
-				},
+				}
 			);
 			console.log('this is data in rsvp event: ', data);
 			if (data.Status) {
@@ -155,7 +155,7 @@ export const postBlogComment = (token, username, blogSubject, blogComment) => {
 					Date: null,
 					Time: null,
 					Comment: blogComment,
-				},
+				}
 			);
 			console.log('this is data: ', data);
 			if (data.Status) {
@@ -207,7 +207,7 @@ const searchBlogsAndEventsSuccess = (matchedEvents) => {
 export const searchingBlogsAndEvents = (
 	filterValue,
 	searchTerm,
-	events,
+	events
 	// blogs,
 ) => {
 	return (dispatch) => {
@@ -229,7 +229,7 @@ export const searchingBlogsAndEvents = (
 					event.Event_desc.indexOf(searchTerm) !== -1 ||
 					event.Event_location.indexOf(searchTerm) !== -1 ||
 					event.Event_time.indexOf(searchTerm) !== -1 ||
-					event.event_name.indexOf(searchTerm) !== -1,
+					event.event_name.indexOf(searchTerm) !== -1
 			);
 		}
 
@@ -243,5 +243,104 @@ export const searchingBlogsAndEvents = (
 		// 		blog.blogName.indexOf(searchTerm) !== -1);
 
 		dispatch(searchBlogsAndEventsSuccess(filteredEvents));
+	};
+};
+
+const onCreatingEvent = () => {
+	return {
+		type: actionTypes.ON_CREATING_EVENT,
+	};
+};
+
+const createdEventFail = (message) => {
+	return {
+		type: actionTypes.CREATED_EVENT_FAIL,
+		alertMessage: message,
+		alertType: 'error',
+	};
+};
+
+const createdEventSuccess = (
+	username,
+	eventTitle,
+	eventDate,
+	eventTime,
+	eventType,
+	locationDetail,
+	imgUrl,
+	eventDescription
+) => {
+	return {
+		type: actionTypes.CREATED_EVENT_SUCCESS,
+		creator: username,
+		eventTitle: eventTitle,
+		eventDate: eventDate,
+		eventTime: eventTime,
+		eventType: eventType,
+		locationDetail: locationDetail,
+		imgUrl: imgUrl,
+		eventDescription: eventDescription,
+		alertMessage: 'Event created successfully',
+		alertType: 'success',
+	};
+};
+
+export const createEvent = (
+	token,
+	username,
+	eventTitle,
+	eventDate,
+	eventTime,
+	eventType,
+	locationDetail,
+	imgUrl,
+	eventDescription
+) => {
+	return async (dispatch) => {
+		dispatch(onCreatingEvent());
+
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
+				{
+					Action: 'C',
+					Token: token,
+					eventTitle: eventTitle,
+					eventDate: eventDate,
+					eventTime: eventTime,
+					eventType: eventType,
+					locationDetail: locationDetail,
+					imgUrl: imgUrl,
+					eventDescription: eventDescription,
+				}
+			);
+
+			console.log('this is data from create event: ', data);
+			if (data.Status) {
+				dispatch(
+					createdEventSuccess(
+						username,
+						eventTitle,
+						eventDate,
+						eventTime,
+						eventType,
+						locationDetail,
+						imgUrl,
+						eventDescription
+					)
+				);
+			} else {
+				dispatch(createdEventFail(data.Description));
+			}
+		} catch (err) {
+			console.log('created event error: ', err);
+			dispatch(createdEventFail('Networking error, please try again!'));
+		}
+	};
+};
+
+export const clearAlertMessage = () => {
+	return {
+		type: actionTypes.CLEAR_ALERT_MESSAGE,
 	};
 };
