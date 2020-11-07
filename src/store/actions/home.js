@@ -33,7 +33,7 @@ export const fetchEvents = (token) => {
 					eventType: null,
 				}
 			);
-			console.log('this is fetching all events: ', data);
+			// console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
 				const allOnlineEvents = data.EventsDB.filter(
@@ -70,7 +70,7 @@ export const fetchBlogs = (token) => {
 				}
 			);
 
-			console.log('this is data in blogs: ', data);
+			// console.log('this is data in blogs: ', data);
 
 			if (data.Status) {
 				dispatch(getBlogsSuccess(data.BlogsDB));
@@ -115,7 +115,7 @@ export const rsvpEvent = (token, eventTitle, username) => {
 					eventType: null,
 				}
 			);
-			console.log('this is data in rsvp event: ', data);
+			// console.log('this is data in rsvp event: ', data);
 			if (data.Status) {
 				dispatch(rsvpEventSuccess(eventTitle, username));
 			}
@@ -157,7 +157,7 @@ export const postBlogComment = (token, username, blogSubject, blogComment) => {
 					Comment: blogComment,
 				}
 			);
-			console.log('this is data: ', data);
+			// console.log('this is data: ', data);
 			if (data.Status) {
 				dispatch(commentBlogSuccess(username, blogSubject, blogComment));
 			}
@@ -305,7 +305,7 @@ export const createEvent = (
 				}
 			);
 
-			console.log('this is data from create event: ', data);
+			// console.log('this is data from create event: ', data);
 			if (data.Status) {
 				dispatch(
 					createdEventSuccess(
@@ -376,7 +376,7 @@ export const postBlog = (
 					Location: currentLocation,
 				}
 			);
-			console.log('this is data from post blog: ', data);
+			// console.log('this is data from post blog: ', data);
 			if (data.Status) {
 				dispatch(
 					postedBlogSuccess(

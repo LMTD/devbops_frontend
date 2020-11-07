@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
 
 const CreateEvent = (props) => {
 	const classes = useStyles();
-	const { register, handleSubmit, watch, reset } = useForm();
+	const { register, handleSubmit, watch } = useForm();
 	const [eventType, setEventType] = useState('');
 	const [selectedFile, setSelectedFile] = useState('');
 	const [isSelectImageMode, setIsSelectImageMode] = useState(true);

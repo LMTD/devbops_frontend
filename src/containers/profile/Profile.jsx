@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
 	Grid,
@@ -62,7 +62,6 @@ const Profile = (props) => {
 	}
 
 	let alertMessage = null;
-	console.log('this is props in profile page: ', props)
 	if (props.alertMessage !== '') {
 		alertMessage = <Alert severity='success'>{props.alertMessage}</Alert>;
 	} else if (props.createdAlertType === 'success') {

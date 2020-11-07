@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CircularProgress } from '@material-ui/core';
 import HeaderBar from './containers/headerBar/HeaderBar';
 import Main from './containers/main/Main';
 import About from './containers/about/About';
@@ -13,12 +12,7 @@ import * as actions from './store/actions/auth';
 import './App.css';
 
 class App extends Component {
-	constructor() {
-		super();
-		this.state = {
-			loading: false,
-		};
-	}
+
 
 	componentDidMount() {
 		// console.log('this is props in app: ', this.props);

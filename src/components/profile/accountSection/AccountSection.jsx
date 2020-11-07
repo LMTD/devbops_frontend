@@ -10,14 +10,13 @@ import {
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import Alert from '@material-ui/lab/Alert';
+
 import { AccountCircle } from '@material-ui/icons';
 import * as actions from '../../../store/actions/auth';
-import CreateEvent from '../../createEvent/CreateEvent';
+
 const AccountSection = (props) => {
 	const [isModifyMode, setIsModifyMode] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
+	const { register, handleSubmit } = useForm();
 
 	const handleModifyMode = () => {
 		setIsModifyMode(!isModifyMode);
@@ -43,7 +42,6 @@ const AccountSection = (props) => {
 			if (data.Status) {
 				console.log('this is update user: ', data);
 				console.log('this is props in account section : ', props);
-				setLoading(true);
 				props.updateUserSuccess(
 					formData.email,
 					formData.firstName,
@@ -51,9 +49,7 @@ const AccountSection = (props) => {
 					formData.city,
 					formData.country,
 				);
-				setLoading(false);
 			}
-			console.log('this is data from update user : ', data);
 		} catch (err) {
 			console.log('there is an error to update user: ', err);
 		}
@@ -117,8 +113,8 @@ const AccountSection = (props) => {
 									inputRef={register()}
 								/>
 							) : (
-								<Typography variant='h6'>{props.email}</Typography>
-							)}
+									<Typography variant='h6'>{props.email}</Typography>
+								)}
 						</Grid>
 						<Grid item xs={2} sm={2} md={2}>
 							<label
@@ -142,8 +138,8 @@ const AccountSection = (props) => {
 									inputRef={register()}
 								/>
 							) : (
-								<Typography variant='h6'>*************************</Typography>
-							)}
+									<Typography variant='h6'>*************************</Typography>
+								)}
 						</Grid>
 						<Grid item xs={2} sm={2} md={2}>
 							<label
@@ -166,8 +162,8 @@ const AccountSection = (props) => {
 									inputRef={register()}
 								/>
 							) : (
-								<Typography variant='h6'>{props.firstName}</Typography>
-							)}
+									<Typography variant='h6'>{props.firstName}</Typography>
+								)}
 						</Grid>
 						<Grid item xs={2} sm={2} md={2}>
 							<label
@@ -190,8 +186,8 @@ const AccountSection = (props) => {
 									inputRef={register()}
 								/>
 							) : (
-								<Typography variant='h6'>{props.lastName}</Typography>
-							)}
+									<Typography variant='h6'>{props.lastName}</Typography>
+								)}
 						</Grid>
 						<Grid item xs={2} sm={2} md={2}>
 							<label
@@ -214,8 +210,8 @@ const AccountSection = (props) => {
 									inputRef={register()}
 								/>
 							) : (
-								<Typography variant='h6'>{props.city}</Typography>
-							)}
+									<Typography variant='h6'>{props.city}</Typography>
+								)}
 						</Grid>
 						<Grid item xs={2} sm={2} md={2}>
 							<label
@@ -237,8 +233,8 @@ const AccountSection = (props) => {
 									name='country'
 								/>
 							) : (
-								<Typography variant='h6'>{props.country}</Typography>
-							)}
+									<Typography variant='h6'>{props.country}</Typography>
+								)}
 						</Grid>
 
 						<Grid

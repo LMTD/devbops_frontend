@@ -1,9 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Typography, Grid, Avatar, List,
-ListItem,
-ListItemAvatar,
-ListItemText,} from '@material-ui/core';
+import {
+  Typography, Grid, List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,14 +25,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ListData = (props) => {
   const classes = useStyles();
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
+
 
   const rsvpItem = props.list.map((rsvpName) => (
     <ListItem key={rsvpName}>
       <ListItemAvatar>
         {/* <Avatar> */}
-          <AccountCircle color="primary" fontSize="large"/>
+        <AccountCircle color="primary" fontSize="large" />
         {/* </Avatar> */}
       </ListItemAvatar>
       <ListItemText
@@ -38,14 +39,8 @@ const ListData = (props) => {
       />
     </ListItem>
   ))
-    
-    const generate = (element) => {
-        return props.list.map((value) =>
-            React.cloneElement(element, {
-            key: value,
-            }),
-        );
-    }
+
+
 
   return (
     <div className={classes.root}>
@@ -55,7 +50,7 @@ const ListData = (props) => {
             {props.list.length > 0 ? props.listTitle : props.listTitleAlter}
           </Typography>
           <div className={classes.demo}>
-            <List dense={dense}>
+            <List dense={false}>
               {rsvpItem}
             </List>
           </div>

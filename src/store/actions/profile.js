@@ -73,7 +73,7 @@ export const fetchBlogs = (token) => {
 					Comment: null,
 				}
 			);
-			console.log('this is blogs fetching: ', data);
+			// console.log('this is blogs fetching: ', data);
 
 			if (data.Status) {
 				dispatch(fetchBlogsSuccess(data.BlogsDB));
@@ -115,7 +115,7 @@ export const onDeleteEvent = (token, eventTitle) => {
 					eventType: null,
 				}
 			);
-			console.log('this is data in on delete event: ', data);
+			// console.log('this is data in on delete event: ', data);
 
 			if (data.Status) {
 				dispatch(deleteEventSuccess(eventTitle));
@@ -165,7 +165,7 @@ export const onUpdateEvent = (
 					eventDescription: eventDescription,
 				}
 			);
-			console.log('this is data in on  onUpdateEvent: ', data);
+			// console.log('this is data in on  onUpdateEvent: ', data);
 
 			if (data.Status) {
 				dispatch(
@@ -221,7 +221,7 @@ export const onDeleteBlog = (token, blogSubject) => {
 					Comment: null,
 				}
 			);
-			console.log('this is delete blog: ', data);
+			// console.log('this is delete blog: ', data);
 
 			if (data.Status) {
 				dispatch(deleteBlogSuccess(blogSubject));
@@ -258,7 +258,7 @@ export const onCancelRSVP = (token, eventTitle) => {
 					eventType: null,
 				}
 			);
-			console.log('this is data in on cancel rsvp event: ', data);
+			// console.log('this is data in on cancel rsvp event: ', data);
 
 			if (data.Status) {
 				dispatch(cancelRSVPSuccess(eventTitle));
@@ -344,7 +344,7 @@ export const createEvent = (
 				}
 			);
 
-			console.log('this is data from create event: ', data);
+			// console.log('this is data from create event: ', data);
 			if (data.Status) {
 				dispatch(
 					createdEventSuccess(
