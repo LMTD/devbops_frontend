@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import {
 	Container,
 	Grid,
@@ -29,6 +30,10 @@ const Home = (props) => {
 		props.fetchEvents(props.token);
 		props.fetchBlogs(props.token);
 	}, []);
+
+	if (props.token === null) {
+		return <Redirect to="/" />
+	}
 
 	const handleChangeFilterValue = (event) => {
 		setFilterValue(event.target.value);

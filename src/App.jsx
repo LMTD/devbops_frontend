@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import ProtectedRoute from './ProtectedRoute';
 import HeaderBar from './containers/headerBar/HeaderBar';
 import Main from './containers/main/Main';
 import About from './containers/about/About';
@@ -13,38 +14,71 @@ import './App.css';
 
 class App extends Component {
 
-
-	componentDidMount() {
+	// constructor(props) {
+	// 	super(props);
+	// 	this.state = {
+	// 		token: null
+	// 	}
+	// }
+	componentWillMount() {
 		// console.log('this is props in app: ', this.props);
+		// const token = await localStorage.getItem('userData');
+
+		// this.setState({
+		// 	token: localStorage.getItem('userData')
+		// })
 
 		this.props.onTryAuthLogin();
 	}
 	render() {
-		let routes = (
-			<Switch>
-				<Route exact path='/' component={Main} />
-				<Route path='/about' component={About} />
-				<Redirect exact from='/home' to='/home' />
-				<Redirect exact from='/profile' to='/profile' />
-				<Redirect from='/*' to='/' />
-			</Switch>
-		);
 
-		if (this.props.isAuthenticated) {
-			routes = (
-				<Switch>
-					{/* <Route exact path='/' component={Main} /> */}
-					<Route path='/about' component={About} />
-					<Route exact path='/home' component={Home} />
-					<Route exact path='/profile' component={Profile} />
-					<Route path='/logout' component={Logout} />
-					<Redirect exact from='/cancel-rsvp' to='/profile' />
+		let routes = <Switch>
+			<Route path='/about' component={About} />
+			<Route exact path='/' component={Main} />
+			<ProtectedRoute exact path='/home' component={Home} />
+			<ProtectedRoute exact path='/profile' component={Profile} />
+			<ProtectedRoute exact path='/logout' component={Logout} />
+			<Redirect from="/*" to={this.props.isAuthenticated ? "/home" : '/'} />
 
-					<Redirect exact from='/' to='/home' />
-					<Redirect exact from='/*' to='/home' />
-				</Switch>
-			);
-		}
+		</Switch>
+
+		// console.log('this is window.location.href: ', window.location.href)
+
+		// let routes = null;
+
+		// if (localStorage.getItem('userData') !== null) {
+		// 	console.log('this is token: ', localStorage.getItem('userData'))
+
+		// 	routes = (
+		// 		<Switch>
+		// 			{/* <Route exact path='/' component={Main} /> */}
+		// 			<Route path='/about' component={About} />
+		// 			<Route exact path='/home' component={Home} />
+		// 			<Route exact path='/profile' component={Profile} />
+		// 			<Route path='/logout' component={Logout} />
+		// 			{/* <Redirect exact from='/cancel-rsvp' to='/profile' /> */}
+
+		// 			{/* <Redirect exact from='/profile' to='/profile' />
+		// 			<Redirect exact from='/*' to='/home' /> */}
+		// 		</Switch>
+		// 	);
+		// } else {
+		// 	routes = (
+		// 		<Switch>
+		// 			<Route exact path='/about' component={About} />
+		// 			<Route exact path='/' component={Main} />
+		// 			{/* <Redirect exact from='/home' to='/home' /> */}
+		// 			{/* <Route exact path='/profile' component={Profile} /> */}
+		// 			{/* <Redirect exact from='/profile' to='/profile' /> */}
+		// 			<Redirect from='/*' to='/' />
+		// 		</Switch>
+		// 	);
+		// }
+
+
+
+
+
 
 		return (
 			<div>
