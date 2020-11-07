@@ -1,26 +1,27 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 import moment from 'moment';
+import { config } from '../../constants';
+
+const eventUrl = config.urls.EVENT_URL;
+const blogUrl = config.urls.BLOG_URL;
 
 export const fetchEvents = (token, action) => {
 	return async (dispatch) => {
 		dispatch(onFetchingEvents());
 
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: action,
-					eventTitle: null,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Token: token,
+				Action: action,
+				eventTitle: null,
+				eventDate: null,
+				eventTime: null,
+				eventDescription: null,
+				imgUrl: null,
+				locationDetail: null,
+				eventType: null,
+			});
 			// console.log('this is data: ', data);
 
 			if (data.Status && data.hasOwnProperty('RSVP')) {
@@ -60,19 +61,16 @@ export const fetchBlogs = (token) => {
 		dispatch(onFetchingMyBlogs());
 
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'H',
-					Token: token,
-					BlogSubject: null,
-					BlogBody: null,
-					Location: null,
-					Date: null,
-					Time: null,
-					Comment: null,
-				}
-			);
+			const { data } = await axios.post(blogUrl, {
+				Action: 'H',
+				Token: token,
+				BlogSubject: null,
+				BlogBody: null,
+				Location: null,
+				Date: null,
+				Time: null,
+				Comment: null,
+			});
 			// console.log('this is blogs fetching: ', data);
 
 			if (data.Status) {
@@ -101,20 +99,17 @@ export const fetchBlogsSuccess = (blogs) => {
 export const onDeleteEvent = (token, eventTitle) => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: 'D',
-					eventTitle: eventTitle,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Token: token,
+				Action: 'D',
+				eventTitle: eventTitle,
+				eventDate: null,
+				eventTime: null,
+				eventDescription: null,
+				imgUrl: null,
+				locationDetail: null,
+				eventType: null,
+			});
 			// console.log('this is data in on delete event: ', data);
 
 			if (data.Status) {
@@ -151,20 +146,17 @@ export const onUpdateEvent = (
 ) => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: 'U',
-					eventTitle: eventTitle,
-					eventDate: moment(eventDate).format('dddd MMM  Do YYYY'),
-					eventTime: moment(`${eventDate}, ${eventTime}`).format('h:mm a'),
-					eventType: eventType,
-					locationDetail: locationDetail,
-					imgUrl: imgUrl,
-					eventDescription: eventDescription,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Token: token,
+				Action: 'U',
+				eventTitle: eventTitle,
+				eventDate: moment(eventDate).format('dddd MMM  Do YYYY'),
+				eventTime: moment(`${eventDate}, ${eventTime}`).format('h:mm a'),
+				eventType: eventType,
+				locationDetail: locationDetail,
+				imgUrl: imgUrl,
+				eventDescription: eventDescription,
+			});
 			// console.log('this is data in on  onUpdateEvent: ', data);
 
 			if (data.Status) {
@@ -208,19 +200,16 @@ const updatedEventSuccess = (
 export const onDeleteBlog = (token, blogSubject) => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'D',
-					Token: token,
-					BlogSubject: blogSubject,
-					BlogBody: null,
-					Location: null,
-					Date: null,
-					Time: null,
-					Comment: null,
-				}
-			);
+			const { data } = await axios.post(blogUrl, {
+				Action: 'D',
+				Token: token,
+				BlogSubject: blogSubject,
+				BlogBody: null,
+				Location: null,
+				Date: null,
+				Time: null,
+				Comment: null,
+			});
 			// console.log('this is delete blog: ', data);
 
 			if (data.Status) {
@@ -244,20 +233,17 @@ export const deleteBlogSuccess = (blogSubject) => {
 export const onCancelRSVP = (token, eventTitle) => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: 'CV',
-					eventTitle: eventTitle,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Token: token,
+				Action: 'CV',
+				eventTitle: eventTitle,
+				eventDate: null,
+				eventTime: null,
+				eventDescription: null,
+				imgUrl: null,
+				locationDetail: null,
+				eventType: null,
+			});
 			// console.log('this is data in on cancel rsvp event: ', data);
 
 			if (data.Status) {
@@ -329,20 +315,17 @@ export const createEvent = (
 		dispatch(onCreating());
 
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Action: 'C',
-					Token: token,
-					eventTitle: eventTitle,
-					eventDate: eventDate,
-					eventTime: eventTime,
-					eventType: eventType,
-					locationDetail: locationDetail,
-					imgUrl: imgUrl,
-					eventDescription: eventDescription,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Action: 'C',
+				Token: token,
+				eventTitle: eventTitle,
+				eventDate: eventDate,
+				eventTime: eventTime,
+				eventType: eventType,
+				locationDetail: locationDetail,
+				imgUrl: imgUrl,
+				eventDescription: eventDescription,
+			});
 
 			// console.log('this is data from create event: ', data);
 			if (data.Status) {
@@ -401,19 +384,16 @@ export const postBlog = (
 		dispatch(onCreating());
 
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'C',
-					Token: token,
-					BlogSubject: blogSubject,
-					BlogBody: blogBody,
-					Date: currentDate,
-					Time: currentTime,
-					Comment: null,
-					Location: currentLocation,
-				}
-			);
+			const { data } = await axios.post(blogUrl, {
+				Action: 'C',
+				Token: token,
+				BlogSubject: blogSubject,
+				BlogBody: blogBody,
+				Date: currentDate,
+				Time: currentTime,
+				Comment: null,
+				Location: currentLocation,
+			});
 			console.log('this is data from post blog: ', data);
 			if (data.Status) {
 				dispatch(

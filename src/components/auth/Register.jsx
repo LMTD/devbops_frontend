@@ -10,6 +10,9 @@ import {
 	CircularProgress,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { config } from '../../constants';
+
+const userUrl = config.urls.USER_URL;
 
 const Register = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
@@ -31,7 +34,7 @@ const Register = (props) => {
 		setLoading(true);
 		try {
 			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/user',
+				userUrl,
 				{
 					Action: 'register',
 					Username: formData.username,

@@ -13,8 +13,10 @@ import {
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import Alert from '@material-ui/lab/Alert';
-
 import './styles.css';
+import { config } from '../../constants';
+
+const userUrl = config.urls.USER_URL;
 
 const Login = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState(
@@ -33,7 +35,7 @@ const Login = (props) => {
 		console.log('this is formdata: ', formData);
 		try {
 			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/user',
+				userUrl,
 				{
 					Action: 'login',
 					Username: formData.username,
