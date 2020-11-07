@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import {
 	Typography,
 	Card,
 	CardActionArea,
 	CardMedia,
 	CardContent,
-	IconButton,
 	Avatar,
-	CardActions,
 	CardHeader,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
@@ -17,6 +16,8 @@ import ProfileBlogDetail from '../../../profile/profileBlogDetail/ProfileBlogDet
 import ProfileEventDetail from '../../../profile/profileEventDetail/ProfileEventDetail';
 import EventDetail from '../../../home/eventDetail/EventDetail';
 import BlogDetail from '../../../home/blogDetail/BlogDetail';
+import * as homeActions from '../../../../store/actions/home';
+import * as profileActions from '../../../../store/actions/profile';
 
 const useStyles = makeStyles({
 	root: {
@@ -39,9 +40,11 @@ const SlideItem = (props) => {
 	const classes = useStyles();
 	const handleClickOpen = () => {
 		setOpen(true);
+		props.homeClearAlertMessage();
+		props.profileClearAlertMessage();
 	};
 
-	const handleClose = (value) => {
+	const handleClose = () => {
 		setOpen(false);
 	};
 	let item = null;
@@ -58,7 +61,7 @@ const SlideItem = (props) => {
 				// image={props.eventImageUrl === '' ? logo : props.eventImageUrl}
 				image={props.Event_image}
 				height={225}
-				// width={400}
+			// width={400}
 			/>
 		);
 	} else {
@@ -150,4 +153,13 @@ const SlideItem = (props) => {
 	);
 };
 
-export default SlideItem;
+
+const mapDispatchToProps = (dispatch) => {
+
+	return {
+		homeClearAlertMessage: () => dispatch(homeActions.clearAlertMessage()),
+		profileClearAlertMessage: () => dispatch(profileActions.clearAlertMessage())
+	}
+}
+
+export default connect(null, mapDispatchToProps)(SlideItem);

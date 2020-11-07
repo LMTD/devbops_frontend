@@ -9,7 +9,6 @@ const SlideShow = (props) => {
 	let items = null;
 	let sectionContents = null;
 
-	console.log('this is props in slideshow: ', props);
 	if (props.slideItems.length > 0) {
 		if (!props.isEvent) {
 			items = props.slideItems.map((item) => {

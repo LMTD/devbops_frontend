@@ -1,47 +1,49 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Grid, Container, Button, TextField } from '@material-ui/core';
-import axios from 'axios';
+import { Grid, Container, Button, TextField, CircularProgress } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+
+import * as homeActions from '../../store/actions/home';
+import * as profileActions from '../../store/actions/profile';
 
 const PostBlog = (props) => {
-	const { register, handleSubmit, watch, reset } = useForm();
+	const { register, handleSubmit, watch } = useForm();
 	const watchFields = watch(['blogSubject', 'blogBody', 'location']);
-
-	let history = useHistory();
 
 	const handlePostBlog = async (formData) => {
 		console.log('this is form data: ', formData);
 
-		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'C',
-					Token: props.token,
-					BlogSubject: formData.blogSubject,
-					BlogBody: formData.blogBody,
-					Date: moment().format('dddd MMM Do YYYY'),
-					Time: moment().format('hh:mm a'),
-					Comment: null,
-					Location: formData.location,
-				},
-			);
-			console.log('this is data from post blog: ', data);
-			if (data.Status) {
-				history.push('/sadadas');
-				props.onClose();
-			}
-		} catch (error) {
-			console.log(error);
+		const currentDate = moment().format('dddd MMM Do YYYY');
+		const currentTime = moment().format('hh:mm a')
+
+		if (window.location.href.includes('/home')) {
+			props.postBlogOnHome(props.token, props.username, formData.blogSubject, formData.blogBody, currentDate,
+				currentTime, formData.location)
+
+		} else if (window.location.href.includes('/profile')) {
+			props.postBlogOnProfile(props.token, props.username, formData.blogSubject, formData.blogBody, currentDate,
+				currentTime, formData.location)
 		}
+
 	};
 
-	return (
-		<Container fixed>
-			{/* {alertMessage && <Alert severity={alertSeverity}>{alertMessage}</Alert>} */}
+	let alert = null;
+
+	if (props.homeAlertMessage) {
+		alert = <Alert severity={props.homeAlertType}>{props.homeAlertMessage}</Alert>;
+	} else if (props.profileAlertMessage) {
+		alert = <Alert severity={props.profileAlertType}>{props.profileAlertMessage}</Alert>;
+
+	}
+
+	let postBlogContent = null;
+
+	if (props.homeCreating || props.profileCreating) {
+		postBlogContent = <CircularProgress />
+	} else {
+		postBlogContent = (
 			<form
 				onSubmit={handleSubmit(handlePostBlog)}
 				style={{ margin: '20px 0' }}>
@@ -100,12 +102,69 @@ const PostBlog = (props) => {
 					</Grid>
 				</Grid>
 			</form>
+		)
+	}
+
+	if (props.homeAlertType === 'success' || props.profileAlertType === 'success') {
+		props.onClose()
+	}
+
+	return (
+		<Container fixed>
+			{/* {alertMessage && <Alert severity={alertSeverity}>{alertMessage}</Alert>} */}
+			{alert}
+			{postBlogContent}
 		</Container>
 	);
 };
 const mapStateToProps = (state) => {
 	return {
 		token: state.auth.token,
+		username: state.auth.username,
+		homeAlertMessage: state.home.alertMessage,
+		homeAlertType: state.home.alertType,
+		homeCreating: state.home.isCreating,
+		profileCreating: state.profile.isCreating,
+		profileAlertMessage: state.profile.createdAlertMessage,
+		profileAlertType: state.profile.profileAlertType
 	};
 };
-export default connect(mapStateToProps)(PostBlog);
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		postBlogOnHome: (
+			token,
+			username,
+			blogSubject,
+			blogBody,
+			currentDate,
+			currentTime,
+			currentLocation
+		) => {
+			dispatch(homeActions.postBlog(token,
+				username,
+				blogSubject,
+				blogBody,
+				currentDate,
+				currentTime,
+				currentLocation))
+		},
+		postBlogOnProfile: (token,
+			username,
+			blogSubject,
+			blogBody,
+			currentDate,
+			currentTime,
+			currentLocation
+		) => {
+			dispatch(profileActions.postBlog(token,
+				username,
+				blogSubject,
+				blogBody,
+				currentDate,
+				currentTime,
+				currentLocation))
+		}
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(PostBlog);
