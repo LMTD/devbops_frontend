@@ -145,8 +145,8 @@ const profileReducer = (state = initialState, action) => {
 
 			return {
 				...state,
-				alertMessage: action.alertMessage,
-				alertType: action.alertType,
+				createdAlertMessage: action.alertMessage,
+				createdAlertType: action.alertType,
 				myBlogs: [...state.myBlogs, { ...newBlog }],
 				isCreating: false,
 			};
