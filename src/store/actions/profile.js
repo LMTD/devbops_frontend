@@ -275,15 +275,15 @@ export const cancelRSVPSuccess = (eventTitle) => {
 	};
 };
 
-const onCreatingEvent = () => {
+const onCreating = () => {
 	return {
-		type: actionTypes.ON_CREATING_EVENT,
+		type: actionTypes.ON_CREATING,
 	};
 };
 
-const createdEventFail = (message) => {
+const createdFail = (message) => {
 	return {
-		type: actionTypes.CREATED_EVENT_FAIL,
+		type: actionTypes.CREATED_FAIL,
 		alertMessage: message,
 		alertType: 'error',
 	};
@@ -326,7 +326,7 @@ export const createEvent = (
 	eventDescription
 ) => {
 	return async (dispatch) => {
-		dispatch(onCreatingEvent());
+		dispatch(onCreating());
 
 		try {
 			const { data } = await axios.post(
@@ -359,10 +359,10 @@ export const createEvent = (
 					)
 				);
 			} else {
-				dispatch(createdEventFail(data.Description));
+				dispatch(createdFail(data.Description));
 			}
 		} catch (err) {
-			dispatch(createdEventFail('Networking error, please try again!'));
+			dispatch(createdFail('Networking error, please try again!'));
 		}
 	};
 };

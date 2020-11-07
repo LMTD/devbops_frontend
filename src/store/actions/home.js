@@ -232,29 +232,19 @@ export const searchingBlogsAndEvents = (
 					event.event_name.indexOf(searchTerm) !== -1
 			);
 		}
-
-		// fiteredBlogs = blogs.filter(
-		// 	(blog) =>
-		// 		blog.BlogComment.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogContent.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogDate.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogLocation.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogTime.indexOf(searchTerm) !== -1 ||
-		// 		blog.blogName.indexOf(searchTerm) !== -1);
-
 		dispatch(searchBlogsAndEventsSuccess(filteredEvents));
 	};
 };
 
-const onCreatingEvent = () => {
+const onCreating = () => {
 	return {
-		type: actionTypes.ON_CREATING_EVENT,
+		type: actionTypes.ON_CREATING,
 	};
 };
 
-const createdEventFail = (message) => {
+const createdFail = (message) => {
 	return {
-		type: actionTypes.CREATED_EVENT_FAIL,
+		type: actionTypes.CREATED_FAIL,
 		alertMessage: message,
 		alertType: 'error',
 	};
@@ -297,7 +287,7 @@ export const createEvent = (
 	eventDescription
 ) => {
 	return async (dispatch) => {
-		dispatch(onCreatingEvent());
+		dispatch(onCreating());
 
 		try {
 			const { data } = await axios.post(
@@ -330,11 +320,88 @@ export const createEvent = (
 					)
 				);
 			} else {
-				dispatch(createdEventFail(data.Description));
+				dispatch(createdFail(data.Description));
 			}
 		} catch (err) {
 			console.log('created event error: ', err);
-			dispatch(createdEventFail('Networking error, please try again!'));
+			dispatch(createdFail('Networking error, please try again!'));
+		}
+	};
+};
+
+const postedBlogSuccess = (
+	username,
+	blogSubject,
+	blogBody,
+	currentDate,
+	currentTime,
+	currentLocation
+) => {
+	return {
+		type: actionTypes.POSTED_BLOG_SUCCESS,
+		username: username,
+		blogSubject: blogSubject,
+		blogBody: blogBody,
+		currentDate: currentDate,
+		currentTime: currentTime,
+		currentLocation: currentLocation,
+		alertMessage: 'Blog posted successfully',
+		alertType: 'success',
+	};
+};
+
+export const postBlog = (
+	token,
+	username,
+	blogSubject,
+	blogBody,
+	currentDate,
+	currentTime,
+	currentLocation
+) => {
+	return async (dispatch) => {
+		dispatch(onCreating());
+
+		console.log(`${token},
+	${username},
+	${blogSubject},
+	${blogBody},
+	${currentDate},
+	${currentTime},
+	${currentLocation}`);
+
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
+				{
+					Action: 'C',
+					Token: token,
+					BlogSubject: blogSubject,
+					BlogBody: blogBody,
+					Date: currentDate,
+					Time: currentTime,
+					Comment: null,
+					Location: currentLocation,
+				}
+			);
+			console.log('this is data from create event: ', data);
+			if (data.Status) {
+				dispatch(
+					postedBlogSuccess(
+						username,
+						blogSubject,
+						blogBody,
+						currentDate,
+						currentTime,
+						currentLocation
+					)
+				);
+			} else {
+				dispatch(createdFail(data.Description));
+			}
+		} catch (err) {
+			console.log('post blog error: ', err);
+			dispatch(createdFail('Networking error, please try again!'));
 		}
 	};
 };

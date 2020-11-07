@@ -65,6 +65,9 @@ const Profile = (props) => {
 
 	if (props.alertMessage !== '') {
 		alertMessage = <Alert severity='success'>{props.alertMessage}</Alert>;
+	} else if (props.createdAlertType === 'success') {
+		alertMessage = <Alert severity={props.createdAlertType}>{props.createdAlertMessage}</Alert>;
+
 	}
 
 	return (
@@ -110,6 +113,8 @@ const mapStateToProps = (state) => {
 		onFetchingMyRsvpList: state.profile.onFetchingMyRsvpList,
 		onFetchingMyEvents: state.profile.onFetchingMyEvents,
 		alertMessage: state.profile.alertMessage,
+		createdAlertMessage: state.profile.createdAlertMessage,
+		createdAlertType: state.profile.createdAlertType
 	};
 };
 

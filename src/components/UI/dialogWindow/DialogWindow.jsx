@@ -48,6 +48,7 @@ const DialogWindow = (props) => {
 		);
 
 		dialogContent = <PostBlog onClose={props.handleClose} />;
+		props.clearAlertMessage();
 	} else if (props.openCreateEvent) {
 		dialogTitle = (
 			<DialogTitle id='customized-dialog-title' onClose={props.handleClose}>

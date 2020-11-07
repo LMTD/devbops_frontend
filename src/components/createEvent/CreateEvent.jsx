@@ -11,6 +11,7 @@ import {
 	Fab,
 	Card,
 	CardActionArea,
+	CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -200,127 +201,146 @@ const CreateEvent = (props) => {
 
 	let alert = null;
 
-	if (props.alertMessage) {
-		alert = <Alert severity={props.alertType}>{props.alertMessage}</Alert>;
+	if (props.homeAlertMessage) {
+		alert = <Alert severity={props.homeAlertType}>{props.homeAlertMessage}</Alert>;
+	} else if (props.profileAlertMessage) {
+		alert = <Alert severity={props.profileAlertType}>{props.profileAlertMessage}</Alert>;
+
+	}
+
+
+
+	let createEventContent = null;
+
+	if (props.homeCreating || props.profileCreating) {
+		createEventContent = <CircularProgress />
+	} else {
+		if (props.homeAlertType === 'success' || props.profileAlertType === 'success') {
+			props.onClose()
+		}
+		createEventContent = (
+			<Grid container spacing={3}>
+
+				<Grid item xs={12} sm={12} md={6}>
+					{eventImageSection}
+				</Grid>
+				<Grid item xs={12} sm={12} md={6}>
+					<div className={classes.details}>
+						<CardContent className={classes.content}>
+							<Grid container spacing={3}>
+								<Grid item xs={12} sm={12} md={12}>
+									<TextField
+										variant='outlined'
+										size='small'
+										fullWidth
+										name='eventTitle'
+										label='Event Title *'
+										type='text'
+										inputRef={register({ required: true })}
+									/>
+								</Grid>
+								<Grid item xs={12} sm={12} md={6}>
+									<TextField
+										fullWidth
+										variant='outlined'
+										size='small'
+										name='eventDate'
+										label='Event Date *'
+										type='date'
+										InputLabelProps={{
+											shrink: true,
+										}}
+										inputRef={register({ required: true })}
+									/>
+								</Grid>
+								<Grid item xs={12} sm={12} md={6}>
+									<TextField
+										fullWidth
+										variant='outlined'
+										size='small'
+										name='eventTime'
+										label='Event Time *'
+										type='time'
+										InputLabelProps={{
+											shrink: true,
+										}}
+										inputRef={register({ required: true })}
+									/>
+								</Grid>
+
+								<Grid item xs={12} sm={12} md={12}>
+									<RadioGroup
+										aria-label='event-type'
+										name='eventType'
+										style={{
+											flexDirection: 'row',
+											justifyContent: 'space-around',
+										}}
+										value={eventType}
+										onChange={handleRadioChange}
+									>
+										<FormControlLabel
+											value='Online'
+											control={<Radio />}
+											label='Online'
+											inputRef={register({ required: true })}
+										/>
+										<FormControlLabel
+											value='In-Person'
+											control={<Radio />}
+											label='In-Person'
+											inputRef={register({ required: true })}
+										/>
+									</RadioGroup>
+								</Grid>
+								{eventDetail}
+
+								<Grid item xs={12} sm={12} md={12}>
+									<TextField
+										variant='outlined'
+										size='small'
+										fullWidth
+										name='eventDescription'
+										placeholder='Please provide some descriptions to the event'
+										multiline
+										rows={3}
+										type='text'
+										inputRef={register({ required: true })}
+									/>
+								</Grid>
+
+								<Grid container justify='center'>
+									<Button
+										type='submit'
+										variant='contained'
+										color='primary'
+										disabled={
+											!(
+												watchFields.eventTitle &&
+												watchFields.eventDate &&
+												watchFields.eventTime &&
+												watchFields.eventType &&
+												watchFields.locationDetail &&
+												watchFields.eventDescription
+											)
+										}
+									>
+										Publish
+										</Button>
+								</Grid>
+							</Grid>
+						</CardContent>
+					</div>
+				</Grid>
+			</Grid>
+		)
 	}
 
 	return (
 		<form onSubmit={handleSubmit(handleCreateEvent)}>
 			{alert}
 			<Card className={classes.root}>
-				<Grid container spacing={3}>
-					<Grid item xs={12} sm={12} md={6}>
-						{eventImageSection}
-					</Grid>
-					<Grid item xs={12} sm={12} md={6}>
-						<div className={classes.details}>
-							<CardContent className={classes.content}>
-								<Grid container spacing={3}>
-									<Grid item xs={12} sm={12} md={12}>
-										<TextField
-											variant='outlined'
-											size='small'
-											fullWidth
-											name='eventTitle'
-											label='Event Title *'
-											type='text'
-											inputRef={register({ required: true })}
-										/>
-									</Grid>
-									<Grid item xs={12} sm={12} md={6}>
-										<TextField
-											fullWidth
-											variant='outlined'
-											size='small'
-											name='eventDate'
-											label='Event Date *'
-											type='date'
-											InputLabelProps={{
-												shrink: true,
-											}}
-											inputRef={register({ required: true })}
-										/>
-									</Grid>
-									<Grid item xs={12} sm={12} md={6}>
-										<TextField
-											fullWidth
-											variant='outlined'
-											size='small'
-											name='eventTime'
-											label='Event Time *'
-											type='time'
-											InputLabelProps={{
-												shrink: true,
-											}}
-											inputRef={register({ required: true })}
-										/>
-									</Grid>
-
-									<Grid item xs={12} sm={12} md={12}>
-										<RadioGroup
-											aria-label='event-type'
-											name='eventType'
-											style={{
-												flexDirection: 'row',
-												justifyContent: 'space-around',
-											}}
-											value={eventType}
-											onChange={handleRadioChange}
-										>
-											<FormControlLabel
-												value='Online'
-												control={<Radio />}
-												label='Online'
-												inputRef={register({ required: true })}
-											/>
-											<FormControlLabel
-												value='In-Person'
-												control={<Radio />}
-												label='In-Person'
-												inputRef={register({ required: true })}
-											/>
-										</RadioGroup>
-									</Grid>
-									{eventDetail}
-
-									<Grid item xs={12} sm={12} md={12}>
-										<TextField
-											variant='outlined'
-											size='small'
-											fullWidth
-											name='eventDescription'
-											placeholder='Please provide some descriptions to the event'
-											multiline
-											rows={3}
-											type='text'
-											inputRef={register({ required: true })}
-										/>
-									</Grid>
-
-									<Grid container justify='center'>
-										<Button
-											type='submit'
-											variant='contained'
-											color='primary'
-											disabled={
-												!(
-													watchFields.eventTitle &&
-													watchFields.eventDate &&
-													watchFields.eventTime &&
-													watchFields.eventType &&
-													watchFields.locationDetail &&
-													watchFields.eventDescription
-												)
-											}
-										>
-											Publish
-										</Button>
-									</Grid>
-								</Grid>
-							</CardContent>
-						</div>
-					</Grid>
-				</Grid>
+				{createEventContent}
 			</Card>
 		</form>
 	);
@@ -330,8 +350,12 @@ const mapStateToProps = (state) => {
 	return {
 		token: state.auth.token,
 		username: state.auth.username,
-		alertMessage: state.home.alertMessage,
-		alertType: state.home.alertType,
+		homeAlertMessage: state.home.alertMessage,
+		homeAlertType: state.home.alertType,
+		homeCreating: state.home.isCreating,
+		profileCreating: state.profile.isCreating,
+		profileAlertMessage: state.profile.createdAlertMessage,
+		profileAlertType: state.profile.profileAlertType
 	};
 };
 

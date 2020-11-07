@@ -10,6 +10,7 @@ const initialState = {
 	alertMessage: '',
 	createdAlertMessage: '',
 	createdAlertType: '',
+	isCreating: false,
 };
 const profileReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -95,11 +96,20 @@ const profileReducer = (state = initialState, action) => {
 				}),
 			};
 
-		case actionTypes.CREATED_EVENT_FAIL:
+		case actionTypes.ON_CREATING:
+			return {
+				...state,
+				createdAlertMessage: '',
+				createdAlertType: '',
+				isCreating: true,
+			};
+
+		case actionTypes.CREATED_FAIL:
 			return {
 				...state,
 				createdAlertMessage: action.alertMessage,
 				createdAlertType: action.alertType,
+				isCreating: false,
 			};
 
 		case actionTypes.CREATED_EVENT_SUCCESS:
@@ -114,19 +124,20 @@ const profileReducer = (state = initialState, action) => {
 				event_name: action.eventTitle,
 			};
 
-			console.log('this is neweVENT in profile: ', newEvent);
-
 			return {
 				...state,
 				createdAlertMessage: action.alertMessage,
 				createdAlertType: action.alertType,
 				myEvents: [...state.myEvents, { ...newEvent }],
+				isCreating: false,
 			};
 
 		case actionTypes.CLEAR_ALERT_MESSAGE:
 			return {
 				...state,
-				alertMessage: '',
+				createdAlertMessage: '',
+				createdAlertType: '',
+				isCreating: false,
 			};
 
 		default:

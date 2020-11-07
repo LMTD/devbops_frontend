@@ -13,6 +13,7 @@ const initialState = {
 	onRSVP: false,
 	alertMessage: '',
 	alertType: '',
+	isCreating: false,
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -22,6 +23,7 @@ const homeReducer = (state = initialState, action) => {
 				...state,
 				onFetchingEvents: true,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.GET_EVENTS_SUCCESS:
@@ -40,6 +42,7 @@ const homeReducer = (state = initialState, action) => {
 				filteredBlogs: action.allBlogs,
 				onFetchingBlogs: false,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.ON_RSVP:
@@ -47,6 +50,7 @@ const homeReducer = (state = initialState, action) => {
 				...state,
 				onRSVP: true,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.RSVP_EVENT_SUCCESS:
@@ -76,6 +80,7 @@ const homeReducer = (state = initialState, action) => {
 				onFetchingEvents: false,
 				onRSVP: false,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.ON_POSTING_BLOG_COMMENT:
@@ -83,6 +88,7 @@ const homeReducer = (state = initialState, action) => {
 				...state,
 				onPostingBlogComment: true,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.COMMENT_BLOG_SUCCESS:
@@ -106,6 +112,7 @@ const homeReducer = (state = initialState, action) => {
 				}),
 				onPostingBlogComment: false,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.ON_FILTER:
@@ -113,6 +120,7 @@ const homeReducer = (state = initialState, action) => {
 				...state,
 				onLoadingHomeData: true,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.FILTER_EVENTS_SUCCESS:
@@ -121,6 +129,7 @@ const homeReducer = (state = initialState, action) => {
 				filteredEvents: action.filteredEvents,
 				onLoadingHomeData: false,
 				alertMessage: '',
+				alertType: '',
 			};
 
 		case actionTypes.SEARCH_BLOGS_AND_EVENTS_SUCCESS:
@@ -129,13 +138,23 @@ const homeReducer = (state = initialState, action) => {
 				filteredEvents: action.matchedEvents,
 				onLoadingHomeData: false,
 				alertMessage: '',
+				alertType: '',
 			};
 
-		case actionTypes.CREATED_EVENT_FAIL:
+		case actionTypes.ON_CREATING:
+			return {
+				...state,
+				alertMessage: '',
+				alertType: '',
+				isCreating: true,
+			};
+
+		case actionTypes.CREATED_FAIL:
 			return {
 				...state,
 				alertMessage: action.alertMessage,
 				alertType: action.alertType,
+				isCreating: false,
 			};
 
 		case actionTypes.CREATED_EVENT_SUCCESS:
@@ -156,12 +175,36 @@ const homeReducer = (state = initialState, action) => {
 				alertType: action.alertType,
 				allEvents: [...state.allEvents, { ...newEvent }],
 				filteredEvents: [...state.filteredEvents, { ...newEvent }],
+				isCreating: false,
+			};
+
+		case actionTypes.POSTED_BLOG_SUCCESS:
+			console.log('this is actions in post success: ', action);
+			const newBlog = {
+				BlogComment: {},
+				BlogContent: action.blogBody,
+				BlogDate: action.currentDate,
+				BlogLocation: action.currentLocation,
+				BlogTime: action.currentTime,
+				UserName: action.username,
+				blogName: action.blogSubject,
+			};
+
+			return {
+				...state,
+				alertMessage: action.alertMessage,
+				alertType: action.alertType,
+				allBlogs: [...state.allBlogs, { ...newBlog }],
+				filteredBlogs: [...state.filteredBlogs, { ...newBlog }],
+				isCreating: false,
 			};
 
 		case actionTypes.CLEAR_ALERT_MESSAGE:
 			return {
 				...state,
 				alertMessage: '',
+				alertType: '',
+				isCreating: false,
 			};
 
 		default:
