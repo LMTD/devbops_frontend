@@ -414,7 +414,7 @@ export const postBlog = (
 					Location: currentLocation,
 				}
 			);
-			console.log('this is data from create event: ', data);
+			console.log('this is data from post blog: ', data);
 			if (data.Status) {
 				dispatch(
 					postedBlogSuccess(
@@ -426,8 +426,10 @@ export const postBlog = (
 						currentLocation
 					)
 				);
-			} else {
+			} else if (data.Description) {
 				dispatch(createdFail(data.Description));
+			} else {
+				dispatch(createdFail('Timeout, please try again later.'));
 			}
 		} catch (err) {
 			console.log('post blog error: ', err);

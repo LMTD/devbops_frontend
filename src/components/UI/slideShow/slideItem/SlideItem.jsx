@@ -46,6 +46,8 @@ const SlideItem = (props) => {
 
 	const handleClose = (value) => {
 		setOpen(false);
+		props.homeClearAlertMessage();
+		props.profileClearAlertMessage();
 	};
 	let item = null;
 	let itemDetail = null;

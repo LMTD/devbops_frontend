@@ -67,7 +67,6 @@ const Profile = (props) => {
 		alertMessage = <Alert severity='success'>{props.alertMessage}</Alert>;
 	} else if (props.createdAlertType === 'success') {
 		alertMessage = <Alert severity={props.createdAlertType}>{props.createdAlertMessage}</Alert>;
-
 	}
 
 	return (

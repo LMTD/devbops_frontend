@@ -132,6 +132,25 @@ const profileReducer = (state = initialState, action) => {
 				isCreating: false,
 			};
 
+		case actionTypes.POSTED_BLOG_SUCCESS:
+			const newBlog = {
+				BlogComment: {},
+				BlogContent: action.blogBody,
+				BlogDate: action.currentDate,
+				BlogLocation: action.currentLocation,
+				BlogTime: action.currentTime,
+				UserName: action.username,
+				blogName: action.blogSubject,
+			};
+
+			return {
+				...state,
+				alertMessage: action.alertMessage,
+				alertType: action.alertType,
+				myBlogs: [...state.myBlogs, { ...newBlog }],
+				isCreating: false,
+			};
+
 		case actionTypes.CLEAR_ALERT_MESSAGE:
 			return {
 				...state,

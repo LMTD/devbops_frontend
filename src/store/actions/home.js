@@ -362,14 +362,6 @@ export const postBlog = (
 	return async (dispatch) => {
 		dispatch(onCreating());
 
-		console.log(`${token},
-	${username},
-	${blogSubject},
-	${blogBody},
-	${currentDate},
-	${currentTime},
-	${currentLocation}`);
-
 		try {
 			const { data } = await axios.post(
 				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
@@ -384,7 +376,7 @@ export const postBlog = (
 					Location: currentLocation,
 				}
 			);
-			console.log('this is data from create event: ', data);
+			console.log('this is data from post blog: ', data);
 			if (data.Status) {
 				dispatch(
 					postedBlogSuccess(

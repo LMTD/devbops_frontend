@@ -78,6 +78,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		clearAlertMessage: () => {
 			dispatch(homeActions.clearAlertMessage());
+			dispatch(profileActions.clearAlertMessage())
 		},
 	};
 };

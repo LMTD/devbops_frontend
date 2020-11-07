@@ -179,7 +179,6 @@ const homeReducer = (state = initialState, action) => {
 			};
 
 		case actionTypes.POSTED_BLOG_SUCCESS:
-			console.log('this is actions in post success: ', action);
 			const newBlog = {
 				BlogComment: {},
 				BlogContent: action.blogBody,
