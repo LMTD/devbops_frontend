@@ -366,6 +366,76 @@ export const createEvent = (
 		}
 	};
 };
+
+const postedBlogSuccess = (
+	username,
+	blogSubject,
+	blogBody,
+	currentDate,
+	currentTime,
+	currentLocation
+) => {
+	return {
+		type: actionTypes.POSTED_BLOG_SUCCESS,
+		username: username,
+		blogSubject: blogSubject,
+		blogBody: blogBody,
+		currentDate: currentDate,
+		currentTime: currentTime,
+		currentLocation: currentLocation,
+		alertMessage: 'Blog posted successfully',
+		alertType: 'success',
+	};
+};
+
+export const postBlog = (
+	token,
+	username,
+	blogSubject,
+	blogBody,
+	currentDate,
+	currentTime,
+	currentLocation
+) => {
+	return async (dispatch) => {
+		dispatch(onCreating());
+
+		try {
+			const { data } = await axios.post(
+				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
+				{
+					Action: 'C',
+					Token: token,
+					BlogSubject: blogSubject,
+					BlogBody: blogBody,
+					Date: currentDate,
+					Time: currentTime,
+					Comment: null,
+					Location: currentLocation,
+				}
+			);
+			console.log('this is data from create event: ', data);
+			if (data.Status) {
+				dispatch(
+					postedBlogSuccess(
+						username,
+						blogSubject,
+						blogBody,
+						currentDate,
+						currentTime,
+						currentLocation
+					)
+				);
+			} else {
+				dispatch(createdFail(data.Description));
+			}
+		} catch (err) {
+			console.log('post blog error: ', err);
+			dispatch(createdFail('Networking error, please try again!'));
+		}
+	};
+};
+
 export const clearAlertMessage = () => {
 	return {
 		type: actionTypes.CLEAR_ALERT_MESSAGE,

@@ -9,7 +9,7 @@ import * as homeActions from '../../store/actions/home';
 import * as profileActions from '../../store/actions/profile';
 
 const PostBlog = (props) => {
-	const { register, handleSubmit, watch, reset } = useForm();
+	const { register, handleSubmit, watch } = useForm();
 	const watchFields = watch(['blogSubject', 'blogBody', 'location']);
 
 	const handlePostBlog = async (formData) => {
@@ -23,7 +23,8 @@ const PostBlog = (props) => {
 				currentTime, formData.location)
 
 		} else if (window.location.href.includes('/profile')) {
-
+			props.postBlogOnProfile(props.token, props.username, formData.blogSubject, formData.blogBody, currentDate,
+				currentTime, formData.location)
 		}
 
 	};
@@ -42,10 +43,6 @@ const PostBlog = (props) => {
 	if (props.homeCreating || props.profileCreating) {
 		postBlogContent = <CircularProgress />
 	} else {
-		console.log('this is the props in post blog: ', props)
-		if (props.homeAlertType === 'success' || props.profileAlertType === 'success') {
-			props.onClose()
-		}
 		postBlogContent = (
 			<form
 				onSubmit={handleSubmit(handlePostBlog)}
@@ -108,6 +105,10 @@ const PostBlog = (props) => {
 		)
 	}
 
+	if (props.homeAlertType === 'success' || props.profileAlertType === 'success') {
+		props.onClose()
+	}
+
 	return (
 		<Container fixed>
 			{/* {alertMessage && <Alert severity={alertSeverity}>{alertMessage}</Alert>} */}
@@ -148,22 +149,22 @@ const mapDispatchToProps = (dispatch) => {
 				currentTime,
 				currentLocation))
 		},
-		// profilePostBlog: (token,
-		// 	username,
-		// 	blogSubject,
-		// 	blogBody,
-		// 	currentDate,
-		// 	currentTime,
-		// 	currentLocation
-		// ) => {
-		// 	dispatch(homeActions.postBlog(token,
-		// 		username,
-		// 		blogSubject,
-		// 		blogBody,
-		// 		currentDate,
-		// 		currentTime,
-		// 		currentLocation))
-		// }
+		postBlogOnProfile: (token,
+			username,
+			blogSubject,
+			blogBody,
+			currentDate,
+			currentTime,
+			currentLocation
+		) => {
+			dispatch(profileActions.postBlog(token,
+				username,
+				blogSubject,
+				blogBody,
+				currentDate,
+				currentTime,
+				currentLocation))
+		}
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PostBlog);
