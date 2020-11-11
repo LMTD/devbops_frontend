@@ -18,8 +18,6 @@ const userUrl = config.urls.USER_URL;
 const Register = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
 	const [alertMessage, setAlertMessage] = useState('');
-	const [country, setCountry] = useState('');
-	const [region, setRegion] = useState('');
 	const [loading, setLoading] = useState(false);
 	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
 	const watchFields = watch([
@@ -35,40 +33,37 @@ const Register = (props) => {
 
 	const submitRegisterForm = async (formData) => {
 
-		console.log('this is formData: ', formData);
-		console.log('and this is country: ', country, ' and this is region: ', region)
-
-		// setLoading(true);
-		// try {
-		// 	const { data } = await axios.post(
-		// 		userUrl,
-		// 		{
-		// 			Action: 'register',
-		// 			Username: formData.username,
-		// 			Password: formData.password,
-		// 			Email: formData.email,
-		// 			FirstName: formData.firstName,
-		// 			LastName: formData.lastName,
-		// 			Country: formData.country,
-		// 			City: formData.city,
-		// 		},
-		// 	);
-		// 	console.log('this is data: ', data);
-		// 	if (data.Status) {
-		// 		setAlertSeverity('success');
-		// 		setAlertMessage('Register Successfully');
-		// 		props.handleSwitchMode(true);
-		// 		reset();
-		// 	} else {
-		// 		setAlertSeverity('error');
-		// 		setAlertMessage(data.Error);
-		// 	}
-		// } catch (err) {
-		// 	console.log('there is an error in register: ', err);
-		// 	setAlertSeverity('error');
-		// 	setAlertMessage('Network error');
-		// }
-		// setLoading(false);
+		setLoading(true);
+		try {
+			const { data } = await axios.post(
+				userUrl,
+				{
+					Action: 'register',
+					Username: formData.username,
+					Password: formData.password,
+					Email: formData.email,
+					FirstName: formData.firstName,
+					LastName: formData.lastName,
+					Country: formData.country,
+					City: formData.city,
+				},
+			);
+			console.log('this is data: ', data);
+			if (data.Status) {
+				setAlertSeverity('success');
+				setAlertMessage('Register Successfully');
+				props.handleSwitchMode(true);
+				reset();
+			} else {
+				setAlertSeverity('error');
+				setAlertMessage(data.Error);
+			}
+		} catch (err) {
+			console.log('there is an error in register: ', err);
+			setAlertSeverity('error');
+			setAlertMessage('Network error');
+		}
+		setLoading(false);
 	};
 
 	return (
@@ -120,12 +115,8 @@ const Register = (props) => {
 							type='password'
 							id='password'
 							inputRef={register({ minLength: 8 })}
-							error={errors.password?.type === 'minLength'}
-							helperText={
-								errors?.password?.type === 'minLength'
-									? 'Password has to be at least 8 characters long'
-									: null
-							}
+							error={errors.password?.type === 'minLength' ? true : false}
+							helperText='Password has to be at least 8 characters long'
 						/>
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
@@ -142,12 +133,8 @@ const Register = (props) => {
 									return value === getValues('password');
 								},
 							})}
-							error={errors.confirmPassword?.type === 'validate'}
-							helperText={
-								errors?.confirmPassword?.type === 'validate'
-									? 'Password has to be matched'
-									: null
-							}
+							error={errors.confirmPassword?.type === 'validate' ? true : false}
+							helperText='Password has to be matched'
 						/>
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>

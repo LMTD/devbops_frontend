@@ -11,14 +11,15 @@ const prod = {
 
 const dev = {
 	urls: {
-		USER_URL: 'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/user',
+		USER_URL: 'https://0c77865x10.execute-api.us-east-1.amazonaws.com/dev/user',
 		EVENT_URL:
-			'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-		BLOG_URL: 'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
+			'https://0c77865x10.execute-api.us-east-1.amazonaws.com/dev/event',
+		BLOG_URL: 'https://0c77865x10.execute-api.us-east-1.amazonaws.com/dev/blog',
 	},
 };
 
 export const config = process.env.NODE_ENV === 'development' ? dev : prod;
+
 export const countries = [
 	{ code: 'AD', label: 'Andorra' },
 	{ code: 'AE', label: 'United Arab Emirates' },
