@@ -1,37 +1,56 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import moment from 'moment';
 import { config } from '../../constants';
 
 const eventUrl = config.urls.EVENT_URL;
 const blogUrl = config.urls.BLOG_URL;
-console.log('this is blogurl: ', blogUrl);
+
 const onFetchEvents = () => {
 	return {
 		type: actionTypes.ON_GET_EVENTS,
 	};
 };
 
-const getEventsSuccess = (allEvents, onlineEvents) => {
+const getEventsSuccess = (allEvents) => {
 	return {
 		type: actionTypes.GET_EVENTS_SUCCESS,
 		allEvents: allEvents,
-		allOnlineEvents: onlineEvents,
 	};
 };
 
 export const fetchEvents = () => {
 	return async (dispatch) => {
 		dispatch(onFetchEvents());
+		const now = moment();
+		let before = moment(
+			`Thursday Oct 29th 2020 3:35 pm`,
+			'dddd MMM Do YYYY, h:mm a'
+		);
+
+		console.log('this is before: ', before);
+		console.log('this is now: ', now);
+		console.log(before.isBefore(now));
+
 		try {
 			const { data } = await axios.get(eventUrl);
-			// console.log('this is fetching all events: ', data);
+			console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
-				const allOnlineEvents = data.EventsDB.filter(
-					(event) => event.Online === 'Online'
-				);
-				console.log('this is allOnlineEvents: ', allOnlineEvents);
-				dispatch(getEventsSuccess(data.EventsDB, allOnlineEvents));
+				const now = moment();
+				const futureEvents = data.EventsDB.filter((event) => {
+					const eventDate = event.Event_date.replace(/\s+/g, ' ');
+
+					const eventDateTime = moment(
+						`${eventDate} ${event.Event_time}`,
+						'dddd MMM Do YYYY, h:mm a'
+					);
+
+					return eventDateTime.isAfter(now) ? event : null;
+				});
+
+				console.log(futureEvents);
+				dispatch(getEventsSuccess(futureEvents));
 			}
 		} catch (err) {}
 	};
@@ -47,6 +66,7 @@ const getBlogsSuccess = (blogs) => {
 export const fetchBlogs = () => {
 	return async (dispatch) => {
 		try {
+			console.log('this is the blogurl in the fetchBlogs: ', blogUrl);
 			const { data } = await axios.get(blogUrl);
 
 			console.log('this is data in blogs: ', data);
