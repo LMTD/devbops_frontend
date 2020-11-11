@@ -14,22 +14,19 @@ import './App.css';
 
 class App extends Component {
 
-	// constructor(props) {
-	// 	super(props);
-	// 	this.state = {
-	// 		token: null
-	// 	}
-	// }
-	componentWillMount() {
-		// console.log('this is props in app: ', this.props);
-		// const token = await localStorage.getItem('userData');
-
-		// this.setState({
-		// 	token: localStorage.getItem('userData')
-		// })
-
+	constructor(props) {
+		super(props);
+		// this.state = {
+		// 	token: null
+		// }
 		this.props.onTryAuthLogin();
+
 	}
+	// componentWillMount() {
+
+
+	// 	this.props.onTryAuthLogin();
+	// }
 	render() {
 
 		let routes = <Switch>

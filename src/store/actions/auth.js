@@ -11,7 +11,7 @@ export const authSuccess = (
 	city,
 	country
 ) => {
-	let expiredIn = moment().add(1, 'minutes');
+	let expiredIn = moment().add(1, 'days');
 	expiredIn = moment(expiredIn).format();
 	console.log('this is expiredIn: ', expiredIn);
 	// const now = moment();

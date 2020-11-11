@@ -11,12 +11,15 @@ import {
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { config } from '../../constants';
+import CountrySelect from '../UI/countrySelect/CountrySelect';
 
 const userUrl = config.urls.USER_URL;
 
 const Register = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
 	const [alertMessage, setAlertMessage] = useState('');
+	const [country, setCountry] = useState('');
+	const [region, setRegion] = useState('');
 	const [loading, setLoading] = useState(false);
 	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
 	const watchFields = watch([
@@ -31,37 +34,41 @@ const Register = (props) => {
 	]);
 
 	const submitRegisterForm = async (formData) => {
-		setLoading(true);
-		try {
-			const { data } = await axios.post(
-				userUrl,
-				{
-					Action: 'register',
-					Username: formData.username,
-					Password: formData.password,
-					Email: formData.email,
-					FirstName: formData.firstName,
-					LastName: formData.lastName,
-					Country: formData.country,
-					City: formData.city,
-				},
-			);
-			console.log('this is data: ', data);
-			if (data.Status) {
-				setAlertSeverity('success');
-				setAlertMessage('Register Successfully');
-				props.handleSwitchMode(true);
-				reset();
-			} else {
-				setAlertSeverity('error');
-				setAlertMessage(data.Error);
-			}
-		} catch (err) {
-			console.log('there is an error in register: ', err);
-			setAlertSeverity('error');
-			setAlertMessage('Network error');
-		}
-		setLoading(false);
+
+		console.log('this is formData: ', formData);
+		console.log('and this is country: ', country, ' and this is region: ', region)
+
+		// setLoading(true);
+		// try {
+		// 	const { data } = await axios.post(
+		// 		userUrl,
+		// 		{
+		// 			Action: 'register',
+		// 			Username: formData.username,
+		// 			Password: formData.password,
+		// 			Email: formData.email,
+		// 			FirstName: formData.firstName,
+		// 			LastName: formData.lastName,
+		// 			Country: formData.country,
+		// 			City: formData.city,
+		// 		},
+		// 	);
+		// 	console.log('this is data: ', data);
+		// 	if (data.Status) {
+		// 		setAlertSeverity('success');
+		// 		setAlertMessage('Register Successfully');
+		// 		props.handleSwitchMode(true);
+		// 		reset();
+		// 	} else {
+		// 		setAlertSeverity('error');
+		// 		setAlertMessage(data.Error);
+		// 	}
+		// } catch (err) {
+		// 	console.log('there is an error in register: ', err);
+		// 	setAlertSeverity('error');
+		// 	setAlertMessage('Network error');
+		// }
+		// setLoading(false);
 	};
 
 	return (
@@ -168,9 +175,10 @@ const Register = (props) => {
 							size='small'
 							inputRef={register()}
 						/>
+
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
-						<TextField
+						{/* <TextField
 							variant='outlined'
 							// margin='normal'
 							fullWidth
@@ -180,7 +188,9 @@ const Register = (props) => {
 							id='country'
 							size='small'
 							inputRef={register()}
-						/>
+						/> */}
+						<CountrySelect inputRef={register()} />
+
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
 						<TextField
