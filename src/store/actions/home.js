@@ -1,5 +1,9 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import { config } from '../../constants';
+
+const eventUrl = config.urls.EVENT_URL;
+const blogUrl = config.urls.BLOG_URL;
 
 const onFetchEvents = () => {
 	return {
@@ -19,20 +23,17 @@ export const fetchEvents = (token) => {
 	return async (dispatch) => {
 		dispatch(onFetchEvents());
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: 'R',
-					eventTitle: null,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Token: token,
+				Action: 'R',
+				eventTitle: null,
+				eventDate: null,
+				eventTime: null,
+				eventDescription: null,
+				imgUrl: null,
+				locationDetail: null,
+				eventType: null,
+			});
 			// console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
@@ -56,19 +57,16 @@ const getBlogsSuccess = (blogs) => {
 export const fetchBlogs = (token) => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Token: token,
-					Action: 'R',
-					BlogSubject: null,
-					BlogBody: null,
-					Date: null,
-					Time: null,
-					Comment: null,
-					Location: null,
-				}
-			);
+			const { data } = await axios.post(blogUrl, {
+				Token: token,
+				Action: 'R',
+				BlogSubject: null,
+				BlogBody: null,
+				Date: null,
+				Time: null,
+				Comment: null,
+				Location: null,
+			});
 
 			// console.log('this is data in blogs: ', data);
 
@@ -101,20 +99,17 @@ export const rsvpEvent = (token, eventTitle, username) => {
 
 		try {
 			// console.log('this is event title: ', props);
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: 'V',
-					eventTitle: eventTitle,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Token: token,
+				Action: 'V',
+				eventTitle: eventTitle,
+				eventDate: null,
+				eventTime: null,
+				eventDescription: null,
+				imgUrl: null,
+				locationDetail: null,
+				eventType: null,
+			});
 			// console.log('this is data in rsvp event: ', data);
 			if (data.Status) {
 				dispatch(rsvpEventSuccess(eventTitle, username));
@@ -144,19 +139,16 @@ export const postBlogComment = (token, username, blogSubject, blogComment) => {
 	return async (dispatch) => {
 		dispatch(onPostingBlogComment());
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'Q',
-					Token: token,
-					BlogSubject: blogSubject,
-					BlogBody: null,
-					Location: null,
-					Date: null,
-					Time: null,
-					Comment: blogComment,
-				}
-			);
+			const { data } = await axios.post(blogUrl, {
+				Action: 'Q',
+				Token: token,
+				BlogSubject: blogSubject,
+				BlogBody: null,
+				Location: null,
+				Date: null,
+				Time: null,
+				Comment: blogComment,
+			});
 			// console.log('this is data: ', data);
 			if (data.Status) {
 				dispatch(commentBlogSuccess(username, blogSubject, blogComment));
@@ -290,20 +282,17 @@ export const createEvent = (
 		dispatch(onCreating());
 
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Action: 'C',
-					Token: token,
-					eventTitle: eventTitle,
-					eventDate: eventDate,
-					eventTime: eventTime,
-					eventType: eventType,
-					locationDetail: locationDetail,
-					imgUrl: imgUrl,
-					eventDescription: eventDescription,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Action: 'C',
+				Token: token,
+				eventTitle: eventTitle,
+				eventDate: eventDate,
+				eventTime: eventTime,
+				eventType: eventType,
+				locationDetail: locationDetail,
+				imgUrl: imgUrl,
+				eventDescription: eventDescription,
+			});
 
 			// console.log('this is data from create event: ', data);
 			if (data.Status) {
@@ -363,19 +352,16 @@ export const postBlog = (
 		dispatch(onCreating());
 
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'C',
-					Token: token,
-					BlogSubject: blogSubject,
-					BlogBody: blogBody,
-					Date: currentDate,
-					Time: currentTime,
-					Comment: null,
-					Location: currentLocation,
-				}
-			);
+			const { data } = await axios.post(blogUrl, {
+				Action: 'C',
+				Token: token,
+				BlogSubject: blogSubject,
+				BlogBody: blogBody,
+				Date: currentDate,
+				Time: currentTime,
+				Comment: null,
+				Location: currentLocation,
+			});
 			// console.log('this is data from post blog: ', data);
 			if (data.Status) {
 				dispatch(

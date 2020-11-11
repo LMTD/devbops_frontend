@@ -156,6 +156,7 @@ const profileReducer = (state = initialState, action) => {
 				...state,
 				createdAlertMessage: '',
 				createdAlertType: '',
+				alertMessage: '',
 				isCreating: false,
 			};
 

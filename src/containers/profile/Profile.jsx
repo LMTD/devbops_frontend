@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import {
 	Grid,
 	Container,
@@ -17,6 +18,11 @@ const Profile = (props) => {
 		props.fetchEvents(props.token, 'H');
 		props.fetchBlogs(props.token);
 	}, []);
+
+	console.log('props.token: ', props.token)
+	if (props.token === null) {
+		return <Redirect to="/" />
+	}
 
 	let blogSection = null;
 	let rsvpSection = null;

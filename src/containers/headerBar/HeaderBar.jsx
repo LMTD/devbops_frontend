@@ -11,7 +11,7 @@ const HeaderBar = (props) => {
 			position='static'
 			style={{ marginBottom: '40px', background: '#fffa71' }}>
 			<Toolbar>
-				<LogoArea />
+				<LogoArea isAuthenticated={props.isAuthenticated} />
 				<RightSection
 					isAuthenticated={props.isAuthenticated}
 					launchClicked={props.launchClicked}
