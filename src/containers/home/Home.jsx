@@ -20,20 +20,31 @@ import * as actions from '../../store/actions/home';
 import { connect } from 'react-redux';
 
 import SlideShow from '../../components/UI/slideShow/SlideShow';
+import DialogWindow from '../../components/UI/dialogWindow/DialogWindow';
+
 
 const Home = (props) => {
+	const [openAuth, setOpenAuth] = useState(false);
+	const [openPostBlog, setOpenPostBlog] = useState(false);
+	const [openCreateEvent, setOpenCreateEvent] = useState(false);
 	const [filterValue, setFilterValue] = useState('All Events');
 	const { register, handleSubmit, watch } = useForm();
 	const watchFields = watch(['searchTerm']);
+
 	useEffect(() => {
-		console.log('this is use effect in home ');
-		props.fetchEvents(props.token);
-		props.fetchBlogs(props.token);
+		props.fetchEvents();
+		props.fetchBlogs();
 	}, []);
 
-	if (props.token === null) {
-		return <Redirect to="/" />
-	}
+	const handleClose = () => {
+		setOpenAuth(false);
+		setOpenPostBlog(false);
+		setOpenCreateEvent(false);
+	};
+
+	const handleAuthClickOpen = () => {
+		setOpenAuth(true);
+	};
 
 	const handleChangeFilterValue = (event) => {
 		setFilterValue(event.target.value);
@@ -68,6 +79,7 @@ const Home = (props) => {
 				isEvent={true}
 				isProfile={false}
 				isRsvpList={false}
+				handleAuthClickOpen={handleAuthClickOpen}
 			/>
 		);
 	}
@@ -83,6 +95,8 @@ const Home = (props) => {
 				isEvent={false}
 				isProfile={false}
 				isRsvpList={false}
+				handleAuthClickOpen={handleAuthClickOpen}
+
 			/>
 		);
 	}
@@ -158,6 +172,12 @@ const Home = (props) => {
 					</Grid>
 				</Grid>
 			</form>
+			<DialogWindow
+				openAuth={openAuth}
+				openPostBlog={openPostBlog}
+				openCreateEvent={openCreateEvent}
+				handleClose={handleClose}
+			/>
 		</Container>
 	);
 };
@@ -181,8 +201,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetchEvents: (token) => dispatch(actions.fetchEvents(token)),
-		fetchBlogs: (token) => dispatch(actions.fetchBlogs(token)),
+		fetchEvents: () => dispatch(actions.fetchEvents()),
+		fetchBlogs: () => dispatch(actions.fetchBlogs()),
 		filteringEvents: (filterValue, events) =>
 			dispatch(actions.filteringEvents(filterValue, events)),
 		searchingBlogsAndEvents: (filterValue, searchTerm, events) =>

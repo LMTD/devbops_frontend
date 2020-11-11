@@ -4,7 +4,7 @@ import { config } from '../../constants';
 
 const eventUrl = config.urls.EVENT_URL;
 const blogUrl = config.urls.BLOG_URL;
-
+console.log('this is blogurl: ', blogUrl);
 const onFetchEvents = () => {
 	return {
 		type: actionTypes.ON_GET_EVENTS,
@@ -19,21 +19,11 @@ const getEventsSuccess = (allEvents, onlineEvents) => {
 	};
 };
 
-export const fetchEvents = (token) => {
+export const fetchEvents = () => {
 	return async (dispatch) => {
 		dispatch(onFetchEvents());
 		try {
-			const { data } = await axios.post(eventUrl, {
-				Token: token,
-				Action: 'R',
-				eventTitle: null,
-				eventDate: null,
-				eventTime: null,
-				eventDescription: null,
-				imgUrl: null,
-				locationDetail: null,
-				eventType: null,
-			});
+			const { data } = await axios.get(eventUrl);
 			// console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
@@ -54,27 +44,18 @@ const getBlogsSuccess = (blogs) => {
 	};
 };
 
-export const fetchBlogs = (token) => {
+export const fetchBlogs = () => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(blogUrl, {
-				Token: token,
-				Action: 'R',
-				BlogSubject: null,
-				BlogBody: null,
-				Date: null,
-				Time: null,
-				Comment: null,
-				Location: null,
-			});
+			const { data } = await axios.get(blogUrl);
 
-			// console.log('this is data in blogs: ', data);
+			console.log('this is data in blogs: ', data);
 
 			if (data.Status) {
 				dispatch(getBlogsSuccess(data.BlogsDB));
 			}
 		} catch (err) {
-			console.log('there is an error in fetch all events: ', err);
+			console.log('there is an error in fetch all blogs: ', err);
 		}
 	};
 };
