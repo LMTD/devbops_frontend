@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes';
+import moment from 'moment';
 
 export const authSuccess = (
 	token,
@@ -10,6 +11,12 @@ export const authSuccess = (
 	city,
 	country
 ) => {
+	let expiredIn = moment().add(1, 'days');
+	expiredIn = moment(expiredIn).format();
+	// console.log('this is expiredIn: ', expiredIn);
+	// const now = moment();
+
+	// console.log('this is now.isBefore(expiredIn): ', now.isBefore(expiredIn));
 	const userData = {
 		token: token,
 		username: username,
@@ -18,6 +25,7 @@ export const authSuccess = (
 		lastName: lastName,
 		city: city,
 		country: country,
+		expiredIn: expiredIn,
 	};
 	localStorage.setItem('userData', JSON.stringify(userData));
 	return {
@@ -40,24 +48,45 @@ export const logout = () => {
 	};
 };
 
+const checkAuthTimeout = (expirationTime) => {
+	return (dispatch) => {
+		setTimeout(() => {
+			dispatch(logout());
+		}, expirationTime);
+	};
+};
+
 export const authCheckState = () => {
 	return (dispatch) => {
 		let userData = localStorage.getItem('userData');
 		userData = JSON.parse(userData);
-		// console.log('this is userData in authcheck: ', userData);
+
 		if (userData !== null) {
-			dispatch(
-				authSuccess(
-					userData.token,
-					false,
-					userData.username,
-					userData.email,
-					userData.firstName,
-					userData.lastName,
-					userData.city,
-					userData.country
-				)
-			);
+			const now = moment();
+			// console.log(
+			// 	'userData.expiredIn - now: ',
+			// 	moment(userData.expiredIn).diff(now)
+			// );
+
+			const expirationTime = moment(userData.expiredIn).diff(now);
+
+			if (now.isBefore(userData.expiredIn)) {
+				dispatch(
+					authSuccess(
+						userData.token,
+						false,
+						userData.username,
+						userData.email,
+						userData.firstName,
+						userData.lastName,
+						userData.city,
+						userData.country
+					)
+				);
+				dispatch(checkAuthTimeout(expirationTime));
+			} else {
+				dispatch(logout());
+			}
 		} else {
 			dispatch(logout());
 		}

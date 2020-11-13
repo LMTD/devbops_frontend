@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import {
 	Container,
 	Grid,
@@ -10,6 +11,8 @@ import {
 	FormControl,
 	CircularProgress,
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+
 import { useForm } from 'react-hook-form';
 
 import * as actions from '../../store/actions/home';
@@ -17,16 +20,31 @@ import * as actions from '../../store/actions/home';
 import { connect } from 'react-redux';
 
 import SlideShow from '../../components/UI/slideShow/SlideShow';
+import DialogWindow from '../../components/UI/dialogWindow/DialogWindow';
+
 
 const Home = (props) => {
+	const [openAuth, setOpenAuth] = useState(false);
+	const [openPostBlog, setOpenPostBlog] = useState(false);
+	const [openCreateEvent, setOpenCreateEvent] = useState(false);
 	const [filterValue, setFilterValue] = useState('All Events');
 	const { register, handleSubmit, watch } = useForm();
 	const watchFields = watch(['searchTerm']);
+
 	useEffect(() => {
-		console.log('this is use effect in home ');
-		props.fetchEvents(props.token);
-		props.fetchBlogs(props.token);
+		props.fetchEvents();
+		props.fetchBlogs();
 	}, []);
+
+	const handleClose = () => {
+		setOpenAuth(false);
+		setOpenPostBlog(false);
+		setOpenCreateEvent(false);
+	};
+
+	const handleAuthClickOpen = () => {
+		setOpenAuth(true);
+	};
 
 	const handleChangeFilterValue = (event) => {
 		setFilterValue(event.target.value);
@@ -61,6 +79,7 @@ const Home = (props) => {
 				isEvent={true}
 				isProfile={false}
 				isRsvpList={false}
+				handleAuthClickOpen={handleAuthClickOpen}
 			/>
 		);
 	}
@@ -76,15 +95,26 @@ const Home = (props) => {
 				isEvent={false}
 				isProfile={false}
 				isRsvpList={false}
+				handleAuthClickOpen={handleAuthClickOpen}
+
 			/>
 		);
 	}
+
+	let alertContent = null;
+
+	if (props.alertType === 'success') {
+		alertContent = <Grid item xs={12} sm={12} md={12}>
+			<Alert severity={props.alertType}>{props.alertMessage}</Alert>
+		</Grid>
+	}
+
 
 	return (
 		<Container>
 			<form onSubmit={handleSubmit(handleSearch)}>
 				<Grid container spacing={3}>
-					<Grid item xs={12} sm={12} md={8}>
+					<Grid item xs={8} sm={8} md={8}>
 						<TextField
 							variant='outlined'
 							size='small'
@@ -96,7 +126,7 @@ const Home = (props) => {
 							id='search-term'
 						/>
 					</Grid>
-					<Grid item xs={3} sm={3} md={2}>
+					<Grid item xs={3} sm={3} md={3}>
 						<FormControl variant='outlined' style={{ width: '100%' }}>
 							<FormControl variant='outlined'>
 								<Select
@@ -120,19 +150,19 @@ const Home = (props) => {
 							Search
 						</Button>
 					</Grid>
-
+					{alertContent}
 					{props.onLoadingHomeData ? (
 						<Grid item xs={12} sm={12}>
 							<CircularProgress />
 						</Grid>
 					) : (
-						<Grid item xs={12} sm={12}>
-							<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
-								Trending Events
+							<Grid item xs={12} sm={12}>
+								<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
+									Trending Events
 							</Typography>
-							{allEventSection}
-						</Grid>
-					)}
+								{allEventSection}
+							</Grid>
+						)}
 
 					<Grid item xs={12} sm={12}>
 						<Typography variant='h5' style={{ fontWeight: 'bolder' }}>
@@ -142,6 +172,12 @@ const Home = (props) => {
 					</Grid>
 				</Grid>
 			</form>
+			<DialogWindow
+				openAuth={openAuth}
+				openPostBlog={openPostBlog}
+				openCreateEvent={openCreateEvent}
+				handleClose={handleClose}
+			/>
 		</Container>
 	);
 };
@@ -157,13 +193,16 @@ const mapStateToProps = (state) => {
 		allEvents: state.home.allEvents,
 		allBlogs: state.home.allBlogs,
 		onLoadingHomeData: state.home.onLoadingHomeData,
+		alertMessage: state.home.alertMessage,
+		alertType: state.home.alertType,
+
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetchEvents: (token) => dispatch(actions.fetchEvents(token)),
-		fetchBlogs: (token) => dispatch(actions.fetchBlogs(token)),
+		fetchEvents: () => dispatch(actions.fetchEvents()),
+		fetchBlogs: () => dispatch(actions.fetchBlogs()),
 		filteringEvents: (filterValue, events) =>
 			dispatch(actions.filteringEvents(filterValue, events)),
 		searchingBlogsAndEvents: (filterValue, searchTerm, events) =>

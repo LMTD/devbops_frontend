@@ -1,10 +1,11 @@
 import React from 'react';
-
 import { Container, Grid, Typography, Button } from '@material-ui/core';
 
 import onlineWorldCuate from '../../images/onlineWorldCuate.png';
 
 const Main = (props) => {
+
+
 	return (
 		<Container>
 			<Grid container spacing={3}>
@@ -40,4 +41,6 @@ const Main = (props) => {
 	);
 };
 
+
 export default Main;
+

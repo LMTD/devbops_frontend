@@ -1,5 +1,10 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import moment from 'moment';
+import { config } from '../../constants';
+
+const eventUrl = config.urls.EVENT_URL;
+const blogUrl = config.urls.BLOG_URL;
 
 const onFetchEvents = () => {
 	return {
@@ -7,40 +12,47 @@ const onFetchEvents = () => {
 	};
 };
 
-const getEventsSuccess = (allEvents, onlineEvents) => {
+const getEventsSuccess = (allEvents) => {
 	return {
 		type: actionTypes.GET_EVENTS_SUCCESS,
 		allEvents: allEvents,
-		allOnlineEvents: onlineEvents,
 	};
 };
 
-export const fetchEvents = (token) => {
+export const fetchEvents = () => {
 	return async (dispatch) => {
 		dispatch(onFetchEvents());
+		const now = moment();
+		let before = moment(
+			`Thursday Oct 29th 2020 3:35 pm`,
+			'dddd MMM Do YYYY, h:mm a'
+		);
+
+		console.log('this is before: ', before);
+		console.log('this is now: ', now);
+		console.log(before.isBefore(now));
+
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: 'R',
-					eventTitle: null,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				}
-			);
+			const { data } = await axios.get(eventUrl);
 			console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
-				const allOnlineEvents = data.EventsDB.filter(
-					(event) => event.Online === 'Online'
-				);
-				console.log('this is allOnlineEvents: ', allOnlineEvents);
-				dispatch(getEventsSuccess(data.EventsDB, allOnlineEvents));
+				const now = moment();
+				const futureEvents = data.EventsDB.filter((event) => {
+					const eventDate = event.Event_date.replace(/\s+/g, ' ');
+
+					const eventDateTime = moment(
+						`${eventDate} ${event.Event_time}`,
+						'dddd MMM Do YYYY, h:mm a'
+					);
+
+					return eventDateTime.isAfter(now) ? event : null;
+				});
+
+				console.log(futureEvents);
+				dispatch(getEventsSuccess(futureEvents));
+			} else {
+				dispatch(getEventsSuccess([]));
 			}
 		} catch (err) {}
 	};
@@ -53,30 +65,21 @@ const getBlogsSuccess = (blogs) => {
 	};
 };
 
-export const fetchBlogs = (token) => {
+export const fetchBlogs = () => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Token: token,
-					Action: 'R',
-					BlogSubject: null,
-					BlogBody: null,
-					Date: null,
-					Time: null,
-					Comment: null,
-					Location: null,
-				}
-			);
+			console.log('this is the blogurl in the fetchBlogs: ', blogUrl);
+			const { data } = await axios.get(blogUrl);
 
 			console.log('this is data in blogs: ', data);
 
 			if (data.Status) {
 				dispatch(getBlogsSuccess(data.BlogsDB));
+			} else {
+				dispatch(getBlogsSuccess([]));
 			}
 		} catch (err) {
-			console.log('there is an error in fetch all events: ', err);
+			console.log('there is an error in fetch all blogs: ', err);
 		}
 	};
 };
@@ -101,21 +104,18 @@ export const rsvpEvent = (token, eventTitle, username) => {
 
 		try {
 			// console.log('this is event title: ', props);
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Token: token,
-					Action: 'V',
-					eventTitle: eventTitle,
-					eventDate: null,
-					eventTime: null,
-					eventDescription: null,
-					imgUrl: null,
-					locationDetail: null,
-					eventType: null,
-				}
-			);
-			console.log('this is data in rsvp event: ', data);
+			const { data } = await axios.post(eventUrl, {
+				Token: token,
+				Action: 'V',
+				eventTitle: eventTitle,
+				eventDate: null,
+				eventTime: null,
+				eventDescription: null,
+				imgUrl: null,
+				locationDetail: null,
+				eventType: null,
+			});
+			// console.log('this is data in rsvp event: ', data);
 			if (data.Status) {
 				dispatch(rsvpEventSuccess(eventTitle, username));
 			}
@@ -144,20 +144,17 @@ export const postBlogComment = (token, username, blogSubject, blogComment) => {
 	return async (dispatch) => {
 		dispatch(onPostingBlogComment());
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/blog',
-				{
-					Action: 'Q',
-					Token: token,
-					BlogSubject: blogSubject,
-					BlogBody: null,
-					Location: null,
-					Date: null,
-					Time: null,
-					Comment: blogComment,
-				}
-			);
-			console.log('this is data: ', data);
+			const { data } = await axios.post(blogUrl, {
+				Action: 'Q',
+				Token: token,
+				BlogSubject: blogSubject,
+				BlogBody: null,
+				Location: null,
+				Date: null,
+				Time: null,
+				Comment: blogComment,
+			});
+			// console.log('this is data: ', data);
 			if (data.Status) {
 				dispatch(commentBlogSuccess(username, blogSubject, blogComment));
 			}
@@ -232,29 +229,19 @@ export const searchingBlogsAndEvents = (
 					event.event_name.indexOf(searchTerm) !== -1
 			);
 		}
-
-		// fiteredBlogs = blogs.filter(
-		// 	(blog) =>
-		// 		blog.BlogComment.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogContent.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogDate.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogLocation.indexOf(searchTerm) !== -1 ||
-		// 		blog.BlogTime.indexOf(searchTerm) !== -1 ||
-		// 		blog.blogName.indexOf(searchTerm) !== -1);
-
 		dispatch(searchBlogsAndEventsSuccess(filteredEvents));
 	};
 };
 
-const onCreatingEvent = () => {
+const onCreating = () => {
 	return {
-		type: actionTypes.ON_CREATING_EVENT,
+		type: actionTypes.ON_CREATING,
 	};
 };
 
-const createdEventFail = (message) => {
+const createdFail = (message) => {
 	return {
-		type: actionTypes.CREATED_EVENT_FAIL,
+		type: actionTypes.CREATED_FAIL,
 		alertMessage: message,
 		alertType: 'error',
 	};
@@ -297,25 +284,22 @@ export const createEvent = (
 	eventDescription
 ) => {
 	return async (dispatch) => {
-		dispatch(onCreatingEvent());
+		dispatch(onCreating());
 
 		try {
-			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/event',
-				{
-					Action: 'C',
-					Token: token,
-					eventTitle: eventTitle,
-					eventDate: eventDate,
-					eventTime: eventTime,
-					eventType: eventType,
-					locationDetail: locationDetail,
-					imgUrl: imgUrl,
-					eventDescription: eventDescription,
-				}
-			);
+			const { data } = await axios.post(eventUrl, {
+				Action: 'C',
+				Token: token,
+				eventTitle: eventTitle,
+				eventDate: eventDate,
+				eventTime: eventTime,
+				eventType: eventType,
+				locationDetail: locationDetail,
+				imgUrl: imgUrl,
+				eventDescription: eventDescription,
+			});
 
-			console.log('this is data from create event: ', data);
+			// console.log('this is data from create event: ', data);
 			if (data.Status) {
 				dispatch(
 					createdEventSuccess(
@@ -330,11 +314,77 @@ export const createEvent = (
 					)
 				);
 			} else {
-				dispatch(createdEventFail(data.Description));
+				dispatch(createdFail(data.Description));
 			}
 		} catch (err) {
 			console.log('created event error: ', err);
-			dispatch(createdEventFail('Networking error, please try again!'));
+			dispatch(createdFail('Networking error, please try again!'));
+		}
+	};
+};
+
+const postedBlogSuccess = (
+	username,
+	blogSubject,
+	blogBody,
+	currentDate,
+	currentTime,
+	currentLocation
+) => {
+	return {
+		type: actionTypes.POSTED_BLOG_SUCCESS,
+		username: username,
+		blogSubject: blogSubject,
+		blogBody: blogBody,
+		currentDate: currentDate,
+		currentTime: currentTime,
+		currentLocation: currentLocation,
+		alertMessage: 'Blog posted successfully',
+		alertType: 'success',
+	};
+};
+
+export const postBlog = (
+	token,
+	username,
+	blogSubject,
+	blogBody,
+	currentDate,
+	currentTime,
+	currentLocation
+) => {
+	return async (dispatch) => {
+		dispatch(onCreating());
+
+		try {
+			const { data } = await axios.post(blogUrl, {
+				Action: 'C',
+				Token: token,
+				BlogSubject: blogSubject,
+				BlogBody: blogBody,
+				Date: currentDate,
+				Time: currentTime,
+				Comment: null,
+				Location: currentLocation,
+			});
+			// console.log('this is data from post blog: ', data);
+			if (data.Status) {
+				dispatch(
+					postedBlogSuccess(
+						username,
+						blogSubject,
+						blogBody,
+						currentDate,
+						currentTime,
+						currentLocation
+					)
+				);
+			} else {
+				dispatch(createdFail(data.Description));
+			}
+		} catch (err) {
+			console.log('post blog error: ', err);
+			dispatch(createdFail('Networking error, please try again!'));
 		}
 	};
 };

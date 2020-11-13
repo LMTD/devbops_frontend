@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
 import { red } from '@material-ui/core/colors';
 
 import {
@@ -10,7 +9,6 @@ import {
 	Grid,
 	DialogActions,
 	Button,
-	Divider,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actions from '../../../store/actions/profile';

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import {
 	Grid,
 	Container,
@@ -17,6 +18,11 @@ const Profile = (props) => {
 		props.fetchEvents(props.token, 'H');
 		props.fetchBlogs(props.token);
 	}, []);
+
+	console.log('props.token: ', props.token)
+	if (props.token === null) {
+		return <Redirect to="/" />
+	}
 
 	let blogSection = null;
 	let rsvpSection = null;
@@ -62,9 +68,10 @@ const Profile = (props) => {
 	}
 
 	let alertMessage = null;
-
 	if (props.alertMessage !== '') {
 		alertMessage = <Alert severity='success'>{props.alertMessage}</Alert>;
+	} else if (props.createdAlertType === 'success') {
+		alertMessage = <Alert severity={props.createdAlertType}>{props.createdAlertMessage}</Alert>;
 	}
 
 	return (
@@ -110,6 +117,8 @@ const mapStateToProps = (state) => {
 		onFetchingMyRsvpList: state.profile.onFetchingMyRsvpList,
 		onFetchingMyEvents: state.profile.onFetchingMyEvents,
 		alertMessage: state.profile.alertMessage,
+		createdAlertMessage: state.profile.createdAlertMessage,
+		createdAlertType: state.profile.createdAlertType
 	};
 };
 

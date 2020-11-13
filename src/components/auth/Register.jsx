@@ -10,6 +10,10 @@ import {
 	CircularProgress,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { config } from '../../constants';
+import CountrySelect from '../UI/countrySelect/CountrySelect';
+
+const userUrl = config.urls.USER_URL;
 
 const Register = (props) => {
 	const [alertSeverity, setAlertSeverity] = useState('');
@@ -28,10 +32,11 @@ const Register = (props) => {
 	]);
 
 	const submitRegisterForm = async (formData) => {
+
 		setLoading(true);
 		try {
 			const { data } = await axios.post(
-				'https://0c77865x10.execute-api.us-east-1.amazonaws.com/v1/user',
+				userUrl,
 				{
 					Action: 'register',
 					Username: formData.username,
@@ -110,12 +115,8 @@ const Register = (props) => {
 							type='password'
 							id='password'
 							inputRef={register({ minLength: 8 })}
-							error={errors.password?.type === 'minLength'}
-							helperText={
-								errors?.password?.type === 'minLength'
-									? 'Password has to be at least 8 characters long'
-									: null
-							}
+							error={errors.password?.type === 'minLength' ? true : false}
+							helperText='Password has to be at least 8 characters long'
 						/>
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
@@ -132,12 +133,8 @@ const Register = (props) => {
 									return value === getValues('password');
 								},
 							})}
-							error={errors.confirmPassword?.type === 'validate'}
-							helperText={
-								errors?.confirmPassword?.type === 'validate'
-									? 'Password has to be matched'
-									: null
-							}
+							error={errors.confirmPassword?.type === 'validate' ? true : false}
+							helperText='Password has to be matched'
 						/>
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
@@ -165,9 +162,10 @@ const Register = (props) => {
 							size='small'
 							inputRef={register()}
 						/>
+
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
-						<TextField
+						{/* <TextField
 							variant='outlined'
 							// margin='normal'
 							fullWidth
@@ -177,7 +175,9 @@ const Register = (props) => {
 							id='country'
 							size='small'
 							inputRef={register()}
-						/>
+						/> */}
+						<CountrySelect inputRef={register()} />
+
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
 						<TextField

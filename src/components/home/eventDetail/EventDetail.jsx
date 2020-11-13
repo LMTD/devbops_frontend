@@ -38,11 +38,15 @@ const useStyles = makeStyles(() => ({
 const EventDetail = (props) => {
 	const classes = useStyles();
 
-	// console.log('this is props in event detail: ', props);
-
 	const handleRSVP = () => {
-		props.rsvpEvent(props.token, props.event_name, props.username);
-		// props.handleClose();
+
+		if (props.isAuthenticated) {
+
+			props.rsvpEvent(props.token, props.event_name, props.username);
+		} else {
+			props.handleClose();
+			props.handleAuthClickOpen();
+		}
 	};
 
 	let imageArea = null;
@@ -77,7 +81,9 @@ const EventDetail = (props) => {
 
 	let buttonText = null;
 	let notAllowedToClick = false;
-	if (props.User === props.username) {
+	if (!props.isAuthenticated) {
+		buttonText = 'Please login to RSVP'
+	} else if (props.User === props.username) {
 		notAllowedToClick = true;
 		buttonText = 'You cannot RSVP your own event';
 	} else if (props.RSVP.length === 0) {
@@ -177,8 +183,8 @@ const EventDetail = (props) => {
 														{props.Event_location}
 													</Link>
 												) : (
-													props.Event_location
-												)}
+														props.Event_location
+													)}
 											</Typography>
 										</Grid>
 										<Grid item xs={12} sm={12} md={12}>
@@ -217,6 +223,7 @@ const EventDetail = (props) => {
 					{buttonText}
 				</Button>
 			</DialogActions>
+
 		</Dialog>
 	);
 };
@@ -224,6 +231,7 @@ const EventDetail = (props) => {
 const mapStateToProps = (state) => {
 	return {
 		onRSVP: state.home.onRSVP,
+		isAuthenticated: state.auth.token !== null
 	};
 };
 

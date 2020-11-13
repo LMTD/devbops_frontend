@@ -9,7 +9,6 @@ const SlideShow = (props) => {
 	let items = null;
 	let sectionContents = null;
 
-	console.log('this is props in slideshow: ', props);
 	if (props.slideItems.length > 0) {
 		if (!props.isEvent) {
 			items = props.slideItems.map((item) => {
@@ -66,7 +65,16 @@ const SlideShow = (props) => {
 			!props.isRsvpList
 		) {
 			sectionContents = (
-				<Typography variant='h6'>There is no event happening</Typography>
+				<Typography variant='h6'>There is no event happening.</Typography>
+			);
+		} else if (
+			props.slideItems.length === 0 &&
+			!props.isProfile &&
+			!props.isEvent &&
+			!props.isRsvpList
+		) {
+			sectionContents = (
+				<Typography variant='h6'>There is no blogs.</Typography>
 			);
 		}
 	}

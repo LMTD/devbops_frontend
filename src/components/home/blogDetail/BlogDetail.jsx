@@ -25,15 +25,44 @@ const BlogDetail = (props) => {
 
 	const submitComment = async (formData) => {
 		console.log('this is comment form data: ', formData);
-		props.postBlogComment(
-			props.token,
-			props.username,
-			props.blogName,
-			formData.comment,
-		);
+		if (props.isAuthenticated) {
+
+			props.postBlogComment(
+				props.token,
+				props.username,
+				props.blogName,
+				formData.comment,
+			);
+		} else {
+			props.handleClose();
+			props.handleAuthClickOpen();
+		}
+
+
 
 		reset();
 	};
+
+	let postButton = (
+		<Button
+			variant='contained'
+			color='primary'
+			type='submit'
+			style={{ margin: '6px 0' }}>
+			Post Comment
+		</Button>
+	);
+	if (!props.isAuthenticated) {
+		postButton = (
+			<Button
+				variant='contained'
+				color='primary'
+				type='submit'
+				style={{ margin: '6px 0' }}>
+				Please login to post comment
+			</Button>
+		)
+	}
 
 	const commentForm = (
 		<form onSubmit={handleSubmit(submitComment)}>
@@ -51,13 +80,7 @@ const BlogDetail = (props) => {
 
 			{watchComment ? (
 				<div>
-					<Button
-						variant='contained'
-						color='primary'
-						type='submit'
-						style={{ margin: '6px 0' }}>
-						Post Comment
-					</Button>
+					{postButton}
 				</div>
 			) : null}
 		</form>
@@ -195,6 +218,8 @@ const BlogDetail = (props) => {
 const mapStateToProps = (state) => {
 	return {
 		onPostingBlogComment: state.home.onPostingBlogComment,
+		isAuthenticated: state.auth.token !== null
+
 	};
 };
 

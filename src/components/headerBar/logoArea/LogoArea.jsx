@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 import logo from '../../../images/devBopsLogo.png';
 
-const LogoArea = () => {
+const LogoArea = (props) => {
 	return (
 		<div data-test='logo-component' style={{ flexGrow: 1 }}>
-			<Link to='/'>
+			<Link to={props.isAuthenticated ? '/home' : '/'}>
 				<img
 					data-test='logo-image'
 					src={logo}

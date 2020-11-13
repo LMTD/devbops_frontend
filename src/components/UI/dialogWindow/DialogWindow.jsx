@@ -10,6 +10,7 @@ import * as homeActions from '../../../store/actions/home';
 import * as profileActions from '../../../store/actions/profile';
 
 const DialogWindow = (props) => {
+
 	const [isLoginMode, setIsLoginMode] = useState(true);
 	const [registerSucceed, setRegisterSucceed] = useState(false);
 	const handleSwitchMode = (successRegister) => {
@@ -48,6 +49,7 @@ const DialogWindow = (props) => {
 		);
 
 		dialogContent = <PostBlog onClose={props.handleClose} />;
+		props.clearAlertMessage();
 	} else if (props.openCreateEvent) {
 		dialogTitle = (
 			<DialogTitle id='customized-dialog-title' onClose={props.handleClose}>
@@ -77,6 +79,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		clearAlertMessage: () => {
 			dispatch(homeActions.clearAlertMessage());
+			dispatch(profileActions.clearAlertMessage())
 		},
 	};
 };
