@@ -13,7 +13,7 @@ export const authSuccess = (
 ) => {
 	let expiredIn = moment().add(1, 'days');
 	expiredIn = moment(expiredIn).format();
-	console.log('this is expiredIn: ', expiredIn);
+	// console.log('this is expiredIn: ', expiredIn);
 	// const now = moment();
 
 	// console.log('this is now.isBefore(expiredIn): ', now.isBefore(expiredIn));

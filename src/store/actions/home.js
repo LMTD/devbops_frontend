@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import moment from 'moment';
 import { config } from '../../constants';
 
 const eventUrl = config.urls.EVENT_URL;
@@ -11,37 +12,47 @@ const onFetchEvents = () => {
 	};
 };
 
-const getEventsSuccess = (allEvents, onlineEvents) => {
+const getEventsSuccess = (allEvents) => {
 	return {
 		type: actionTypes.GET_EVENTS_SUCCESS,
 		allEvents: allEvents,
-		allOnlineEvents: onlineEvents,
 	};
 };
 
-export const fetchEvents = (token) => {
+export const fetchEvents = () => {
 	return async (dispatch) => {
 		dispatch(onFetchEvents());
+		const now = moment();
+		let before = moment(
+			`Thursday Oct 29th 2020 3:35 pm`,
+			'dddd MMM Do YYYY, h:mm a'
+		);
+
+		console.log('this is before: ', before);
+		console.log('this is now: ', now);
+		console.log(before.isBefore(now));
+
 		try {
-			const { data } = await axios.post(eventUrl, {
-				Token: token,
-				Action: 'R',
-				eventTitle: null,
-				eventDate: null,
-				eventTime: null,
-				eventDescription: null,
-				imgUrl: null,
-				locationDetail: null,
-				eventType: null,
-			});
-			// console.log('this is fetching all events: ', data);
+			const { data } = await axios.get(eventUrl);
+			console.log('this is fetching all events: ', data);
 
 			if (data.Status) {
-				const allOnlineEvents = data.EventsDB.filter(
-					(event) => event.Online === 'Online'
-				);
-				console.log('this is allOnlineEvents: ', allOnlineEvents);
-				dispatch(getEventsSuccess(data.EventsDB, allOnlineEvents));
+				const now = moment();
+				const futureEvents = data.EventsDB.filter((event) => {
+					const eventDate = event.Event_date.replace(/\s+/g, ' ');
+
+					const eventDateTime = moment(
+						`${eventDate} ${event.Event_time}`,
+						'dddd MMM Do YYYY, h:mm a'
+					);
+
+					return eventDateTime.isAfter(now) ? event : null;
+				});
+
+				console.log(futureEvents);
+				dispatch(getEventsSuccess(futureEvents));
+			} else {
+				dispatch(getEventsSuccess([]));
 			}
 		} catch (err) {}
 	};
@@ -54,27 +65,21 @@ const getBlogsSuccess = (blogs) => {
 	};
 };
 
-export const fetchBlogs = (token) => {
+export const fetchBlogs = () => {
 	return async (dispatch) => {
 		try {
-			const { data } = await axios.post(blogUrl, {
-				Token: token,
-				Action: 'R',
-				BlogSubject: null,
-				BlogBody: null,
-				Date: null,
-				Time: null,
-				Comment: null,
-				Location: null,
-			});
+			console.log('this is the blogurl in the fetchBlogs: ', blogUrl);
+			const { data } = await axios.get(blogUrl);
 
-			// console.log('this is data in blogs: ', data);
+			console.log('this is data in blogs: ', data);
 
 			if (data.Status) {
 				dispatch(getBlogsSuccess(data.BlogsDB));
+			} else {
+				dispatch(getBlogsSuccess([]));
 			}
 		} catch (err) {
-			console.log('there is an error in fetch all events: ', err);
+			console.log('there is an error in fetch all blogs: ', err);
 		}
 	};
 };

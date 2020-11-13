@@ -54,19 +54,19 @@ const RightSection = (props) => {
 				{props.isAuthenticated ? (
 					<Profile data-test='profile-area' />
 				) : (
-					<Grid item data-test='launch-devbops-button'>
-						<Button
-							style={{
-								background: 'white',
-								color: 'black',
-								fontSize: '0.7rem',
-							}}
-							color='inherit'
-							onClick={handleAuthClickOpen}>
-							LAUNCH DEVBOPS
+						<Grid item data-test='launch-devbops-button'>
+							<Button
+								style={{
+									background: 'white',
+									color: 'black',
+									fontSize: '0.7rem',
+								}}
+								color='inherit'
+								onClick={handleAuthClickOpen}>
+								LAUNCH DEVBOPS
 						</Button>
-					</Grid>
-				)}
+						</Grid>
+					)}
 			</Grid>
 
 			<DialogWindow

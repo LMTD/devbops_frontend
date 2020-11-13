@@ -10,6 +10,7 @@ import * as homeActions from '../../../store/actions/home';
 import * as profileActions from '../../../store/actions/profile';
 
 const DialogWindow = (props) => {
+
 	const [isLoginMode, setIsLoginMode] = useState(true);
 	const [registerSucceed, setRegisterSucceed] = useState(false);
 	const handleSwitchMode = (successRegister) => {

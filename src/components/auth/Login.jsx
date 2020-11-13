@@ -15,12 +15,10 @@ import { useForm } from 'react-hook-form';
 import Alert from '@material-ui/lab/Alert';
 import './styles.css';
 import { config } from '../../constants';
-import { useHistory } from 'react-router-dom';
 
 const userUrl = config.urls.USER_URL;
 
 const Login = (props) => {
-	let history = useHistory();
 	const [alertSeverity, setAlertSeverity] = useState(
 		props.registerSucceed ? 'success' : '',
 	);
@@ -59,7 +57,6 @@ const Login = (props) => {
 					data.City,
 					data.Country,
 				);
-				history.push('/home')
 				props.onClose();
 
 			} else {

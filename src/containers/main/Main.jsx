@@ -1,22 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { Container, Grid, Typography, Button } from '@material-ui/core';
 
 import onlineWorldCuate from '../../images/onlineWorldCuate.png';
 
 const Main = (props) => {
 
-	// if (props.isAuthenticated) {
-
-
-	// 	if (window.location.href.includes('/profile')) {
-	// 		return <Redirect to="/profile" />
-	// 	} else {
-	// 		return <Redirect to="/home" />
-
-	// 	}
-	// }
 
 	return (
 		<Container>
@@ -53,11 +41,6 @@ const Main = (props) => {
 	);
 };
 
-const mapStateToProps = (state) => {
-	return {
-		isAuthenticated: state.auth.token !== null,
-	};
-};
 
-export default connect(mapStateToProps)(Main);
+export default Main;
 
