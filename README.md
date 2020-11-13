@@ -1,5 +1,5 @@
 # Devbops Frontend Repo
-sadasd
+
 ## Installed Packages
 
 - Axios: HTTP requests
@@ -15,3 +15,13 @@ sadasd
 - create your own branch if want to update: `git checkout -b <name-of-your-branch>`
 - run `npm install` to install all required packages
 - run `npm start` to start the development environment
+
+## Development Environment
+
+- create the docker image based on the docker file: `docker image build -t devbops:dev .`
+- run the container: `sudo docker run -it -p 3000:3000/tcp devbops:dev`
+
+## Production Environment
+
+- create the docker image based on the docker file: `docker image build -f Dockerfile.prod -t devbops:prod .`
+- run the container: `sudo docker run -it -p 3000:80/tcp devbops:prod`
