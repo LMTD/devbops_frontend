@@ -51,6 +51,8 @@ export const fetchEvents = () => {
 
 				console.log(futureEvents);
 				dispatch(getEventsSuccess(futureEvents));
+			} else {
+				dispatch(getEventsSuccess([]));
 			}
 		} catch (err) {}
 	};
@@ -73,6 +75,8 @@ export const fetchBlogs = () => {
 
 			if (data.Status) {
 				dispatch(getBlogsSuccess(data.BlogsDB));
+			} else {
+				dispatch(getBlogsSuccess([]));
 			}
 		} catch (err) {
 			console.log('there is an error in fetch all blogs: ', err);
