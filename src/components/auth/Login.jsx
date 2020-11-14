@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/auth';
-
+import Icon from '@material-ui/core/Icon';
 import {
 	Grid,
 	Container,
@@ -13,6 +13,7 @@ import {
 import { useForm } from 'react-hook-form';
 import Alert from '@material-ui/lab/Alert';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
+
 import { LinkedIn } from 'react-linkedin-login-oauth2';
 import './styles.css';
 
@@ -27,7 +28,8 @@ const Login = (props) => {
 
 	const handleSuccess = (data) => {
 		console.log('this is data in handlesuccess: ', data);
-		setCode(data.code)
+		// setCode(data.code)
+		props.login('loginLinkedin', data.code, '', '')
 	}
 
 
@@ -83,7 +85,7 @@ const Login = (props) => {
 							Register Here
 						</Typography>
 					</Grid>
-					<Grid container justify='center' spacing={2}>
+					<Grid container align="center" justify='center' spacing={2}>
 						<Grid item>{props.authLoading ? <CircularProgress /> : null}</Grid>
 						<Grid item>
 							<Button
@@ -96,12 +98,14 @@ const Login = (props) => {
 								Login
 							</Button>
 						</Grid>
-						<Grid item>
+						<Grid item xs={12} sm={12} md={12}>
+							Or you can sign in with
+						</Grid>
+						<Grid item xs={12} sm={12} md={12}>
 							<LinkedIn clientId="86svu9wdn93n5r"
 								onFailure={() => { console.log('there is an error with login with linkedin') }}
 								onSuccess={handleSuccess}
 								redirectUri={`${window.location.origin}/linkedin`}
-								// redirectPath='/linkedin'
 								scope="r_emailaddress,r_liteprofile"
 							>
 								<LinkedInIcon />
@@ -110,7 +114,6 @@ const Login = (props) => {
 					</Grid>
 				</Grid>
 			</form>
-
 		</Container>
 	);
 };
