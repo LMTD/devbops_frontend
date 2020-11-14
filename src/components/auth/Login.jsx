@@ -10,15 +10,12 @@ import {
 	Typography,
 	CircularProgress,
 } from '@material-ui/core';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import Alert from '@material-ui/lab/Alert';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import { LinkedIn } from 'react-linkedin-login-oauth2';
 import './styles.css';
-import { config } from '../../constants';
 
-const userUrl = config.urls.USER_URL;
 
 const Login = (props) => {
 

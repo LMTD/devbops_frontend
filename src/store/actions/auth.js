@@ -17,6 +17,90 @@ const authFail = (alertMessage) => {
 	};
 };
 
+const authSuccess = (
+	token,
+	username,
+	email,
+	firstName,
+	lastName,
+	city,
+	country
+) => {
+	let expiredIn = moment().add(1, 'days');
+	expiredIn = moment(expiredIn).format();
+	// console.log('this is expiredIn: ', expiredIn);
+	// const now = moment();
+
+	// console.log('this is now.isBefore(expiredIn): ', now.isBefore(expiredIn));
+	const userData = {
+		token: token,
+		username: username,
+		email: email,
+		firstName: firstName,
+		lastName: lastName,
+		city: city,
+		country: country,
+		expiredIn: expiredIn,
+	};
+	localStorage.setItem('userData', JSON.stringify(userData));
+	return {
+		type: actionTypes.AUTH_SUCCESS,
+		token: token,
+		username: username,
+		email: email,
+		firstName: firstName,
+		lastName: lastName,
+		city: city,
+		country: country,
+	};
+};
+
+const registerSuccess = (alertMessage) => {
+	return {
+		type: actionTypes.REGISTER_SUCCESS,
+		alertMessage: alertMessage,
+	};
+};
+
+export const register = (
+	username,
+	password,
+	email,
+	firstName,
+	lastName,
+	country,
+	city
+) => {
+	return async (dispatch) => {
+		dispatch(onAuth());
+
+		try {
+			const { data } = await axios.post(userUrl, {
+				Action: 'register',
+				Username: username,
+				Password: password,
+				Email: email,
+				FirstName: firstName,
+				LastName: lastName,
+				Country: country,
+				City: city,
+			});
+			console.log('this is data: ', data);
+			if (data.Status) {
+				dispatch(registerSuccess('Register Successful!'));
+			} else {
+				dispatch(
+					authFail(
+						'Username and/or Email already existed, please enter another one.'
+					)
+				);
+			}
+		} catch (err) {
+			dispatch(authFail('Network Error, please try again'));
+		}
+	};
+};
+
 export const login = (action, authCode, username, password) => {
 	return async (dispatch) => {
 		dispatch(onAuth());
@@ -73,44 +157,6 @@ export const login = (action, authCode, username, password) => {
 				dispatch(authFail('Network Error, please try again'));
 			}
 		}
-	};
-};
-
-export const authSuccess = (
-	token,
-	username,
-	email,
-	firstName,
-	lastName,
-	city,
-	country
-) => {
-	let expiredIn = moment().add(1, 'days');
-	expiredIn = moment(expiredIn).format();
-	// console.log('this is expiredIn: ', expiredIn);
-	// const now = moment();
-
-	// console.log('this is now.isBefore(expiredIn): ', now.isBefore(expiredIn));
-	const userData = {
-		token: token,
-		username: username,
-		email: email,
-		firstName: firstName,
-		lastName: lastName,
-		city: city,
-		country: country,
-		expiredIn: expiredIn,
-	};
-	localStorage.setItem('userData', JSON.stringify(userData));
-	return {
-		type: actionTypes.AUTH_SUCCESS,
-		token: token,
-		username: username,
-		email: email,
-		firstName: firstName,
-		lastName: lastName,
-		city: city,
-		country: country,
 	};
 };
 

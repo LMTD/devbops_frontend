@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import * as actions from '../../store/actions/auth';
+import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import {
 	Container,
@@ -10,16 +11,13 @@ import {
 	CircularProgress,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { config } from '../../constants';
 import CountrySelect from '../UI/countrySelect/CountrySelect';
 
-const userUrl = config.urls.USER_URL;
+
 
 const Register = (props) => {
-	const [alertSeverity, setAlertSeverity] = useState('');
-	const [alertMessage, setAlertMessage] = useState('');
-	const [loading, setLoading] = useState(false);
-	const { register, handleSubmit, errors, getValues, reset, watch } = useForm();
+
+	const { register, handleSubmit, errors, getValues, watch } = useForm();
 	const watchFields = watch([
 		'username',
 		'email',
@@ -33,42 +31,16 @@ const Register = (props) => {
 
 	const submitRegisterForm = async (formData) => {
 
-		setLoading(true);
-		try {
-			const { data } = await axios.post(
-				userUrl,
-				{
-					Action: 'register',
-					Username: formData.username,
-					Password: formData.password,
-					Email: formData.email,
-					FirstName: formData.firstName,
-					LastName: formData.lastName,
-					Country: formData.country,
-					City: formData.city,
-				},
-			);
-			console.log('this is data: ', data);
-			if (data.Status) {
-				setAlertSeverity('success');
-				setAlertMessage('Register Successfully');
-				props.handleSwitchMode(true);
-				reset();
-			} else {
-				setAlertSeverity('error');
-				setAlertMessage(data.Error);
-			}
-		} catch (err) {
-			console.log('there is an error in register: ', err);
-			setAlertSeverity('error');
-			setAlertMessage('Network error');
-		}
-		setLoading(false);
+		props.register(formData.username, formData.password, formData.email, formData.firstName, formData.lastName, formData.country, formData.city)
 	};
+
+	if (props.authAlertSeverity === 'success') {
+		props.handleSwitchMode(true);
+	}
 
 	return (
 		<Container>
-			{alertMessage && <Alert severity={alertSeverity}>{alertMessage}</Alert>}
+			{props.authAlertMessage && <Alert severity={props.authAlertSeverity}>{props.authAlertMessage}</Alert>}
 			<form
 				onSubmit={handleSubmit(submitRegisterForm)}
 				style={{ margin: '20px 0' }}>
@@ -153,7 +125,6 @@ const Register = (props) => {
 					<Grid item xs={12} sm={12} md={6}>
 						<TextField
 							variant='outlined'
-							// margin='normal'
 							fullWidth
 							name='lastName'
 							label='Last Name'
@@ -165,24 +136,12 @@ const Register = (props) => {
 
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
-						{/* <TextField
-							variant='outlined'
-							// margin='normal'
-							fullWidth
-							name='country'
-							label='Current Country'
-							type='text'
-							id='country'
-							size='small'
-							inputRef={register()}
-						/> */}
 						<CountrySelect inputRef={register()} />
 
 					</Grid>
 					<Grid item xs={12} sm={12} md={6}>
 						<TextField
 							variant='outlined'
-							// margin='normal'
 							fullWidth
 							name='city'
 							label='Current City'
@@ -201,7 +160,7 @@ const Register = (props) => {
 						</Typography>
 					</Grid>
 					<Grid container justify='center' spacing={2}>
-						<Grid item>{loading ? <CircularProgress /> : null}</Grid>
+						<Grid item>{props.authLoading ? <CircularProgress /> : null}</Grid>
 						<Grid item>
 							<Button
 								type='submit'
@@ -217,7 +176,7 @@ const Register = (props) => {
 										watchFields.lastName &&
 										watchFields.country &&
 										watchFields.city
-									) || loading
+									) || props.authLoading
 								}>
 								Register
 							</Button>
@@ -229,4 +188,19 @@ const Register = (props) => {
 	);
 };
 
-export default Register;
+const mapStateToProps = (state) => {
+	return {
+		authAlertMessage: state.auth.authAlertMessage,
+		authAlertSeverity: state.auth.authAlertSeverity,
+		authLoading: state.auth.authLoading
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		register: (username, password, email, firstName, lastName, country, city) => dispatch(actions.register(username, password, email, firstName, lastName, country, city))
+	}
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

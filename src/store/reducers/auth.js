@@ -31,6 +31,15 @@ const authReducer = (state = initialState, action) => {
 			};
 		}
 
+		case actionTypes.REGISTER_SUCCESS: {
+			return {
+				...state,
+				authLoading: false,
+				authAlertMessage: action.alertMessage,
+				authAlertSeverity: 'success',
+			};
+		}
+
 		case actionTypes.AUTH_SUCCESS:
 			// console.log('this is state in auth: ', state);
 			return {
