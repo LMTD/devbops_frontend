@@ -12,6 +12,7 @@ export const POSTED_BLOG_SUCCESS = 'POSTED_BLOG_SUCCESS';
 export const ON_REGISTER = 'ON_REGISTER';
 export const REGISTERED_SUCCESS = 'REGISTERED_SUCCESS';
 export const ON_AUTH = 'ON_AUTH';
+export const AUTH_FAIL = 'AUTH_FAIL';
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 
