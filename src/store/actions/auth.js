@@ -17,6 +17,12 @@ const authFail = (alertMessage) => {
 	};
 };
 
+export const clearAlertMessage = () => {
+	return {
+		type: actionTypes.CLEAR_ALERT_MESSAGE,
+	};
+};
+
 const authSuccess = (
 	token,
 	username,
@@ -106,6 +112,7 @@ export const login = (action, authCode, username, password) => {
 		dispatch(onAuth());
 
 		if (action === 'loginLinkedin') {
+			console.log('this is authCode: ', authCode);
 			try {
 				const { data } = await axios.post(userUrl, {
 					Action: action,

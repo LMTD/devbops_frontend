@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Button, Link, Grid } from '@material-ui/core';
 import DialogWindow from '../../UI/dialogWindow/DialogWindow';
 import { Link as RouterLink } from 'react-router-dom';
-
+import { connect } from 'react-redux';
 import Profile from '../profile/Profile';
+import * as authActions from '../../../store/actions/auth';
 
 const RightSection = (props) => {
 	const [openAuth, setOpenAuth] = useState(false);
@@ -26,6 +27,8 @@ const RightSection = (props) => {
 		setOpenAuth(false);
 		setOpenPostBlog(false);
 		setOpenCreateEvent(false);
+		props.clearAlertMessage()
+
 	};
 	return (
 		<div data-test='right-section-component'>
@@ -79,4 +82,13 @@ const RightSection = (props) => {
 	);
 };
 
-export default RightSection;
+const mapDispatchToProps = (dispatch) => {
+	return {
+		clearAlertMessage: () => {
+			dispatch(authActions.clearAlertMessage());
+
+		},
+	}
+}
+
+export default connect(null, mapDispatchToProps)(RightSection);

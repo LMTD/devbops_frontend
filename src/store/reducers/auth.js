@@ -68,6 +68,14 @@ const authReducer = (state = initialState, action) => {
 				country: action.newCountry,
 			};
 
+		case actionTypes.CLEAR_ALERT_MESSAGE:
+			return {
+				...state,
+				authLoading: false,
+				authAlertMessage: '',
+				authAlertSeverity: '',
+			};
+
 		default:
 			return state;
 	}
