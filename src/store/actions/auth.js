@@ -1,9 +1,30 @@
 import * as actionTypes from './actionTypes';
 import moment from 'moment';
+import axios from 'axios';
+import { config } from '../../constants';
+const userUrl = config.urls.USER_URL;
 
-export const authSuccess = (
+const onAuth = () => {
+	return {
+		type: actionTypes.ON_AUTH,
+	};
+};
+
+const authFail = (alertMessage) => {
+	return {
+		type: actionTypes.AUTH_FAIL,
+		alertMessage: alertMessage,
+	};
+};
+
+export const clearAlertMessage = () => {
+	return {
+		type: actionTypes.CLEAR_ALERT_MESSAGE,
+	};
+};
+
+const authSuccess = (
 	token,
-	launchClicked,
 	username,
 	email,
 	firstName,
@@ -37,7 +58,112 @@ export const authSuccess = (
 		lastName: lastName,
 		city: city,
 		country: country,
-		launchClicked: launchClicked,
+	};
+};
+
+const registerSuccess = (alertMessage) => {
+	return {
+		type: actionTypes.REGISTER_SUCCESS,
+		alertMessage: alertMessage,
+	};
+};
+
+export const register = (
+	username,
+	password,
+	email,
+	firstName,
+	lastName,
+	country,
+	city
+) => {
+	return async (dispatch) => {
+		dispatch(onAuth());
+
+		try {
+			const { data } = await axios.post(userUrl, {
+				Action: 'register',
+				Username: username,
+				Password: password,
+				Email: email,
+				FirstName: firstName,
+				LastName: lastName,
+				Country: country,
+				City: city,
+			});
+			console.log('this is data: ', data);
+			if (data.Status) {
+				dispatch(registerSuccess('Register Successful!'));
+			} else {
+				dispatch(
+					authFail(
+						'Username and/or Email already existed, please enter another one.'
+					)
+				);
+			}
+		} catch (err) {
+			dispatch(authFail('Network Error, please try again'));
+		}
+	};
+};
+
+export const login = (action, authCode, username, password) => {
+	return async (dispatch) => {
+		dispatch(onAuth());
+
+		if (action === 'loginLinkedin') {
+			console.log('this is authCode: ', authCode);
+			try {
+				const { data } = await axios.post(userUrl, {
+					Action: action,
+					Code: authCode,
+				});
+				console.log('this is data: ', data);
+				if (data.Status) {
+					dispatch(
+						authSuccess(
+							data.Token,
+							data.Username,
+							data.Email,
+							data.FirstName,
+							data.LastName,
+							data.City,
+							data.Country
+						)
+					);
+				} else {
+					dispatch(authFail('Invalid Username and/or Passowrd'));
+				}
+			} catch (err) {
+				dispatch(authFail('Network Error, please try again'));
+			}
+		} else if (action === 'login') {
+			try {
+				const { data } = await axios.post(userUrl, {
+					Action: action,
+					Username: username,
+					Password: password,
+				});
+				console.log('this is data: ', data);
+				if (data.Status) {
+					dispatch(
+						authSuccess(
+							data.Token,
+							data.Username,
+							data.Email,
+							data.FirstName,
+							data.LastName,
+							data.City,
+							data.Country
+						)
+					);
+				} else {
+					dispatch(authFail('Invalid Username and/or Passowrd'));
+				}
+			} catch (err) {
+				dispatch(authFail('Network Error, please try again'));
+			}
+		}
 	};
 };
 
@@ -74,7 +200,6 @@ export const authCheckState = () => {
 				dispatch(
 					authSuccess(
 						userData.token,
-						false,
 						userData.username,
 						userData.email,
 						userData.firstName,

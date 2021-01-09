@@ -8,7 +8,7 @@
 - Redux: to store user data and allow different components to access to it
 - React-Router-DOM: to render different components based on the routes
 
-## Start This Project
+## Start This Project On Development Evironment
 
 - clone this project through `git clone`
 - switch to `development` branch by: `git checkout development`
@@ -16,12 +16,7 @@
 - run `npm install` to install all required packages
 - run `npm start` to start the development environment
 
-## Development Environment
-
-- create the docker image based on the docker file: `docker image build -t devbops:dev .`
-- run the container: `sudo docker run -it -p 3000:3000/tcp devbops:dev`
-
 ## Production Environment
 
 - create the docker image based on the docker file: `docker image build -f Dockerfile.prod -t devbops:prod .`
-- run the container: `sudo docker run -it -p 3000:80/tcp devbops:prod`
+- run the container: `sudo docker run -d -p 3000:80/tcp devbops:prod`

@@ -64,19 +64,7 @@ const CreateEvent = (props) => {
 		const eventTime = moment(
 			`${formData.eventDate}, ${formData.eventTime}`
 		).format('h:mm a');
-		if (window.location.href.includes('/home')) {
-			props.createEventOnHome(
-				props.token,
-				props.username,
-				formData.eventTitle,
-				eventDate,
-				eventTime,
-				formData.eventType,
-				formData.locationDetail,
-				selectedFile,
-				formData.eventDescription
-			);
-		} else if (window.location.href.includes('/profile')) {
+		if (window.location.href.includes('/profile')) {
 			props.createEventOnProfile(
 				props.token,
 				props.username,
@@ -88,6 +76,19 @@ const CreateEvent = (props) => {
 				selectedFile,
 				formData.eventDescription
 			);
+		} else if (window.location.href.includes('/')) {
+			props.createEventOnHome(
+				props.token,
+				props.username,
+				formData.eventTitle,
+				eventDate,
+				eventTime,
+				formData.eventType,
+				formData.locationDetail,
+				selectedFile,
+				formData.eventDescription
+			);
+
 		}
 		// reset();
 	};

@@ -2,3 +2,15 @@
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+.btn-linkedin {
+	border: 0 solid #2e6da4;
+	border-radius: 10%;
+	background-color: #4d5b67;
+	height: 100%;
+}
+
+.btn-linkedin:hover {
+	background-color: #337ab7;
+	cursor: pointer;
+}

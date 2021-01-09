@@ -9,10 +9,37 @@ const initialState = {
 	city: null,
 	country: null,
 	launchFirstClicked: false,
+	authLoading: false,
+	authAlertMessage: '',
+	authAlertSeverity: '',
 };
 
 const authReducer = (state = initialState, action) => {
 	switch (action.type) {
+		case actionTypes.ON_AUTH:
+			return {
+				...state,
+				authLoading: true,
+			};
+
+		case actionTypes.AUTH_FAIL: {
+			return {
+				...state,
+				authLoading: false,
+				authAlertMessage: action.alertMessage,
+				authAlertSeverity: 'error',
+			};
+		}
+
+		case actionTypes.REGISTER_SUCCESS: {
+			return {
+				...state,
+				authLoading: false,
+				authAlertMessage: action.alertMessage,
+				authAlertSeverity: 'success',
+			};
+		}
+
 		case actionTypes.AUTH_SUCCESS:
 			// console.log('this is state in auth: ', state);
 			return {
@@ -24,13 +51,12 @@ const authReducer = (state = initialState, action) => {
 				lastName: action.lastName,
 				city: action.city,
 				country: action.country,
-				launchFirstClicked: action.launchClicked,
+				authLoading: false,
 			};
 		case actionTypes.AUTH_LOGOUT:
 			return {
 				...state,
 				token: null,
-				launchFirstClicked: false,
 			};
 		case actionTypes.UPDATE_USER_SUCCESS:
 			return {
@@ -40,6 +66,14 @@ const authReducer = (state = initialState, action) => {
 				lastName: action.newLastName,
 				city: action.newCity,
 				country: action.newCountry,
+			};
+
+		case actionTypes.CLEAR_ALERT_MESSAGE:
+			return {
+				...state,
+				authLoading: false,
+				authAlertMessage: '',
+				authAlertSeverity: '',
 			};
 
 		default:
