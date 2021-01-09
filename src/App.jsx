@@ -36,7 +36,6 @@ class App extends Component {
 					<ProtectedRoute exact path='/profile' component={Profile} />
 					<ProtectedRoute exact path='/logout' component={Logout} />
 					<Route path='/main' component={Main} />
-
 					<Redirect from="/*" to='/main' />
 
 				</Switch>
