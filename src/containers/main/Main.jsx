@@ -10,12 +10,20 @@ const Main = (props) => {
 		<Container>
 			<Grid container spacing={3}>
 				<Grid item xs={12} sm={12} md={12}>
-					<Typography component='h1' variant='h1'>
+					<Typography component='h1' variant='h1' style={{
+						// color: '#000000',
+						fontWeight: 'bold',
+						// textTransform: 'lowercase',
+					}}>
 						DevBops is changing the
 					</Typography>
 				</Grid>
 				<Grid item xs={12} sm={12} md={4}>
-					<Typography component='h1' variant='h1'>
+					<Typography component='h1' variant='h1' style={{
+						// color: '#000000',
+						fontWeight: 'bold',
+						// textTransform: 'lowercase',
+					}}>
 						way Engineers connects
 					</Typography>
 					<Button
@@ -33,7 +41,7 @@ const Main = (props) => {
 					<img
 						src={onlineWorldCuate}
 						alt='Online World Cuate'
-						style={{ width: '100%', maxWidth: '1000px' }}
+						style={{ width: '100%', maxWidth: '900px' }}
 					/>
 				</Grid>
 			</Grid>

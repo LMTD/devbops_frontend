@@ -18,12 +18,12 @@ const PostBlog = (props) => {
 		const currentDate = moment().format('dddd MMM Do YYYY');
 		const currentTime = moment().format('hh:mm a')
 
-		if (window.location.href.includes('/home')) {
-			props.postBlogOnHome(props.token, props.username, formData.blogSubject, formData.blogBody, currentDate,
+		if (window.location.href.includes('/profile')) {
+			props.postBlogOnProfile(props.token, props.username, formData.blogSubject, formData.blogBody, currentDate,
 				currentTime, formData.location)
 
-		} else if (window.location.href.includes('/profile')) {
-			props.postBlogOnProfile(props.token, props.username, formData.blogSubject, formData.blogBody, currentDate,
+		} else if (window.location.href.includes('/')) {
+			props.postBlogOnHome(props.token, props.username, formData.blogSubject, formData.blogBody, currentDate,
 				currentTime, formData.location)
 		}
 

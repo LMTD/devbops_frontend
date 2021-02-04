@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 
 import SlideShow from '../../components/UI/slideShow/SlideShow';
 import DialogWindow from '../../components/UI/dialogWindow/DialogWindow';
-
+import Main from '../main/Main';
 
 const Home = (props) => {
 	const [openAuth, setOpenAuth] = useState(false);
@@ -112,6 +112,7 @@ const Home = (props) => {
 
 	return (
 		<Container>
+			{/* <Main /> */}
 			<form onSubmit={handleSubmit(handleSearch)}>
 				<Grid container spacing={3}>
 					<Grid item xs={8} sm={8} md={8}>

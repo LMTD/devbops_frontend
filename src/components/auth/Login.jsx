@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/auth';
-
+import Icon from '@material-ui/core/Icon';
 import {
 	Grid,
 	Container,
@@ -10,70 +10,42 @@ import {
 	Typography,
 	CircularProgress,
 } from '@material-ui/core';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import Alert from '@material-ui/lab/Alert';
-import './styles.css';
-import { config } from '../../constants';
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
-const userUrl = config.urls.USER_URL;
+import { LinkedIn } from 'react-linkedin-login-oauth2';
+import './styles.css';
+
 
 const Login = (props) => {
-	const [alertSeverity, setAlertSeverity] = useState(
-		props.registerSucceed ? 'success' : '',
-	);
-	const [alertMessage, setAlertMessage] = useState(
-		props.registerSucceed ? 'Register Successfully' : '',
-	);
-	const [loading, setLoading] = useState('');
+
+	const [code, setCode] = useState('');
 
 	const { register, handleSubmit, errors, watch } = useForm();
 	const watchFields = watch(['username', 'password']);
 
-	const submitLoginForm = async (formData) => {
-		setLoading(true);
-		console.log('this is formdata: ', formData);
-		try {
-			const { data } = await axios.post(
-				userUrl,
-				{
-					Action: 'login',
-					Username: formData.username,
-					Password: formData.password,
-				},
-			);
-			console.log('this is data: ', data);
-			if (data.Status) {
-				setAlertSeverity('success');
-				setAlertMessage('Login Successfully');
-				props.clearRegisterSuccess();
-				props.authSuccess(
-					data.Token,
-					true,
-					data.Username,
-					data.Email,
-					data.FirstName,
-					data.LastName,
-					data.City,
-					data.Country,
-				);
-				props.onClose();
 
-			} else {
-				setAlertSeverity('error');
-				setAlertMessage(data.Error);
-			}
-		} catch (err) {
-			console.log('there is an error in login: ', err);
-			setAlertSeverity('error');
-			setAlertMessage('Network error');
-		}
-		setLoading(false);
+	const handleSuccess = (data) => {
+		console.log('this is data in handlesuccess: ', data);
+		// setCode(data.code)
+		props.login('loginLinkedin', data.code, '', '')
+	}
+
+
+	const submitLoginForm = async (formData) => {
+
+		console.log('this is formdata: ', formData);
+		props.login('login', '', formData.username, formData.password)
 	};
+
+	if (props.isAuthenticated) {
+		props.onClose()
+	}
 
 	return (
 		<Container fixed>
-			{alertMessage && <Alert severity={alertSeverity}>{alertMessage}</Alert>}
+			{props.authAlertMessage && <Alert severity={props.authAlertSeverity}>{props.authAlertMessage}</Alert>}
 			<form
 				onSubmit={handleSubmit(submitLoginForm)}
 				style={{ margin: '20px 0' }}>
@@ -113,18 +85,31 @@ const Login = (props) => {
 							Register Here
 						</Typography>
 					</Grid>
-					<Grid container justify='center' spacing={2}>
-						<Grid item>{loading ? <CircularProgress /> : null}</Grid>
+					<Grid container align="center" justify='center' spacing={2}>
+						<Grid item>{props.authLoading ? <CircularProgress /> : null}</Grid>
 						<Grid item>
 							<Button
 								type='submit'
 								variant='contained'
 								color='primary'
 								disabled={
-									!(watchFields.username && watchFields.password) || loading
+									!(watchFields.username && watchFields.password) || props.authLoading
 								}>
 								Login
 							</Button>
+						</Grid>
+						<Grid item xs={12} sm={12} md={12}>
+							Or you can sign in with
+						</Grid>
+						<Grid item xs={12} sm={12} md={12}>
+							<LinkedIn clientId="86svu9wdn93n5r"
+								onFailure={() => { console.log('there is an error with login with linkedin') }}
+								onSuccess={handleSuccess}
+								redirectUri={`${window.location.origin}/linkedin`}
+								scope="r_emailaddress,r_liteprofile"
+							>
+								<LinkedInIcon />
+							</LinkedIn>
 						</Grid>
 					</Grid>
 				</Grid>
@@ -132,30 +117,21 @@ const Login = (props) => {
 		</Container>
 	);
 };
+
+const mapStateToProps = (state) => {
+	return {
+		isAuthenticated: state.auth.token !== null,
+		authAlertMessage: state.auth.authAlertMessage,
+		authAlertSeverity: state.auth.authAlertSeverity,
+		authLoading: state.auth.authLoading
+	}
+}
+
+
 const mapDispatchToProps = (dispatch) => {
 	return {
-		authSuccess: (
-			token,
-			launchClicked,
-			username,
-			email,
-			firstName,
-			lastName,
-			city,
-			country,
-		) =>
-			dispatch(
-				actions.authSuccess(
-					token,
-					launchClicked,
-					username,
-					email,
-					firstName,
-					lastName,
-					city,
-					country,
-				),
-			),
+
+		login: (action, authCode, username, password) => dispatch(actions.login(action, authCode, username, password))
 	};
 };
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

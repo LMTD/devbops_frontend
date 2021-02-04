@@ -9,6 +9,7 @@ import CreateEvent from '../../createEvent/CreateEvent';
 import * as homeActions from '../../../store/actions/home';
 import * as profileActions from '../../../store/actions/profile';
 
+
 const DialogWindow = (props) => {
 
 	const [isLoginMode, setIsLoginMode] = useState(true);
